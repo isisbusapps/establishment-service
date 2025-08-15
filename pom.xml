@@ -130,6 +130,25 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.jsonschema2pojo</groupId>
+                <artifactId>jsonschema2pojo-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-ror-pojos</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/resources/ROR-schema</sourceDirectory>
+                    <targetPackage>uk.ac.stfc.facilities.domains.establishment</targetPackage>
+                    <useLongIntegers>true</useLongIntegers>
+                    <annotationStyle>jackson2</annotationStyle>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
