@@ -73,6 +73,15 @@
             <artifactId>fuzzywuzzy</artifactId>
             <version>1.4.0</version>
         </dependency>
+
+        <!-- Begin dependencies required for compiling/running JUnit5/Mockito unit tests -->
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>4.11.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
