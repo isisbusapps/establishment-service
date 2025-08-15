@@ -1,10 +1,9 @@
-package uk.ac.stfc.facilities.services;
+package uk.ac.stfc.facilities.domains.department;
 
 import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.ac.stfc.facilities.domains.department.*;
 
 import java.util.*;
 import java.util.stream.Collectors;

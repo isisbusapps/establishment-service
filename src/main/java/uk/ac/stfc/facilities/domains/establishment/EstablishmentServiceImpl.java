@@ -1,11 +1,10 @@
-package uk.ac.stfc.facilities.services;
+package uk.ac.stfc.facilities.domains.establishment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import uk.ac.stfc.facilities.domains.establishment.*;
 import uk.ac.stfc.facilities.exceptions.RorQueryException;
 
 import java.io.IOException;
@@ -142,11 +141,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         }
 
         return establishmentTypes;
-    }
-
-    @Override
-    public EstablishmentDTO createEstablishmentFromEstablishmentDTO(EstablishmentDTO dto) {
-        return null;
     }
 
     @Override

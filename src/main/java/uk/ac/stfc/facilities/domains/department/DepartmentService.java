@@ -1,9 +1,6 @@
-package uk.ac.stfc.facilities.services;
+package uk.ac.stfc.facilities.domains.department;
 
 import jakarta.persistence.NoResultException;
-import uk.ac.stfc.facilities.domains.department.Department;
-import uk.ac.stfc.facilities.domains.department.DepartmentLabel;
-import uk.ac.stfc.facilities.domains.department.Label;
 
 import java.util.List;
 
