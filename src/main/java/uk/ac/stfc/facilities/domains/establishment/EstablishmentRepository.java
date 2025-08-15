@@ -6,7 +6,6 @@ public interface EstablishmentRepository {
 
     Establishment findById(Long estId);
     List<Establishment> getAll();
-    List<EstablishmentAndAddress> findByQuery(String searchQuery);
     List<Establishment> getVerified();
     List<Establishment> getUnverified();
 

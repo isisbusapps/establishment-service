@@ -1,13 +1,11 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stfc.UserOffice.Exceptions.DuplicateRecordsException;
-import com.stfc.UserOffice.Exceptions.EstablishmentDTOException;
-import com.stfc.UserOffice.Exceptions.RorQueryException;
 import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import uk.ac.stfc.facilities.exceptions.RorQueryException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.stfc.UserOffice.Helpers.Constants.EST_SEARCH_CUTOFF;
+import static uk.ac.stfc.facilities.helpers.Constants.EST_SEARCH_CUTOFF;
 
 
 public class EstablishmentServiceImpl implements EstablishmentService {
@@ -38,7 +36,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<EstablishmentDTO> getAllEstablishmentDTOs() {
+    public List<Establishment> getAllEstablishmentDTOs() {
         return List.of();
     }
 
@@ -55,16 +53,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .stream()
                 .limit(limit)
                 .toList();
-    }
-
-    @Override
-    public EstablishmentDTO getEstablishmentWithAddress(Long establishmentId) throws EstablishmentDTOException {
-        return null;
-    }
-
-    @Override
-    public List<EstablishmentDTO> getEstablishmentDTOsBySearchDetails(List<EstablishmentSearchDetails> searchDetails) {
-        return List.of();
     }
 
     @Override
@@ -168,12 +156,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public EstablishmentDTO deleteEstablishment(Long estId) throws NoResultException {
-        return null;
-    }
-
-    @Override
-    public EstablishmentDTO updateEstablishmentWithAddress(EstablishmentDTO e) throws DuplicateRecordsException {
+    public Establishment deleteEstablishment(Long estId) throws NoResultException {
         return null;
     }
 
@@ -189,33 +172,13 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public EstablishmentDTO deleteEstablishmentById(Long establishmentId) throws DuplicateRecordsException {
-        return null;
-    }
-
-    @Override
-    public EstablishmentDTO mergeEstablishment(String oldEst) throws DuplicateRecordsException {
-        return null;
-    }
-
-    @Override
-    public EstablishmentDTO getEstablishmentById(Long establishmentId) {
+    public Establishment getEstablishmentById(Long establishmentId) {
         return null;
     }
 
     @Override
     public List<Establishment> getUnverifiedEstablishments() {
         return repo.getUnverified();
-    }
-
-    @Override
-    public List<EstablishmentDTO> getSimilarEstablishments(String establishmentId) throws EstablishmentDTOException {
-        return List.of();
-    }
-
-    @Override
-    public List<EstablishmentDTO> getEstablishmentsByOrgName(String orgName) {
-        return List.of();
     }
 
     @Override

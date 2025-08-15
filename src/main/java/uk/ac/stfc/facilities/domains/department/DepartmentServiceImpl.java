@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.stfc.UserOffice.Helpers.Constants.*;
+import static uk.ac.stfc.facilities.helpers.Constants.*;
 
 
 public class DepartmentServiceImpl implements DepartmentService {

@@ -68,11 +68,6 @@ public class EstablishmentRepositoryCSV implements EstablishmentRepository {
     }
 
     @Override
-    public List<EstablishmentAndAddress> findByQuery(String searchQuery) {
-        return List.of();
-    }
-
-    @Override
     public List<Establishment> getVerified() {
         return establishments.stream()
                 .filter(Establishment::getVerified)
