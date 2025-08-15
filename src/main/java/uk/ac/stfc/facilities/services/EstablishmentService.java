@@ -1,6 +1,10 @@
-package uk.ac.stfc.facilities.domains.establishment;
+package uk.ac.stfc.facilities.services;
 
 import jakarta.persistence.NoResultException;
+import uk.ac.stfc.facilities.domains.establishment.Establishment;
+import uk.ac.stfc.facilities.domains.establishment.EstablishmentAlias;
+import uk.ac.stfc.facilities.domains.establishment.EstablishmentType;
+import uk.ac.stfc.facilities.domains.establishment.RorQueryDto;
 
 import java.util.List;
 
