@@ -73,6 +73,15 @@
             <artifactId>fuzzywuzzy</artifactId>
             <version>1.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-orm-panache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jdbc-oracle</artifactId>
+        </dependency>
+
 
         <!-- Begin dependencies required for compiling/running JUnit5/Mockito unit tests -->
 
