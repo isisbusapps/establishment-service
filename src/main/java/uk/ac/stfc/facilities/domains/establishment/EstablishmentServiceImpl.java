@@ -145,9 +145,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public Establishment createUnverifiedEstablishment(String name) {
-        Establishment unverfiedEst = new Establishment(name);
-        unverfiedEst.setVerified(false);
-        return unverfiedEst;
+        Establishment unverifiedEst = new Establishment(name);
+        unverifiedEst.setVerified(false);
+        return unverifiedEst;
     }
 
     @Override
