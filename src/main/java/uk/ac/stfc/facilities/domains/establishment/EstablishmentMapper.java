@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 @Mapper(config = MappingConfig.class)
 public abstract class EstablishmentMapper extends DateConverter {
 
-    abstract EstablishmentDTO toDTO(Establishment entity);
+    public abstract EstablishmentDTO toDTO(Establishment entity);
 
-    abstract Establishment toEntity(EstablishmentDTO dto);
+    public abstract Establishment toEntity(EstablishmentDTO dto);
 }
