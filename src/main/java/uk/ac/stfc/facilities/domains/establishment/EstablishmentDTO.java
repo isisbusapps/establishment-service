@@ -2,9 +2,11 @@ package uk.ac.stfc.facilities.domains.establishment;
 
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import uk.ac.stfc.facilities.BaseClasses.Dto;
+
 import java.time.ZonedDateTime;
 
-public class EstablishmentDTO {
+public class EstablishmentDTO implements Dto {
     @Schema(
             description = "The unique identifier for the establishment",
             example = "1",
