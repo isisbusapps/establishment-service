@@ -5,6 +5,9 @@ import jakarta.ws.rs.QueryParam;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentMapper;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentService;
+import uk.ac.stfc.facilities.exceptions.RestControllerException;
+import uk.ac.stfc.facilities.helpers.ReasonCode;
+
 import java.util.List;
 
 public class EstablishmentController implements EstablishmentControllerInterface {
@@ -14,11 +17,20 @@ public class EstablishmentController implements EstablishmentControllerInterface
     EstablishmentService service;
 
     @Override
-    public List<EstablishmentDTO> getTopEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) {
-        return service.getTopEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
-                .stream()
-                .map(mapper::toDTO)
-                .toList();
+    public List<EstablishmentDTO> getTopEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) throws RestControllerException {
+
+        if (searchQuery == null) {
+            throw new RestControllerException(ReasonCode.BadRequest, "No query parameter found");
+        }
+
+        try {
+            return service.getTopEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
+                    .stream()
+                    .map(mapper::toDTO)
+                    .toList();
+        } catch (Exception e) {
+            throw new RestControllerException(ReasonCode.UnexpectedError, "Error processing query");
+        }
     }
 
     @Override
