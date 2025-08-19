@@ -20,7 +20,7 @@ public class EstablishmentRepositoryImpl implements EstablishmentRepository, Pan
 
     @Override
     public List<Establishment> getVerified() {
-        return List.of();
+        return list("verified", true);
     }
 
     @Override
