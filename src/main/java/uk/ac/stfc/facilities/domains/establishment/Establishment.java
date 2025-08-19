@@ -1,15 +1,37 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
+import jakarta.persistence.*;
+
 import java.time.Instant;
 
+@Entity
+@Table(name = "ESTABLISHMENT_NEW")
 public class Establishment {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long establishmentId;
+
+    @Column(name = "ESTABLISHMENT_NAME", nullable = false)
     private String establishmentName;
+
+    @Column(name = "ROR_ID")
     private String rorId;
+
+    @Column(name = "COUNTRY_NAME")
     private String countryName;
+
+    @Column(name = "ESTABLISHMENT_URL")
     private String establishmentUrl;
+
+    @Column(name = "FROM_DATE")
     private Instant fromDate;
+
+    @Column(name = "THRU_DATE")
     private Instant thruDate;
+
+    @Column(name = "VERIFIED")
     private Boolean verified;
 
     public Establishment() {
