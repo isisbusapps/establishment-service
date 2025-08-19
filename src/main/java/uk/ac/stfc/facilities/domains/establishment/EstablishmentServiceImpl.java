@@ -43,15 +43,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<Establishment> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified) {
+    public List<Establishment> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) {
         List<Establishment>  allEst = onlyVerified?  repo.getVerified() : repo.getAll();
 
-        return fuzzySearch(searchQuery, EST_SEARCH_CUTOFF, useAliases, allEst);
-    }
-
-    @Override
-    public List<Establishment> getTopEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) {
-        return getEstablishmentsByQuery(searchQuery, useAliases, onlyVerified)
+        return fuzzySearch(searchQuery, EST_SEARCH_CUTOFF, useAliases, allEst)
                 .stream()
                 .limit(limit)
                 .toList();

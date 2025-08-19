@@ -17,14 +17,14 @@ public class EstablishmentController implements EstablishmentControllerInterface
     EstablishmentService service;
 
     @Override
-    public List<EstablishmentDTO> getTopEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) throws RestControllerException {
+    public List<EstablishmentDTO> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) throws RestControllerException {
 
         if (searchQuery == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "No query parameter found");
         }
 
         try {
-            return service.getTopEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
+            return service.getEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
                     .stream()
                     .map(mapper::toDTO)
                     .toList();

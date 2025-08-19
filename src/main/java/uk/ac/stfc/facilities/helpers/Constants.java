@@ -15,6 +15,6 @@ public class Constants {
     public static final int EST_SEARCH_CUTOFF = 60; // minimum similarity score (0-100) for a match
     public static final int DEPT_LABEL_CUTOFF = 80; // minimum similarity score (0-100) for a match
     public static final String FALLBACK_LABEL_NAME = "Other";
-    public static final String ESTABLISHMENT_SEARCH_LIMIT_STR = "3";
+    public static final String DEFAULT_ESTABLISHMENT_SEARCH_LIMIT = "100";
 
 }

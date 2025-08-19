@@ -7,7 +7,7 @@ import uk.ac.stfc.facilities.exceptions.RestControllerException;
 
 import java.util.List;
 
-import static uk.ac.stfc.facilities.helpers.Constants.ESTABLISHMENT_SEARCH_LIMIT_STR;
+import static uk.ac.stfc.facilities.helpers.Constants.DEFAULT_ESTABLISHMENT_SEARCH_LIMIT;
 
 @Path("establishment")
 @Produces(MediaType.APPLICATION_JSON)
@@ -15,12 +15,12 @@ import static uk.ac.stfc.facilities.helpers.Constants.ESTABLISHMENT_SEARCH_LIMIT
 public interface EstablishmentControllerInterface {
 
     @GET
-    @Path("/top-matches")
-    List<EstablishmentDTO>  getTopEstablishmentsByQuery(
+    @Path("/search")
+    List<EstablishmentDTO>  getEstablishmentsByQuery(
             @QueryParam("searchQuery") String searchQuery,
             @QueryParam("useAlias") @DefaultValue("true") boolean useAlias,
             @QueryParam("onlyVerified") @DefaultValue("true") boolean onlyVerified,
-            @QueryParam("limit") @DefaultValue(ESTABLISHMENT_SEARCH_LIMIT_STR) int limit
+            @QueryParam("limit") @DefaultValue(DEFAULT_ESTABLISHMENT_SEARCH_LIMIT) int limit
     ) throws RestControllerException;
 
     @GET

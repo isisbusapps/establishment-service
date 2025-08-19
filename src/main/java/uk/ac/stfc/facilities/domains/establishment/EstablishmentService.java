@@ -8,9 +8,7 @@ public interface EstablishmentService {
 
     List<Establishment> getAllEstablishments();
 
-    List<Establishment> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified);
-
-    List<Establishment> getTopEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit);
+    List<Establishment> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit);
 
     RorQueryDto getRorMatches(String establishmentName);
 
