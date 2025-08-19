@@ -18,24 +18,17 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     public List<EstablishmentDTO> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) throws RestControllerException {
-
         if (searchQuery == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "No query parameter found");
         }
-
-        try {
-            return service.getEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
-                    .stream()
-                    .map(mapper::toDTO)
-                    .toList();
-        } catch (Exception e) {
-            throw new RestControllerException(ReasonCode.UnexpectedError, "Error processing query");
-        }
+        return service.getEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
+                .stream()
+                .map(mapper::toDTO)
+                .toList();
     }
 
     @Override
     public List<EstablishmentDTO> getUnverifiedEstablishments() {
-
         return service.getUnverifiedEstablishments()
                 .stream()
                 .map(mapper::toDTO)
