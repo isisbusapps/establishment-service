@@ -10,12 +10,12 @@ public class EstablishmentRepositoryImpl implements EstablishmentRepository, Pan
 
     @Override
     public Establishment findById(Long estId) {
-        return PanacheRepository.super.findById(estId); // delegate to Panache
+        return PanacheRepository.super.findById(estId);
     }
 
     @Override
     public List<Establishment> getAll() {
-        return List.of();
+        return listAll();
     }
 
     @Override
@@ -25,21 +25,18 @@ public class EstablishmentRepositoryImpl implements EstablishmentRepository, Pan
 
     @Override
     public List<Establishment> getUnverified() {
-        return List.of();
+        return list("verified", false);
     }
 
     @Override
-    public void create(Establishment model) {
-
+    public void create(Establishment establishment) {
     }
 
     @Override
-    public void update(Long estId, Establishment model) {
-
+    public void update(Long estId, Establishment establishment) {
     }
 
     @Override
     public void delete(Long estId) {
-
     }
 }

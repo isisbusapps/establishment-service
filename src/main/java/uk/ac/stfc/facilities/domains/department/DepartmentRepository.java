@@ -6,7 +6,7 @@ public interface DepartmentRepository {
     Department findById(Long depId);
     List<Department> getAll();
 
-    void create(Department entity);
-    void update(Long depId, Department entity);
+    void create(Department department);
+    void update(Long depId, Department department);
     void delete(Long depId);
 }
