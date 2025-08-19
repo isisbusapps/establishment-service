@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface EstablishmentService {
 
-    List<Establishment> getAllEstablishmentDTOs();
+    List<Establishment> getAllEstablishments();
 
     List<Establishment> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified);
 

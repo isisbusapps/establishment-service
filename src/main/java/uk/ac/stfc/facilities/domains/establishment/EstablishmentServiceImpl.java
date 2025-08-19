@@ -38,7 +38,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<Establishment> getAllEstablishmentDTOs() {
+    public List<Establishment> getAllEstablishments() {
         return List.of();
     }
 
