@@ -1,13 +1,11 @@
 package uk.ac.stfc.facilities.controllers;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.QueryParam;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentMapper;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentService;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 import uk.ac.stfc.facilities.helpers.ReasonCode;
-
 import java.util.List;
 
 public class EstablishmentController implements EstablishmentControllerInterface {
