@@ -1,9 +1,20 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "ESTABLISHMENT_ALIAS")
 public class EstablishmentAlias {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "RID")
     private Long rid;
+
+    @Column(name = "ESTABLISHMENT_ID", nullable = false)
     private Long establishmentId;
+
+    @Column(name = "ALIAS", nullable = false)
     private String alias;
 
     public EstablishmentAlias() {
