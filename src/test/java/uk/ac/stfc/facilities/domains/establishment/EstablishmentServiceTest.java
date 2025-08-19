@@ -1,10 +1,10 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -25,12 +25,11 @@ class EstablishmentServiceTest {
     @Mock
     private EstablishmentAliasRepository aliasRepo;
 
-    private EstablishmentService service;
+    @Mock
+    private EstablishmentTypeRepository typeRepo;
 
-    @BeforeEach
-    public void setUp() {
-        service = new EstablishmentServiceImpl(repo, aliasRepo);
-    }
+    @InjectMocks
+    EstablishmentServiceImpl service;
 
     @Test
     void test_getEstablishmentsByQuery_ExactQuery_ReturnsEstablishments() {
@@ -247,7 +246,8 @@ class EstablishmentServiceTest {
     void test_getEstablishmentsByQuery_PerformanceTest_CompletesWithinExpectedTime() {
         EstablishmentService service = new EstablishmentServiceImpl(
                 new EstablishmentRepositoryCSV(),
-                new EstablishmentAliasRepositoryCSV()
+                new EstablishmentAliasRepositoryCSV(),
+                typeRepo
         );
 
         long start = System.currentTimeMillis();
@@ -265,7 +265,8 @@ class EstablishmentServiceTest {
     void test_getEstablishmentsByQuery_SampleRealDataQuery_PrintsResults() {
         EstablishmentService service = new EstablishmentServiceImpl(
                 new EstablishmentRepositoryCSV(),
-                new EstablishmentAliasRepositoryCSV()
+                new EstablishmentAliasRepositoryCSV(),
+                typeRepo
         );
 
         List<Establishment> results = service.getEstablishmentsByQuery("ucl", true, true);
@@ -279,7 +280,8 @@ class EstablishmentServiceTest {
     void test_getTopEstablishmentsByQuery_SampleRealDataQuery_PrintsResults() {
         EstablishmentService service = new EstablishmentServiceImpl(
                 new EstablishmentRepositoryCSV(),
-                new EstablishmentAliasRepositoryCSV()
+                new EstablishmentAliasRepositoryCSV(),
+                typeRepo
         );
 
         List<Establishment> topResults = service.getTopEstablishmentsByQuery("ucl", true, true, ESTABLISHMENT_SEARCH_LIMIT);

@@ -1,6 +1,8 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -20,19 +22,19 @@ import java.util.Set;
 
 import static uk.ac.stfc.facilities.helpers.Constants.EST_SEARCH_CUTOFF;
 
-
+@ApplicationScoped
 public class EstablishmentServiceImpl implements EstablishmentService {
+
 
     private EstablishmentRepository repo;
     private EstablishmentAliasRepository aliasRepo;
     private EstablishmentTypeRepository typeRepo;
 
-    public EstablishmentServiceImpl() {
-    }
-
-    public EstablishmentServiceImpl(EstablishmentRepository repo, EstablishmentAliasRepository aliasRepo) {
+    @Inject
+    public EstablishmentServiceImpl(EstablishmentRepository repo, EstablishmentAliasRepository aliasRepo, EstablishmentTypeRepository typeRepo) {
         this.repo = repo;
         this.aliasRepo = aliasRepo;
+        this.typeRepo = typeRepo;
     }
 
     @Override
