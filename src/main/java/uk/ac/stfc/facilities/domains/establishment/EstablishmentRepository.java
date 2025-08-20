@@ -2,7 +2,7 @@ package uk.ac.stfc.facilities.domains.establishment;
 
 import java.util.List;
 
-public interface EstablishmentRepository {
+public interface EstablishmentRepository  {
 
     Establishment findById(Long estId);
     List<Establishment> getAll();

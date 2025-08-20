@@ -1,6 +1,7 @@
 package uk.ac.stfc.facilities.controllers;
 
 import jakarta.inject.Inject;
+import jakarta.ws.rs.core.Response;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentMapper;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentService;
@@ -32,4 +33,14 @@ public class EstablishmentController implements EstablishmentControllerInterface
                 .map(mapper::toDTO)
                 .toList();
     }
+
+    @Override
+    public Response createUnverifiedEstablishment(String establishmentName) throws RestControllerException {
+        if (establishmentName == null || establishmentName.isBlank()) {
+            throw new RestControllerException(ReasonCode.BadRequest, "Establishment name must not be null or empty");
+        }
+        EstablishmentDTO newEstablishment = mapper.toDTO(service.createUnverifiedEstablishment(establishmentName));
+        return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
+    }
+
 }

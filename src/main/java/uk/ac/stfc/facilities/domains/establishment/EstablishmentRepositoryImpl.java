@@ -30,6 +30,7 @@ public class EstablishmentRepositoryImpl implements EstablishmentRepository, Pan
 
     @Override
     public void create(Establishment establishment) {
+        persistAndFlush(establishment);
     }
 
     @Override
