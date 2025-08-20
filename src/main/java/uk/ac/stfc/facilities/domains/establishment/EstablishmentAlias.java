@@ -7,9 +7,10 @@ import jakarta.persistence.*;
 public class EstablishmentAlias {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "RID")
-    private Long rid;
+    @SequenceGenerator(name="ESTABLISHMENT_ALIAS_RID_SEQ", sequenceName="ESTABLISHMENT_ALIAS_RID_SEQ", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ESTABLISHMENT_ALIAS_RID_SEQ")
+    @Column(name = "ALIAS_ID")
+    private Long aliasId;
 
     @Column(name = "ESTABLISHMENT_ID", nullable = false)
     private Long establishmentId;
@@ -26,13 +27,13 @@ public class EstablishmentAlias {
     }
 
     public EstablishmentAlias(Long RID, Long establishmentId, String alias) {
-        this.rid = rid;
+        this.aliasId = aliasId;
         this.establishmentId = establishmentId;
         this.alias = alias;
     }
 
-    public Long getRID() {return rid;}
-    public void setRID(Long RID) {this.rid = rid;}
+    public Long getRID() {return aliasId;}
+    public void setRID(Long RID) {this.aliasId = aliasId;}
     public Long getEstablishmentId() {return establishmentId;}
     public void setEstablishmentId(Long establishmentId) {this.establishmentId = establishmentId;}
     public String getAlias() {return alias;}

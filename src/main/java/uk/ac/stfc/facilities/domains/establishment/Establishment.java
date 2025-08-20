@@ -9,7 +9,8 @@ import java.time.Instant;
 public class Establishment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="ESTABLISHMENT_NEW_RID_SEQ", sequenceName="ESTABLISHMENT_NEW_RID_SEQ", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ESTABLISHMENT_NEW_RID_SEQ")
     @Column(name = "ID")
     private Long establishmentId;
 
@@ -31,7 +32,7 @@ public class Establishment {
     @Column(name = "THRU_DATE")
     private Instant thruDate;
 
-    @Column(name = "VERIFIED")
+    @Column(name = "VERIFIED", nullable = false, columnDefinition = "NUMBER(1) DEFAULT 0")
     private Boolean verified;
 
     public Establishment() {
