@@ -1,17 +1,10 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
-
 import java.util.List;
 
 @ApplicationScoped
-public class EstablishmentRepositoryImpl implements EstablishmentRepository, PanacheRepository<Establishment> {
-
-    @Override
-    public Establishment findById(Long estId) {
-        return PanacheRepository.super.findById(estId);
-    }
+public class EstablishmentRepositoryImpl implements EstablishmentRepository {
 
     @Override
     public List<Establishment> getAll() {
@@ -26,11 +19,6 @@ public class EstablishmentRepositoryImpl implements EstablishmentRepository, Pan
     @Override
     public List<Establishment> getUnverified() {
         return list("verified", false);
-    }
-
-    @Override
-    public void save(Establishment establishment) {
-        persistAndFlush(establishment);
     }
 
     @Override

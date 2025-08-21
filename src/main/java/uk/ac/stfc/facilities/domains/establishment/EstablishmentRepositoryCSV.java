@@ -78,11 +78,6 @@ public class EstablishmentRepositoryCSV implements EstablishmentRepository {
     public List<Establishment> getUnverified() { return List.of(); }
 
     @Override
-    public void save(Establishment establishment) {
-
-    }
-
-    @Override
     public void update(Long estId, Establishment establishment) {
 
     }

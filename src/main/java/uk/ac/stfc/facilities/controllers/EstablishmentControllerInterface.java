@@ -1,9 +1,6 @@
 package uk.ac.stfc.facilities.controllers;
 
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -33,7 +30,7 @@ public interface EstablishmentControllerInterface {
     List<EstablishmentDTO> getUnverifiedEstablishments();
 
     @POST
-    Response createUnverifiedEstablishment(@RequestBody String establishmentName)
+    Response createUnverifiedEstablishment(String establishmentName)
             throws RestControllerException;
 
     @GET
@@ -45,11 +42,6 @@ public interface EstablishmentControllerInterface {
     @PUT
     @Path("/{establishmentId}")
     Response verifyAndEnrichData (@PathParam("establishmentId") Long establishmentId,
-            @RequestBody(description = "Establishment to update", required = true,
-            content = @Content(schema = @Schema(implementation = EstablishmentDTO.class))) RorSchemaV21 rorMatch)
-            throws RestControllerException;
-
-
-
+                                  RorSchemaV21 rorMatch) throws RestControllerException;
 
 }

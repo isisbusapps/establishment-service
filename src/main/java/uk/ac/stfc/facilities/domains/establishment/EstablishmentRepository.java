@@ -1,15 +1,15 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
+import io.quarkus.hibernate.orm.panache.PanacheRepository;
+
 import java.util.List;
 
-public interface EstablishmentRepository  {
+public interface EstablishmentRepository extends PanacheRepository<Establishment> {
 
-    Establishment findById(Long estId);
     List<Establishment> getAll();
     List<Establishment> getVerified();
     List<Establishment> getUnverified();
 
-    void save(Establishment establishment);
     void update(Long estId, Establishment establishment);
     void delete(Long estId);
 }

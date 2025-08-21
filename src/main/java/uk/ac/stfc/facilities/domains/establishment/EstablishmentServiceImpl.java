@@ -77,9 +77,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
+    @Transactional
     public Establishment addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror){
-
-        Establishment est = repo.findById(establishmentId);
 
         String establishmentName = ror.getNames().stream()
                 .filter(name -> name.getTypes().contains(Type.ROR_DISPLAY))
@@ -87,27 +86,33 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .map(Name::getValue)
                 .orElse(null);
 
-       String rorId = ror.getId();
+        String rorId = ror.getId();
 
-       String countryName = ror.getLocations().stream()
-               .findFirst()
-               .map(location -> location.getGeonamesDetails().getCountryName())
-               .orElse(null);
+        if (establishmentName == null || rorId == null) {
+            throw new IllegalArgumentException("Cannot update establishment: missing essential ROR data");
+        }
 
-       String establishmentUrl = ror.getLinks().stream()
-               .filter(link -> link.getType().equals(Link.Type.WEBSITE))
-               .findFirst()
-               .map(Link::getValue)
-               .orElse(null);
+        String countryName = ror.getLocations().stream()
+                   .findFirst()
+                   .map(location -> location.getGeonamesDetails().getCountryName())
+                   .orElse(null);
 
-       est.setEstablishmentName(establishmentName);
-       est.setRorId(rorId);
-       est.setCountryName(countryName);
-       est.setEstablishmentUrl(establishmentUrl);
-       est.setVerified(true);
+        String establishmentUrl = ror.getLinks().stream()
+                   .filter(link -> link.getType().equals(Link.Type.WEBSITE))
+                   .findFirst()
+                   .map(Link::getValue)
+                   .orElse(null);
 
-       repo.save(est);
-       return est;
+        Establishment est = repo.findById(establishmentId);
+
+        est.setEstablishmentName(establishmentName);
+        est.setRorId(rorId);
+        est.setCountryName(countryName);
+        est.setEstablishmentUrl(establishmentUrl);
+        est.setVerified(true);
+
+        repo.persistAndFlush(est);
+        return est;
     }
 
     @Override
@@ -153,7 +158,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public Establishment createUnverifiedEstablishment(String name) {
         Establishment unverifiedEst = new Establishment(name);
         unverifiedEst.setVerified(false);
-        repo.save(unverifiedEst);
+        repo.persistAndFlush(unverifiedEst);
         return unverifiedEst;
     }
 

@@ -59,9 +59,12 @@ public class EstablishmentController implements EstablishmentControllerInterface
         if (establishmentId == null || rorMatch == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing required data");
         }
-
-        Establishment est = repo.findByID(establishmentId);
-        Establishment estEnriched = service.addRorDataToEstablishment(est, ror);
-        return Response.status(Response.Status.OK).entity(estEnriched).build();
+        try {
+            Establishment estEnriched = service.addRorDataToEstablishment(establishmentId, rorMatch);
+            EstablishmentDTO estEnrichedDTO = mapper.toDTO(estEnriched);
+            return Response.status(Response.Status.OK).entity(estEnrichedDTO).build();
+        } catch (IllegalArgumentException e) {
+            throw new RestControllerException(ReasonCode.BadRequest, e.getMessage());
+        }
     }
 }
