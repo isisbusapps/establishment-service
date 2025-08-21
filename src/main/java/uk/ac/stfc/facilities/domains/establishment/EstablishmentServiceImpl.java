@@ -77,8 +77,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public Establishment addRorDataToEstablishment(Establishment est, RorSchemaV21 ror){
-       String establishmentName = ror.getNames().stream()
+    public Establishment addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror){
+
+        Establishment est = repo.findById(establishmentId);
+
+        String establishmentName = ror.getNames().stream()
                 .filter(name -> name.getTypes().contains(Type.ROR_DISPLAY))
                 .findFirst()
                 .map(Name::getValue)
@@ -108,7 +111,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<EstablishmentAlias> createEstablishmentAliasesFromRor(Establishment est, RorSchemaV21 ror) {
+    public List<EstablishmentAlias> createEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror) {
 
         Set<Type> aliasTypes = Set.of(Type.ACRONYM, Type.ALIAS, Type.LABEL);
 
@@ -121,7 +124,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         List<EstablishmentAlias> establishmentAliases = new ArrayList<>();
 
         for (String alias : aliases) {
-            EstablishmentAlias establishmentAlias = new EstablishmentAlias(est.getEstablishmentId(), alias);
+            EstablishmentAlias establishmentAlias = new EstablishmentAlias(establishmentId, alias);
             establishmentAliases.add(establishmentAlias);
         }
 
@@ -129,7 +132,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<EstablishmentType> createEstablishmentTypesFromRor(Establishment est, RorSchemaV21 ror) {
+    public List<EstablishmentType> createEstablishmentTypesFromRor(Long establishmentId, RorSchemaV21 ror) {
 
         List<String> types = ror.getTypes().stream()
                 .map(Type_::toString)
@@ -138,7 +141,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         List<EstablishmentType> establishmentTypes = new ArrayList<>();
 
         for (String type : types) {
-            EstablishmentType establishmentType = new EstablishmentType(est.getEstablishmentId(), type);
+            EstablishmentType establishmentType = new EstablishmentType(establishmentId, type);
             establishmentTypes.add(establishmentType);
         }
 
@@ -160,19 +163,17 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public Establishment updateEstablishment(Establishment existingEst, Establishment updateEst) {
-        existingEst.setEstablishmentName(updateEst.getEstablishmentName());
-        existingEst.setRorId(updateEst.getRorId());
-        existingEst.setCountryName(updateEst.getCountryName());
-        existingEst.setEstablishmentUrl(updateEst.getEstablishmentUrl());
-        existingEst.setVerified(updateEst.getVerified());
+    public Establishment updateEstablishment(Long establishmentId, Establishment updateEst) {
 
-        return existingEst;
-    }
+        Establishment est = repo.findById(establishmentId);
 
-    @Override
-    public Establishment getEstablishmentById(Long establishmentId) {
-        return null;
+        est.setEstablishmentName(updateEst.getEstablishmentName());
+        est.setRorId(updateEst.getRorId());
+        est.setCountryName(updateEst.getCountryName());
+        est.setEstablishmentUrl(updateEst.getEstablishmentUrl());
+        est.setVerified(updateEst.getVerified());
+
+        return est;
     }
 
     @Override

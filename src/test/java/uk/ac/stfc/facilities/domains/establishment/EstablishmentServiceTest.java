@@ -156,8 +156,9 @@ class EstablishmentServiceTest {
     void test_addRorDataToEstablishment_RorSchema_DataAddedToEntity() {
         RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
+        when(repo.findById(est.getEstablishmentId())).thenReturn(est);
 
-        Establishment result =  service.addRorDataToEstablishment(est, ror);
+        Establishment result =  service.addRorDataToEstablishment(est.getEstablishmentId(), ror);
 
         Assertions.assertEquals("University of Amsterdam", result.getEstablishmentName(), "entity has wrong name");
         Assertions.assertEquals("https://ror.org/04dkp9463", result.getRorId(), "entity has wrong ROR id");
@@ -169,8 +170,9 @@ class EstablishmentServiceTest {
     void test_createEstablishmentAliasesFromRor_RorData_ReturnsEstablishmentAliases() {
         RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
+        when(repo.findById(est.getEstablishmentId())).thenReturn(est);
 
-        List<EstablishmentAlias> results =  service.createEstablishmentAliasesFromRor(est, ror);
+        List<EstablishmentAlias> results =  service.createEstablishmentAliasesFromRor(est.getEstablishmentId(), ror);
 
         List<Long> expectedEstId = List.of(est.getEstablishmentId(),est.getEstablishmentId());
         List<String> expectedAliases = List.of("Universiteit van Amsterdam", "UvA");
@@ -182,8 +184,9 @@ class EstablishmentServiceTest {
     void test_createEstablishmentTypesFromRor_RorData_ReturnsEstablishmentTypes() {
         RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
+        when(repo.findById(est.getEstablishmentId())).thenReturn(est);
 
-        List<EstablishmentType> results =  service.createEstablishmentTypesFromRor(est, ror);
+        List<EstablishmentType> results =  service.createEstablishmentTypesFromRor(est.getEstablishmentId(), ror);
 
         List<Long> expectedEstId = List.of(est.getEstablishmentId(),est.getEstablishmentId());
         List<String> expectedTypes = List.of("education", "funder");
@@ -226,7 +229,9 @@ class EstablishmentServiceTest {
                 true
         );
 
-        Establishment result = service.updateEstablishment(existing, updated);
+        when(repo.findById(existing.getEstablishmentId())).thenReturn(existing);
+
+        Establishment result = service.updateEstablishment(existing.getEstablishmentId(), updated);
 
         Assertions.assertEquals("New Name", result.getEstablishmentName(), "Establishment name should be updated");
         Assertions.assertEquals("new-ror", result.getRorId(), "ROR ID should be updated");

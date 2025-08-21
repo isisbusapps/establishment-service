@@ -12,19 +12,17 @@ public interface EstablishmentService {
 
     List<RorSchemaV21> getRorMatches(String establishmentName);
 
-    Establishment addRorDataToEstablishment(Establishment est, RorSchemaV21 ror);
+    Establishment addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror);
 
-    List<EstablishmentAlias> createEstablishmentAliasesFromRor(Establishment est, RorSchemaV21 ror);
+    List<EstablishmentAlias> createEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror);
 
-    List<EstablishmentType> createEstablishmentTypesFromRor(Establishment est, RorSchemaV21 ror);
+    List<EstablishmentType> createEstablishmentTypesFromRor(Long establishmentId, RorSchemaV21 ror);
 
     Establishment createUnverifiedEstablishment(String name);
 
     Establishment deleteEstablishment(Long establishmentId) throws NoResultException;
 
-    Establishment updateEstablishment(Establishment existingEst, Establishment updateEst);
-
-    Establishment getEstablishmentById(Long establishmentId);
+    Establishment updateEstablishment(Long establishmentId, Establishment updateEst);
 
     List<Establishment> getUnverifiedEstablishments();
 
