@@ -18,4 +18,28 @@ public class EnrichedEstablishmentResponse {
         this.aliases = aliases;
         this.types = types;
     }
+
+    public EstablishmentDTO getEstablishment() {
+        return establishment;
+    }
+
+    public void setEstablishment(EstablishmentDTO establishment) {
+        this.establishment = establishment;
+    }
+
+    public List<EstablishmentAlias> getAliases() {
+        return aliases;
+    }
+
+    public void setAliases(List<EstablishmentAlias> aliases) {
+        this.aliases = aliases;
+    }
+
+    public List<EstablishmentType> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<EstablishmentType> types) {
+        this.types = types;
+    }
 }
