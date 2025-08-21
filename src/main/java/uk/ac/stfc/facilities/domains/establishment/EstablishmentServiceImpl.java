@@ -103,6 +103,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
        est.setEstablishmentUrl(establishmentUrl);
        est.setVerified(true);
 
+       repo.save(est);
        return est;
     }
 
@@ -149,7 +150,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public Establishment createUnverifiedEstablishment(String name) {
         Establishment unverifiedEst = new Establishment(name);
         unverifiedEst.setVerified(false);
-        repo.create(unverifiedEst);
+        repo.save(unverifiedEst);
         return unverifiedEst;
     }
 

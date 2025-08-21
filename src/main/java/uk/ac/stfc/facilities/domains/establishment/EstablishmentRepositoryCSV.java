@@ -78,7 +78,7 @@ public class EstablishmentRepositoryCSV implements EstablishmentRepository {
     public List<Establishment> getUnverified() { return List.of(); }
 
     @Override
-    public void create(Establishment establishment) {
+    public void save(Establishment establishment) {
 
     }
 

@@ -9,7 +9,7 @@ public interface EstablishmentRepository  {
     List<Establishment> getVerified();
     List<Establishment> getUnverified();
 
-    void create(Establishment establishment);
+    void save(Establishment establishment);
     void update(Long estId, Establishment establishment);
     void delete(Long estId);
 }
