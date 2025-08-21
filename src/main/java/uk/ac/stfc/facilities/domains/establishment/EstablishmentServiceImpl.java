@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static uk.ac.stfc.facilities.helpers.Constants.EST_SEARCH_CUTOFF;
 
@@ -125,15 +126,17 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .map(Name::getValue)
                 .toList();
 
-        List<EstablishmentAlias> establishmentAliases = new ArrayList<>();
+        Set<String> existingAliases = aliasRepo.getAliasesFromEstablishment(establishmentId).stream()
+                .map(EstablishmentAlias::getAlias)
+                .collect(Collectors.toSet());
 
-        for (String alias : aliases) {
-            EstablishmentAlias establishmentAlias = new EstablishmentAlias(establishmentId, alias);
-            establishmentAliases.add(establishmentAlias);
-        }
+        List<EstablishmentAlias> newAliases = aliases.stream()
+                .filter(alias -> !existingAliases.contains(alias))
+                .map(alias -> new EstablishmentAlias(establishmentId, alias))
+                .toList();
 
-        aliasRepo.persist(establishmentAliases);
-        return establishmentAliases;
+        aliasRepo.persist(newAliases);
+        return newAliases;
     }
 
     @Override
@@ -143,15 +146,17 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .map(Type_::toString)
                 .toList();
 
-        List<EstablishmentType> establishmentTypes = new ArrayList<>();
+        Set<String> existingTypes = typeRepo.getTypesFromEstablishment(establishmentId).stream()
+                .map(EstablishmentType::getType)
+                .collect(Collectors.toSet());
 
-        for (String type : types) {
-            EstablishmentType establishmentType = new EstablishmentType(establishmentId, type);
-            establishmentTypes.add(establishmentType);
-        }
+        List<EstablishmentType> newTypes = types.stream()
+                .filter(type -> !existingTypes.contains(type))
+                .map(type -> new EstablishmentType(establishmentId, type))
+                .toList();
 
-        typeRepo.persist(establishmentTypes);
-        return establishmentTypes;
+        typeRepo.persist(newTypes);
+        return newTypes;
     }
 
     @Override

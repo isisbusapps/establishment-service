@@ -7,6 +7,6 @@ import java.util.List;
 public class EstablishmentAliasRepositoryImpl implements EstablishmentAliasRepository {
     @Override
     public List<EstablishmentAlias> getAliasesFromEstablishment(Long establishmentId) {
-        return List.of();
+        return find("establishmentId", establishmentId).list();
     }
 }
