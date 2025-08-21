@@ -9,9 +9,4 @@ public class EstablishmentAliasRepositoryImpl implements EstablishmentAliasRepos
     public List<EstablishmentAlias> getAliasesFromEstablishment(Long establishmentId) {
         return List.of();
     }
-
-    @Override
-    public void add(List<EstablishmentAlias> aliases) {
-
-    }
 }

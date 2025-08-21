@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import uk.ac.stfc.facilities.domains.establishment.*;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
+import uk.ac.stfc.facilities.helpers.EnrichedEstablishmentResponse;
 import uk.ac.stfc.facilities.helpers.ReasonCode;
 import java.util.List;
 
@@ -62,7 +63,13 @@ public class EstablishmentController implements EstablishmentControllerInterface
         try {
             Establishment estEnriched = service.addRorDataToEstablishment(establishmentId, rorMatch);
             EstablishmentDTO estEnrichedDTO = mapper.toDTO(estEnriched);
-            return Response.status(Response.Status.OK).entity(estEnrichedDTO).build();
+
+            List<EstablishmentAlias> aliases = service.addEstablishmentAliasesFromRor(establishmentId, rorMatch);
+            List<EstablishmentType> types = service.addEstablishmentTypesFromRor(establishmentId, rorMatch);
+
+            EnrichedEstablishmentResponse response = new EnrichedEstablishmentResponse(estEnrichedDTO, aliases, types);
+
+            return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {
             throw new RestControllerException(ReasonCode.BadRequest, e.getMessage());
         }

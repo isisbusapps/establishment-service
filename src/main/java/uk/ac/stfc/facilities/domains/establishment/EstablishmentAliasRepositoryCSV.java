@@ -32,11 +32,6 @@ public class EstablishmentAliasRepositoryCSV implements EstablishmentAliasReposi
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void add(List<EstablishmentAlias> aliases) {
-
-    }
-
     private void loadFromCsv(String filePath) throws IOException {
         establishmentAliases.clear();
 

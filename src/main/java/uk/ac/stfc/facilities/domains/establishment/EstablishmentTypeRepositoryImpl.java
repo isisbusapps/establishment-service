@@ -6,12 +6,7 @@ import java.util.List;
 @ApplicationScoped
 public class EstablishmentTypeRepositoryImpl implements EstablishmentTypeRepository {
     @Override
-    public List<EstablishmentType> getTypesFromEstablishmentId(Long establishmentId) {
+    public List<EstablishmentType> getTypesFromEstablishment(Long establishmentId) {
         return List.of();
-    }
-
-    @Override
-    public void add(List<EstablishmentType> types) {
-
     }
 }

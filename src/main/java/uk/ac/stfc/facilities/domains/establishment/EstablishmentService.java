@@ -14,9 +14,9 @@ public interface EstablishmentService {
 
     Establishment addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror);
 
-    List<EstablishmentAlias> createEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror);
+    List<EstablishmentAlias> addEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror);
 
-    List<EstablishmentType> createEstablishmentTypesFromRor(Long establishmentId, RorSchemaV21 ror);
+    List<EstablishmentType> addEstablishmentTypesFromRor(Long establishmentId, RorSchemaV21 ror);
 
     Establishment createUnverifiedEstablishment(String name);
 

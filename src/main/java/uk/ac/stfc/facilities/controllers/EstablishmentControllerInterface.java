@@ -40,7 +40,7 @@ public interface EstablishmentControllerInterface {
     ) throws RestControllerException;
 
     @PUT
-    @Path("/{establishmentId}")
+    @Path("/enrich/{establishmentId}")
     Response verifyAndEnrichData (@PathParam("establishmentId") Long establishmentId,
                                   RorSchemaV21 rorMatch) throws RestControllerException;
 

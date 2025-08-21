@@ -116,7 +116,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<EstablishmentAlias> createEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror) {
+    public List<EstablishmentAlias> addEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror) {
 
         Set<Type> aliasTypes = Set.of(Type.ACRONYM, Type.ALIAS, Type.LABEL);
 
@@ -133,11 +133,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             establishmentAliases.add(establishmentAlias);
         }
 
+        aliasRepo.persist(establishmentAliases);
         return establishmentAliases;
     }
 
     @Override
-    public List<EstablishmentType> createEstablishmentTypesFromRor(Long establishmentId, RorSchemaV21 ror) {
+    public List<EstablishmentType> addEstablishmentTypesFromRor(Long establishmentId, RorSchemaV21 ror) {
 
         List<String> types = ror.getTypes().stream()
                 .map(Type_::toString)
@@ -150,6 +151,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             establishmentTypes.add(establishmentType);
         }
 
+        typeRepo.persist(establishmentTypes);
         return establishmentTypes;
     }
 
@@ -188,13 +190,13 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public List<EstablishmentAlias> addEstablishmentAliases(List<EstablishmentAlias> aliases) {
-        aliasRepo.add(aliases);
+        aliasRepo.persist(aliases);
         return aliases;
     }
 
     @Override
     public List<EstablishmentType> addEstablishmentTypes(List<EstablishmentType> types) {
-        typeRepo.add(types);
+        typeRepo.persist(types);
         return types;
     }
 

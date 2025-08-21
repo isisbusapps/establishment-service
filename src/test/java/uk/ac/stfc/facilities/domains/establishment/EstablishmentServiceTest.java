@@ -167,12 +167,12 @@ class EstablishmentServiceTest {
     }
 
     @Test
-    void test_createEstablishmentAliasesFromRor_RorData_ReturnsEstablishmentAliases() {
+    void test_addEstablishmentAliasesFromRor_RorData_ReturnsEstablishmentAliases() {
         RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
         when(repo.findById(est.getEstablishmentId())).thenReturn(est);
 
-        List<EstablishmentAlias> results =  service.createEstablishmentAliasesFromRor(est.getEstablishmentId(), ror);
+        List<EstablishmentAlias> results =  service.addEstablishmentAliasesFromRor(est.getEstablishmentId(), ror);
 
         List<Long> expectedEstId = List.of(est.getEstablishmentId(),est.getEstablishmentId());
         List<String> expectedAliases = List.of("Universiteit van Amsterdam", "UvA");
@@ -181,12 +181,12 @@ class EstablishmentServiceTest {
     }
 
     @Test
-    void test_createEstablishmentTypesFromRor_RorData_ReturnsEstablishmentTypes() {
+    void test_addEstablishmentTypesFromRor_RorData_ReturnsEstablishmentTypes() {
         RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
         when(repo.findById(est.getEstablishmentId())).thenReturn(est);
 
-        List<EstablishmentType> results =  service.createEstablishmentTypesFromRor(est.getEstablishmentId(), ror);
+        List<EstablishmentType> results =  service.addEstablishmentTypesFromRor(est.getEstablishmentId(), ror);
 
         List<Long> expectedEstId = List.of(est.getEstablishmentId(),est.getEstablishmentId());
         List<String> expectedTypes = List.of("education", "funder");
