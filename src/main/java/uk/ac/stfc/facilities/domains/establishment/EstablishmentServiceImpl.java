@@ -1,5 +1,6 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -54,7 +55,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public RorQueryDto getRorMatches(String establishmentName) {
+    public List<RorSchemaV21> getRorMatches(String establishmentName) {
         try {
             String encodedQuery = URLEncoder.encode(establishmentName, StandardCharsets.UTF_8);
             String url = "https://api.ror.org/v2/organizations?query=" + encodedQuery;
@@ -67,7 +68,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(response.body(), RorQueryDto.class);
+            JsonNode rootNode = mapper.readTree(response.body());
+            return mapper.readerForListOf(RorSchemaV21.class)
+                    .readValue(rootNode.get("items"));
         } catch (IOException | InterruptedException e) {
             throw new RorQueryException("Failed to fetch ROR matches for establishment: " + establishmentName, e);
         }

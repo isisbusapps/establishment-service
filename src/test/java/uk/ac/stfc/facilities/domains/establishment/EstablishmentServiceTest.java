@@ -146,15 +146,15 @@ class EstablishmentServiceTest {
     @Test
     void test_getRorMatches_Query_ReturnsRorMatches() {
 
-        RorQueryDto results = service.getRorMatches("University of Oxford");
+        List<RorSchemaV21> results = service.getRorMatches("University of Oxford");
 
-        Assertions.assertTrue(results.getItems().size()>1, "Multiple results expected to be returned");
-        Assertions.assertEquals("https://ror.org/052gg0110", results.getItems().getFirst().getId(), "First result should be University of Oxford");
+        Assertions.assertTrue(results.size()>1, "Multiple results expected to be returned");
+        Assertions.assertEquals("https://ror.org/052gg0110", results.getFirst().getId(), "First result should be University of Oxford");
     }
 
     @Test
     void test_addRorDataToEstablishment_RorSchema_DataAddedToEntity() {
-        RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getItems().getFirst();
+        RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
 
         Establishment result =  service.addRorDataToEstablishment(est, ror);
@@ -167,7 +167,7 @@ class EstablishmentServiceTest {
 
     @Test
     void test_createEstablishmentAliasesFromRor_RorData_ReturnsEstablishmentAliases() {
-        RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getItems().getFirst();
+        RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
 
         List<EstablishmentAlias> results =  service.createEstablishmentAliasesFromRor(est, ror);
@@ -180,7 +180,7 @@ class EstablishmentServiceTest {
 
     @Test
     void test_createEstablishmentTypesFromRor_RorData_ReturnsEstablishmentTypes() {
-        RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getItems().getFirst();
+        RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
 
         List<EstablishmentType> results =  service.createEstablishmentTypesFromRor(est, ror);

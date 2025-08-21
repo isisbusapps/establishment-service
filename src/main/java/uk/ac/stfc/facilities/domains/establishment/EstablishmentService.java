@@ -10,7 +10,7 @@ public interface EstablishmentService {
 
     List<Establishment> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit);
 
-    RorQueryDto getRorMatches(String establishmentName);
+    List<RorSchemaV21> getRorMatches(String establishmentName);
 
     Establishment addRorDataToEstablishment(Establishment est, RorSchemaV21 ror);
 
