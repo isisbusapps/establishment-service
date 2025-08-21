@@ -2,9 +2,7 @@ package uk.ac.stfc.facilities.controllers;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
-import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
-import uk.ac.stfc.facilities.domains.establishment.EstablishmentMapper;
-import uk.ac.stfc.facilities.domains.establishment.EstablishmentService;
+import uk.ac.stfc.facilities.domains.establishment.*;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 import uk.ac.stfc.facilities.helpers.ReasonCode;
 import java.util.List;
@@ -36,11 +34,34 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     public Response createUnverifiedEstablishment(String establishmentName) throws RestControllerException {
-        if (establishmentName == null || establishmentName.isBlank()) {
+        if (establishmentName == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Establishment name must not be null or empty");
         }
         EstablishmentDTO newEstablishment = mapper.toDTO(service.createUnverifiedEstablishment(establishmentName));
         return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
     }
 
+    @Override
+    public List<RorSchemaV21> getRorMatches(String searchQuery) throws RestControllerException {
+        if (searchQuery == null) {
+            throw new RestControllerException(ReasonCode.BadRequest, "No query parameter found");
+        }
+
+        try {
+            return  service.getRorMatches(searchQuery);
+        } catch (Exception e) {
+            throw new RestControllerException(ReasonCode.BadGateway, "Failed to fetch establishments");
+        }
+    }
+
+    @Override
+    public Response verifyAndEnrichData(Long establishmentId, RorSchemaV21 rorMatch) throws RestControllerException {
+        if (establishmentId == null || rorMatch == null) {
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing required data");
+        }
+
+        Establishment est = repo.findByID(establishmentId);
+        Establishment estEnriched = service.addRorDataToEstablishment(est, ror);
+        return Response.status(Response.Status.OK).entity(estEnriched).build();
+    }
 }
