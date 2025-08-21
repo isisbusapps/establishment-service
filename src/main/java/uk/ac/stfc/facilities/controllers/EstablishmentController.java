@@ -1,6 +1,7 @@
 package uk.ac.stfc.facilities.controllers;
 
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import uk.ac.stfc.facilities.domains.establishment.*;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
@@ -8,6 +9,7 @@ import uk.ac.stfc.facilities.helpers.EnrichedEstablishmentResponse;
 import uk.ac.stfc.facilities.helpers.ReasonCode;
 import java.util.List;
 
+@Transactional
 public class EstablishmentController implements EstablishmentControllerInterface {
     @Inject
     EstablishmentMapper mapper;

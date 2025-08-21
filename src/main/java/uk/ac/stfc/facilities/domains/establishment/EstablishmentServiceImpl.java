@@ -77,7 +77,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    @Transactional
     public Establishment addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror){
 
         String establishmentName = ror.getNames().stream()
@@ -156,7 +155,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    @Transactional
     public Establishment createUnverifiedEstablishment(String name) {
         Establishment unverifiedEst = new Establishment(name);
         unverifiedEst.setVerified(false);
