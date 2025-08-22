@@ -49,6 +49,16 @@ public interface EstablishmentControllerInterface {
     Response manualVerifyAndEnrichData(@PathParam("establishmentId") Long establishmentId,
                                     EstablishmentDTO inputEst) throws RestControllerException;
 
+    @PUT
+    @Path("/{establishmentId}/aliases")
+    Response addEstablishmentAliases(@PathParam("establishmentId") Long establishmentId,
+                                     List<String> aliasName)
+            throws RestControllerException;
 
+    @PUT
+    @Path("/{establishmentId}/types")
+    Response addEstablishmentTypes(@PathParam("establishmentId") Long establishmentId,
+                                     List<String> typeNames)
+            throws RestControllerException;
 
 }

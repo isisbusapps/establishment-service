@@ -84,8 +84,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         Establishment est = repo.findById(establishmentId);
 
         if (est == null) {
-            LOGGER.warn("No results were found for establishment number: " + establishmentId);
-            throw new NoResultException("No results were found for establishment number: " + establishmentId);
+            LOGGER.warn("No establishment found with establishment id: " + establishmentId);
+            throw new NoResultException("No establishment found with establishment id: " + establishmentId);
         }
 
         String establishmentName = ror.getNames().stream()
@@ -127,43 +127,23 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
         Set<Type> aliasTypes = Set.of(Type.ACRONYM, Type.ALIAS, Type.LABEL);
 
-        List<String> aliases = ror.getNames().stream()
+        List<String> aliasNames = ror.getNames().stream()
                 .filter(name -> name.getTypes().stream().anyMatch(aliasTypes::contains) &&
                         !name.getTypes().contains(Type.ROR_DISPLAY))
                 .map(Name::getValue)
                 .toList();
 
-        Set<String> existingAliases = aliasRepo.getAliasesFromEstablishment(establishmentId).stream()
-                .map(EstablishmentAlias::getAlias)
-                .collect(Collectors.toSet());
-
-        List<EstablishmentAlias> newAliases = aliases.stream()
-                .filter(alias -> !existingAliases.contains(alias))
-                .map(alias -> new EstablishmentAlias(establishmentId, alias))
-                .toList();
-
-        aliasRepo.persist(newAliases);
-        return newAliases;
+        return addEstablishmentAliases(establishmentId, aliasNames);
     }
 
     @Override
     public List<EstablishmentType> addEstablishmentTypesFromRor(Long establishmentId, RorSchemaV21 ror) {
 
-        List<String> types = ror.getTypes().stream()
+        List<String> typeNames = ror.getTypes().stream()
                 .map(Type_::toString)
                 .toList();
 
-        Set<String> existingTypes = typeRepo.getTypesFromEstablishment(establishmentId).stream()
-                .map(EstablishmentType::getType)
-                .collect(Collectors.toSet());
-
-        List<EstablishmentType> newTypes = types.stream()
-                .filter(type -> !existingTypes.contains(type))
-                .map(type -> new EstablishmentType(establishmentId, type))
-                .toList();
-
-        typeRepo.persist(newTypes);
-        return newTypes;
+        return addEstablishmentTypes(establishmentId, typeNames);
     }
 
     @Override
@@ -185,8 +165,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         Establishment est = repo.findById(establishmentId);
 
         if (est == null) {
-            LOGGER.info("No results were found for establishment number: " + establishmentId);
-            throw new NoResultException("No results were found for establishment number: " + establishmentId);
+            LOGGER.info("No establishment found with establishment id: " + establishmentId);
+            throw new NoResultException("No establishment found with establishment id: " + establishmentId);
         }
 
         est.setEstablishmentName(updateEst.getEstablishmentName());
@@ -205,15 +185,44 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<EstablishmentAlias> addEstablishmentAliases(List<EstablishmentAlias> aliases) {
-        aliasRepo.persist(aliases);
-        return aliases;
+    public List<EstablishmentAlias> addEstablishmentAliases(Long establishmentId, List<String> aliasNames) {
+
+        if (repo.findById(establishmentId) == null) {
+            LOGGER.warn("No establishment found with establishment id: " + establishmentId);
+            throw new NoResultException("No establishment found with establishment id: " + establishmentId);
+        }
+
+        Set<String> existingAliases = aliasRepo.getAliasesFromEstablishment(establishmentId).stream()
+                .map(EstablishmentAlias::getAlias)
+                .collect(Collectors.toSet());
+
+        List<EstablishmentAlias> newAliases = aliasNames.stream()
+                .filter(aliasName -> !existingAliases.contains(aliasName))
+                .map(aliasName -> new EstablishmentAlias(establishmentId, aliasName))
+                .toList();
+
+        aliasRepo.persist(newAliases);
+        return newAliases;
     }
 
     @Override
-    public List<EstablishmentType> addEstablishmentTypes(List<EstablishmentType> types) {
-        typeRepo.persist(types);
-        return types;
+    public List<EstablishmentType> addEstablishmentTypes(Long establishmentId, List<String> typeNames) {
+        if (repo.findById(establishmentId) == null) {
+            LOGGER.warn("No establishment found with establishment id: " + establishmentId);
+            throw new NoResultException("No establishment found with establishment id: " + establishmentId);
+        }
+
+        Set<String> existingTypes = typeRepo.getTypesFromEstablishment(establishmentId).stream()
+                .map(EstablishmentType::getType)
+                .collect(Collectors.toSet());
+
+        List<EstablishmentType> newTypes = typeNames.stream()
+                .filter(typeName -> !existingTypes.contains(typeName))
+                .map(typeName -> new EstablishmentType(establishmentId, typeName))
+                .toList();
+
+        typeRepo.persist(newTypes);
+        return newTypes;
     }
 
     private List<Establishment> fuzzySearch(String query, Integer cutoff, boolean useAliases, List<Establishment> establishments) {

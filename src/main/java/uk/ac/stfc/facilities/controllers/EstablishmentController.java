@@ -20,7 +20,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     @Override
     public List<EstablishmentDTO> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) throws RestControllerException {
         if (searchQuery == null) {
-            throw new RestControllerException(ReasonCode.BadRequest, "No query parameter found");
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing search query");
         }
         return service.getEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
                 .stream()
@@ -38,7 +38,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     public Response createUnverifiedEstablishment(String establishmentName) throws RestControllerException {
-        if (establishmentName == null) {
+        if (establishmentName == null || establishmentName.isEmpty()) {
             throw new RestControllerException(ReasonCode.BadRequest, "Establishment name must not be null or empty");
         }
         EstablishmentDTO newEstablishment = mapper.toDTO(service.createUnverifiedEstablishment(establishmentName));
@@ -48,7 +48,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     @Override
     public List<RorSchemaV21> getRorMatches(String searchQuery) throws RestControllerException {
         if (searchQuery == null) {
-            throw new RestControllerException(ReasonCode.BadRequest, "No query parameter found");
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing search query");
         }
 
         try {
@@ -82,8 +82,8 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     public Response manualVerifyAndEnrichData(Long establishmentId, EstablishmentDTO inputEst) throws RestControllerException {
-        if (establishmentId == null || inputEst == null) {
-            throw new RestControllerException(ReasonCode.BadRequest, "Missing required data");
+        if (establishmentId == null || inputEst == null || inputEst.getEstablishmentName().isEmpty()) {
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
         }
         inputEst.setEstablishmentId(establishmentId);
         inputEst.setVerified(true);
@@ -95,6 +95,31 @@ public class EstablishmentController implements EstablishmentControllerInterface
         }
 
         return Response.status(Response.Status.OK).entity(inputEst).build();
+    }
 
+    @Override
+    public Response addEstablishmentAliases(Long establishmentId, List<String> aliasName) throws RestControllerException {
+        if (establishmentId == null || aliasName == null || aliasName.isEmpty()) {
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
+        }
+        try{
+            List<EstablishmentAlias> aliases = service.addEstablishmentAliases(establishmentId, aliasName);
+            return Response.status(Response.Status.OK).entity(aliases).build();
+        } catch (NoResultException e) {
+            throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
+        }
+    }
+
+    @Override
+    public Response addEstablishmentTypes(Long establishmentId, List<String> typeNames) throws RestControllerException {
+        if (establishmentId == null || typeNames == null || typeNames.isEmpty()) {
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
+        }
+        try{
+            List<EstablishmentType> types = service.addEstablishmentTypes(establishmentId, typeNames);
+            return Response.status(Response.Status.OK).entity(types).build();
+        } catch (NoResultException e) {
+            throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
+        }
     }
 }

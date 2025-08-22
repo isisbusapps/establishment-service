@@ -26,7 +26,7 @@ public interface EstablishmentService {
 
     List<Establishment> getUnverifiedEstablishments();
 
-    List<EstablishmentAlias>  addEstablishmentAliases(List<EstablishmentAlias> aliases);
+    List<EstablishmentAlias>  addEstablishmentAliases(Long establishmentId, List<String> aliasNames);
 
-    List<EstablishmentType> addEstablishmentTypes(List<EstablishmentType> types);
+    List<EstablishmentType> addEstablishmentTypes(Long establishmentId, List<String> typeNames);
 }
