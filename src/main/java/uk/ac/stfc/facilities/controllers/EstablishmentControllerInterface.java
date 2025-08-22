@@ -1,6 +1,5 @@
 package uk.ac.stfc.facilities.controllers;
 
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
 import jakarta.ws.rs.*;
