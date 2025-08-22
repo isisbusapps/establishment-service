@@ -1,6 +1,7 @@
 package uk.ac.stfc.facilities.controllers;
 
 import jakarta.inject.Inject;
+import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import uk.ac.stfc.facilities.domains.establishment.*;
@@ -60,7 +61,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     @Override
     public Response rorVerifyAndEnrichData(Long establishmentId, RorSchemaV21 rorMatch) throws RestControllerException {
         if (establishmentId == null || rorMatch == null) {
-            throw new RestControllerException(ReasonCode.BadRequest, "Missing required data");
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
         }
         try {
             Establishment estEnriched = service.addRorDataToEstablishment(establishmentId, rorMatch);
@@ -74,6 +75,26 @@ public class EstablishmentController implements EstablishmentControllerInterface
             return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {
             throw new RestControllerException(ReasonCode.BadRequest, e.getMessage());
+        } catch (NoResultException e) {
+            throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
         }
+    }
+
+    @Override
+    public Response manualVerifyAndEnrichData(Long establishmentId, EstablishmentDTO inputEst) throws RestControllerException {
+        if (establishmentId == null || inputEst == null) {
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing required data");
+        }
+        inputEst.setEstablishmentId(establishmentId);
+        inputEst.setVerified(true);
+
+        try {
+            service.updateEstablishment(establishmentId, mapper.toEntity(inputEst));
+        } catch (NoResultException e) {
+            throw new RestControllerException(ReasonCode.NoResults, e.getMessage());
+        }
+
+        return Response.status(Response.Status.OK).entity(inputEst).build();
+
     }
 }

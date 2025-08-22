@@ -43,5 +43,12 @@ public interface EstablishmentControllerInterface {
     @Path("/{establishmentId}/ror-enrich-verify")
     Response rorVerifyAndEnrichData(@PathParam("establishmentId") Long establishmentId,
                                     RorSchemaV21 rorMatch) throws RestControllerException;
-    
+
+    @PUT
+    @Path("/{establishmentId}/manual-enrich-verify")
+    Response manualVerifyAndEnrichData(@PathParam("establishmentId") Long establishmentId,
+                                    EstablishmentDTO inputEst) throws RestControllerException;
+
+
+
 }

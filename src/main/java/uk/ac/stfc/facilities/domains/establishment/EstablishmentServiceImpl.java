@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
-import jakarta.transaction.Transactional;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jboss.logging.Logger;
 import uk.ac.stfc.facilities.exceptions.RorQueryException;
 
 import java.io.IOException;
@@ -28,6 +28,7 @@ import static uk.ac.stfc.facilities.helpers.Constants.EST_SEARCH_CUTOFF;
 @ApplicationScoped
 public class EstablishmentServiceImpl implements EstablishmentService {
 
+    private static final Logger LOGGER = Logger.getLogger(EstablishmentService.class);
 
     private EstablishmentRepository repo;
     private EstablishmentAliasRepository aliasRepo;
@@ -80,6 +81,13 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public Establishment addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror){
 
+        Establishment est = repo.findById(establishmentId);
+
+        if (est == null) {
+            LOGGER.warn("No results were found for establishment number: " + establishmentId);
+            throw new NoResultException("No results were found for establishment number: " + establishmentId);
+        }
+
         String establishmentName = ror.getNames().stream()
                 .filter(name -> name.getTypes().contains(Type.ROR_DISPLAY))
                 .findFirst()
@@ -89,6 +97,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         String rorId = ror.getId();
 
         if (establishmentName == null || rorId == null) {
+            LOGGER.warn("Cannot update establishment: missing essential ROR data");
             throw new IllegalArgumentException("Cannot update establishment: missing essential ROR data");
         }
 
@@ -102,8 +111,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                    .findFirst()
                    .map(Link::getValue)
                    .orElse(null);
-
-        Establishment est = repo.findById(establishmentId);
 
         est.setEstablishmentName(establishmentName);
         est.setRorId(rorId);
@@ -177,12 +184,18 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
         Establishment est = repo.findById(establishmentId);
 
+        if (est == null) {
+            LOGGER.info("No results were found for establishment number: " + establishmentId);
+            throw new NoResultException("No results were found for establishment number: " + establishmentId);
+        }
+
         est.setEstablishmentName(updateEst.getEstablishmentName());
         est.setRorId(updateEst.getRorId());
         est.setCountryName(updateEst.getCountryName());
         est.setEstablishmentUrl(updateEst.getEstablishmentUrl());
         est.setVerified(updateEst.getVerified());
 
+        repo.persist(est);
         return est;
     }
 
