@@ -58,7 +58,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
-    public Response verifyAndEnrichData(Long establishmentId, RorSchemaV21 rorMatch) throws RestControllerException {
+    public Response rorVerifyAndEnrichData(Long establishmentId, RorSchemaV21 rorMatch) throws RestControllerException {
         if (establishmentId == null || rorMatch == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing required data");
         }
