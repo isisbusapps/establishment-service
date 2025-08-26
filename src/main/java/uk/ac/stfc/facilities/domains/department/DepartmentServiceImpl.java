@@ -4,6 +4,7 @@ import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.ac.stfc.facilities.domains.establishment.Establishment;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -116,7 +117,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<DepartmentLabel> addDepartmentLabelsAutomatically(Department department) {
+    public List<DepartmentLabel> addDepartmentLabelsAutomatically(Long departmentId) {
+
+        Department department = depRepo.findById(departmentId);
+
+        if (department == null) {
+            LOGGER.warn("No department found with department id: " + departmentId);
+            throw new NoResultException("No department found with department id: " + departmentId);
+        }
 
         try {
             List<Label> linkedLabels = linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId());
