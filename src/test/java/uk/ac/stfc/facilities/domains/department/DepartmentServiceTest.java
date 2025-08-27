@@ -139,9 +139,10 @@ public class DepartmentServiceTest {
 
         Assertions.assertTrue(result);
         Label other = labelRepo.getByName("Other");
-        verify(linkRepo).addLink(argThat(departmentLabel ->
+        verify(linkRepo).persist(argThat((DepartmentLabel departmentLabel) ->
                 departmentLabel.getDepartmentId().equals(mocKDeptId) &&
-                        departmentLabel.getLabelId().equals(other.getLabelId())));
+                        departmentLabel.getLabelId().equals(other.getLabelId())
+        ));
     }
 
     @Test
