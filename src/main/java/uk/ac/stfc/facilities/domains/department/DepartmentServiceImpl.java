@@ -130,7 +130,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             List<Label> linkedLabels = linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId());
 
             if (!linkedLabels.isEmpty()) {
-                throw new RuntimeException("Department already has a label");
+                throw new RuntimeException("Department already has labels added");
             }
 
             String cleanDepartmentName = cleanName(department.getDepartmentName());
