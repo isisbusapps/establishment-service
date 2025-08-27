@@ -28,6 +28,7 @@ public class DepartmentServiceTest {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "Department of Physics", mocKDEstId);
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
         List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
@@ -42,6 +43,7 @@ public class DepartmentServiceTest {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "Department of Physics and Biology", mocKDEstId);
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
         List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
@@ -56,6 +58,7 @@ public class DepartmentServiceTest {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "Ministry of Magic", mocKDEstId);
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
         List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
@@ -70,6 +73,7 @@ public class DepartmentServiceTest {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "DEPARTMENT OF COMPUTER SCIENCE", mocKDEstId);
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
         List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
@@ -84,6 +88,7 @@ public class DepartmentServiceTest {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "Physiacial Sciences", mocKDEstId);
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
         List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
@@ -98,7 +103,8 @@ public class DepartmentServiceTest {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "Issaac Newton School and Department of Physiacial Sciences", mocKDEstId);
-
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
+        
         List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
         Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
