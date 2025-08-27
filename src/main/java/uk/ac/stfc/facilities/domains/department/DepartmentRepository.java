@@ -1,9 +1,10 @@
 package uk.ac.stfc.facilities.domains.department;
+import io.quarkus.hibernate.orm.panache.PanacheRepository;
+
 import java.util.List;
 
-public interface DepartmentRepository {
+public interface DepartmentRepository extends PanacheRepository<Department> {
 
-    Department findById(Long depId);
     List<Department> getAll();
 
     void create(Department department);

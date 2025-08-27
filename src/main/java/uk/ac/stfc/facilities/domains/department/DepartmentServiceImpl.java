@@ -64,12 +64,12 @@ public class DepartmentServiceImpl implements DepartmentService {
                 return false;
             }
 
-            linkRepo.remove(new DepartmentLabel(department.getDepartmentId(), labelToRemove.getLabelId()));
+            linkRepo.remove(new DepartmentLabel(department, labelToRemove));
 
             if (existingLabels.size() == 1) {
                 Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
                 LOGGER.info("No labels remaining after removal; adding fallback label '{}'", FALLBACK_LABEL_NAME);
-                linkRepo.addLink(new DepartmentLabel(department.getDepartmentId(), other.getLabelId()));
+                linkRepo.addLink(new DepartmentLabel(department, other));
             }
 
             return true;
@@ -96,7 +96,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             }
 
             List<DepartmentLabel> linksToAdd = labelsToAdd.stream()
-                    .map(label -> new DepartmentLabel(department.getDepartmentId(), label.getLabelId()))
+                    .map(label -> new DepartmentLabel(department, label))
                     .toList();
             
             if (!linksToAdd.isEmpty()) {
@@ -142,10 +142,10 @@ public class DepartmentServiceImpl implements DepartmentService {
             List<DepartmentLabel> linksToAdd = new ArrayList<>();
 
             if (matchedLabels.isEmpty()) {
-                linksToAdd.add(new DepartmentLabel(department.getDepartmentId(), other.getLabelId()));
+                linksToAdd.add(new DepartmentLabel(department, other));
             } else {
                 for (Label match : matchedLabels) {
-                    linksToAdd.add(new DepartmentLabel(department.getDepartmentId(), match.getLabelId()));
+                    linksToAdd.add(new DepartmentLabel(department, match));
                 }
             }
 

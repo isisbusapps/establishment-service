@@ -1,9 +1,23 @@
 package uk.ac.stfc.facilities.domains.department;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "DEPARTMENT")
 public class Department {
+
+    @Id
+    @SequenceGenerator(name="DEPARTMENT_RID_SEQ", sequenceName="DEPARTMENT_RID_SEQ", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DEPARTMENT_RID_SEQ")
+    @Column(name = "ID")
     private Long  departmentId;
+
+    @Column(name = "DEPARTMENT_NAME")
     private String departmentName;
+
+    @Column(name = "OLD_ESTABLISHMENT_ID")
     private Long oldEstablishmentId;
+
     private Long establishmentId;
 
     public Department() {}
