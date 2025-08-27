@@ -69,7 +69,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             if (existingLabels.size() == 1) {
                 Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
                 LOGGER.info("No labels remaining after removal; adding fallback label '{}'", FALLBACK_LABEL_NAME);
-                linkRepo.addLink(new DepartmentLabel(department, other));
+                linkRepo.persist(new DepartmentLabel(department, other));
             }
 
             return true;
@@ -100,7 +100,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                     .toList();
             
             if (!linksToAdd.isEmpty()) {
-                linkRepo.add(linksToAdd);
+                linkRepo.persist(linksToAdd);
             }
 
             if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
@@ -149,7 +149,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 }
             }
 
-            linkRepo.add(linksToAdd);
+            linkRepo.persist(linksToAdd);
 
             return linksToAdd;
 
