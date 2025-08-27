@@ -30,6 +30,22 @@ public class DepartmentLabel {
 
     public void setId(DepartmentLabelId id) {this.id = id;}
 
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
+    }
+
     public Long getDepartmentId() {
         return id != null ? id.getDepartmentId() : null;
     }
