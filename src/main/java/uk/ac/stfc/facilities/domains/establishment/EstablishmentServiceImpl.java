@@ -34,6 +34,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private EstablishmentAliasRepository aliasRepo;
     private EstablishmentTypeRepository typeRepo;
 
+    public EstablishmentServiceImpl() {}
+
     @Inject
     public EstablishmentServiceImpl(EstablishmentRepository repo, EstablishmentAliasRepository aliasRepo, EstablishmentTypeRepository typeRepo) {
         this.repo = repo;
