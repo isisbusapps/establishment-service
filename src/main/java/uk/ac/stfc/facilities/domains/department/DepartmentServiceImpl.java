@@ -1,6 +1,7 @@
 package uk.ac.stfc.facilities.domains.department;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.logging.log4j.LogManager;
@@ -19,9 +20,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     private LabelRepository labelRepo;
     private DepartmentLabelRepository linkRepo;
 
-    public DepartmentServiceImpl() {
-    }
+    public DepartmentServiceImpl() {}
 
+    @Inject
     public DepartmentServiceImpl(DepartmentRepository depRepo, LabelRepository labelRepo, DepartmentLabelRepository linkRepo) {
         this.depRepo = depRepo;
         this.labelRepo = labelRepo;
