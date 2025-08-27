@@ -1,17 +1,16 @@
 package uk.ac.stfc.facilities.domains.department;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.ac.stfc.facilities.domains.establishment.Establishment;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static uk.ac.stfc.facilities.helpers.Constants.*;
 
-
+@ApplicationScoped
 public class DepartmentServiceImpl implements DepartmentService {
 
     private static final Logger LOGGER = LogManager.getLogger();
