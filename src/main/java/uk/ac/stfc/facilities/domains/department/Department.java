@@ -18,6 +18,7 @@ public class Department {
     @Column(name = "OLD_ESTABLISHMENT_ID")
     private Long oldEstablishmentId;
 
+    @Column(name = "ESTABLISHMENT_ID")
     private Long establishmentId;
 
     public Department() {}
