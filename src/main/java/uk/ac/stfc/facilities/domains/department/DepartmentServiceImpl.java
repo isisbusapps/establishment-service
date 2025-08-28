@@ -6,6 +6,7 @@ import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Department createDepartment(Department department) {
-        return null;
+    public Department createDepartment(String name, Long establishmentId) {
+        Department dep = new Department(name, establishmentId);
+        depRepo.persist(dep);
+        return dep;
     }
 
     @Override

@@ -23,6 +23,11 @@ public class Department {
 
     public Department() {}
 
+    public Department(String departmentName, Long establishmentId) {
+        this.departmentName = departmentName;
+        this.establishmentId = establishmentId;
+    }
+
     public Department(Long departmentId, String departmentName, Long establishmentId) {
         this.departmentId = departmentId;
         this.departmentName = departmentName;
