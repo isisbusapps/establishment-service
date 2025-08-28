@@ -3,9 +3,9 @@ package uk.ac.stfc.facilities.controllers;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import uk.ac.stfc.facilities.domains.establishment.RorSchemaV21;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 
+import java.util.List;
 
 
 @Path("department")
@@ -15,8 +15,15 @@ import uk.ac.stfc.facilities.exceptions.RestControllerException;
 public interface DepartmentControllerInterface {
 
     @PUT
-    @Path("/{departmentId}/add-label")
+    @Path("/{departmentId}/add-label-manual")
+    Response addDepartmentLabelsManually(@PathParam("departmentId") Long departmentId, List<Long> LabelIds)
+            throws RestControllerException;
+
+    @PUT
+    @Path("/{departmentId}/add-label-auto")
     Response addDepartmentLabelsAutomatically(@PathParam("departmentId") Long departmentId)
             throws RestControllerException;
+
+
 
 }
