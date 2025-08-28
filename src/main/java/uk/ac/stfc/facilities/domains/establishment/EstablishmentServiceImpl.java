@@ -120,7 +120,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         est.setEstablishmentUrl(establishmentUrl);
         est.setVerified(true);
 
-        repo.persistAndFlush(est);
+        repo.persist(est);
         return est;
     }
 
@@ -152,7 +152,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public Establishment createUnverifiedEstablishment(String name) {
         Establishment unverifiedEst = new Establishment(name);
         unverifiedEst.setVerified(false);
-        repo.persistAndFlush(unverifiedEst);
+        repo.persist(unverifiedEst);
         return unverifiedEst;
     }
 
