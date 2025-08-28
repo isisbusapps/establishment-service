@@ -18,7 +18,7 @@ public interface DepartmentService {
 
     List<DepartmentLabel> addDepartmentLabelsAutomatically(Long departmentId);
 
-    List<DepartmentLabel> addDepartmentLabelsManually(Department department, List<Label> newLabels);
+    List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Label> newLabels);
 
     boolean removeDepartmentLabel(Department department, Label labelToRemove);
 

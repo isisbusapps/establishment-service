@@ -160,14 +160,15 @@ public class DepartmentServiceTest {
     }
 
     @Test
-    public void test_addDepartmentLabelsManually_LabelsNotAlreadyLinked_AddsLinks()  {
+    public void test_addDepartmentLabels_LabelsNotAlreadyLinked_AddsLinks()  {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         List<Label> existingLabels = List.of(labelRepo.getByName("Physics"));
         when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(existingLabels);
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsManually(dep, List.of(labelRepo.getByName("Biology"), labelRepo.getByName("Chemistry")));
+        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(labelRepo.getByName("Biology"), labelRepo.getByName("Chemistry")));
 
         List<Long> addedLabelIds = addedLinks.stream().map(DepartmentLabel::getLabelId).toList();
         Assertions.assertEquals(2, addedLinks.size(), "Unexpected number of labels added");
@@ -176,14 +177,15 @@ public class DepartmentServiceTest {
     }
 
     @Test
-    public void test_addDepartmentLabelsManually_LabelAlreadyLinked_LinkNotAdded()  {
+    public void test_addDepartmentLabels_LabelAlreadyLinked_LinkNotAdded()  {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         List<Label> existingLabels = List.of(labelRepo.getByName("Physics"));
         when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(existingLabels);
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsManually(dep, List.of(labelRepo.getByName("Physics"), labelRepo.getByName("Chemistry")));
+        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(labelRepo.getByName("Physics"), labelRepo.getByName("Chemistry")));
 
         List<Long> addedLabelIds = addedLinks.stream().map(DepartmentLabel::getLabelId).toList();
         Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
@@ -192,7 +194,7 @@ public class DepartmentServiceTest {
     }
 
     @Test
-    public void test_addDepartmentLabelsManually_FallbackLabelAlreadyLinked_RemovesFallback()  {
+    public void test_addDepartmentLabels_FallbackLabelAlreadyLinked_RemovesFallback()  {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
@@ -201,8 +203,9 @@ public class DepartmentServiceTest {
         when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId))
                 .thenReturn(List.of(existingLabel))
                 .thenReturn(List.of(existingLabel, newLabel));
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsManually(dep, List.of(newLabel));
+        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(newLabel));
 
         Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
         Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
@@ -215,29 +218,31 @@ public class DepartmentServiceTest {
     }
 
     @Test
-    public void test_addDepartmentLabelsManually_AddFallbackWhereExistingLabel_FallbackNotAdded()  {
+    public void test_addDepartmentLabels_AddFallbackWhereExistingLabel_FallbackNotAdded()  {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         Label existingLabel = labelRepo.getByName("Biology");
         Label newLabel = labelRepo.getByName("Other");
         when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(List.of(existingLabel));
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsManually(dep, List.of(newLabel));
+        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(newLabel));
 
         Assertions.assertEquals(0, addedLinks.size(), "Unexpected number of labels added");
 
     }
 
     @Test
-    public void test_addDepartmentLabelsManually_AddFallbackWhereNoExistingLabel_FallbackAdded()  {
+    public void test_addDepartmentLabels_AddFallbackWhereNoExistingLabel_FallbackAdded()  {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         Label newLabel = labelRepo.getByName("Other");
         when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(List.of());
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsManually(dep, List.of(newLabel));
+        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(newLabel));
 
         Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
         Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
@@ -246,14 +251,15 @@ public class DepartmentServiceTest {
     }
 
     @Test
-    public void test_addDepartmentLabelsManually_AddDuplicateLabels_DuplicatesNotAdded()  {
+    public void test_addDepartmentLabels_AddDuplicateLabels_DuplicatesNotAdded()  {
         LabelRepository labelRepo = new LabelRepositoryStub();
         DepartmentService service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         List<Label> newLabels = List.of(labelRepo.getByName("Physics"),labelRepo.getByName("Physics"));
         when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(List.of());
+        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsManually(dep, newLabels);
+        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), newLabels);
 
         Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
         Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");

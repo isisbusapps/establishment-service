@@ -81,7 +81,14 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<DepartmentLabel> addDepartmentLabelsManually(Department department, List<Label> newLabels) {
+    public List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Label> newLabels) {
+
+        Department department = depRepo.findById(departmentId);
+
+        if (department == null) {
+            LOGGER.warn("No department found with department id: " + departmentId);
+            throw new NoResultException("No department found with department id: " + departmentId);
+        }
 
         try {
             Set<Label> existingLabels = new HashSet<>(linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
@@ -127,31 +134,12 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
 
         try {
-            List<Label> linkedLabels = linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId());
-
-            if (!linkedLabels.isEmpty()) {
-                throw new RuntimeException("Department already has labels added");
-            }
-
             String cleanDepartmentName = cleanName(department.getDepartmentName());
-
             List<Label> allLabels = labelRepo.getAll();
             List<Label> matchedLabels = fuzzySearch(cleanDepartmentName, DEPT_LABEL_CUTOFF, allLabels);
-
             Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
-            List<DepartmentLabel> linksToAdd = new ArrayList<>();
 
-            if (matchedLabels.isEmpty()) {
-                linksToAdd.add(new DepartmentLabel(department, other));
-            } else {
-                for (Label match : matchedLabels) {
-                    linksToAdd.add(new DepartmentLabel(department, match));
-                }
-            }
-
-            linkRepo.persist(linksToAdd);
-
-            return linksToAdd;
+            return addDepartmentLabels(departmentId, matchedLabels.isEmpty() ? List.of(other) : matchedLabels);
 
         } catch (Exception e) {
             LOGGER.error("Error adding labels to department: {}", department.getDepartmentName(), e);
