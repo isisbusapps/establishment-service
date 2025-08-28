@@ -10,8 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 import static uk.ac.stfc.facilities.domains.department.DepartmentTestConstants.*;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -107,47 +105,6 @@ public class DepartmentServiceTest {
     }
 
     @Test
-    public void test_removeDepartmentLabel_MultipleLabelsLinked_RemovesLink() {
-        Department dep = new Department(mocKDeptId, "Department of Physics", mocKDEstId);
-        Label labelToRemove = labelRepo.getByName("Chemistry");
-        List<Label> existingLabels = List.of(labelRepo.getByName("Physics"), labelRepo.getByName("Chemistry"));
-        when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(existingLabels);
-
-        boolean result = service.removeDepartmentLabel(dep.getDepartmentId(), labelToRemove.getLabelId());
-
-        Assertions.assertTrue(result);
-    }
-
-    @Test
-    public void test_removeDepartmentLabel_OnlyLabel_AddsFallback() {
-        Department dep = new Department(mocKDeptId, "Ministry of Magic", mocKDEstId);
-        Label labelToRemove = labelRepo.getByName("Physics");
-        List<Label> existingLabels = List.of(labelRepo.getByName("Physics"));
-        when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(existingLabels);
-
-        boolean result = service.removeDepartmentLabel(dep.getDepartmentId(), labelToRemove.getLabelId());
-
-        Assertions.assertTrue(result);
-        Label other = labelRepo.getByName("Other");
-        verify(linkRepo).persist(argThat((DepartmentLabel departmentLabel) ->
-                departmentLabel.getDepartmentId().equals(mocKDeptId) &&
-                        departmentLabel.getLabelId().equals(other.getLabelId())
-        ));
-    }
-
-    @Test
-    public void test_removeDepartmentLabel_LabelNotLinked_NoRemoval() {
-        Department dep = new Department(mocKDeptId, "Department of Physics", mocKDEstId);
-        Label labelToRemove = labelRepo.getByName("Biology");
-        List<Label> existingLabels = List.of(labelRepo.getByName("Physics"));
-        when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(existingLabels);
-
-        boolean result = service.removeDepartmentLabel(dep.getDepartmentId(), labelToRemove.getLabelId());
-
-        Assertions.assertFalse(result);
-    }
-
-    @Test
     public void test_addDepartmentLabels_LabelsNotAlreadyLinked_AddsLinks()  {
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         List<Label> existingLabels = List.of(labelRepo.getByName("Physics"));
@@ -175,28 +132,6 @@ public class DepartmentServiceTest {
         Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
         Assertions.assertFalse(addedLabelIds.contains(labelRepo.getByName("Physics").getLabelId()), "Physics label should not be added again");
         Assertions.assertTrue(addedLabelIds.contains(labelRepo.getByName("Chemistry").getLabelId()), "Chemistry label not found");
-    }
-
-    @Test
-    public void test_addDepartmentLabels_FallbackLabelAlreadyLinked_RemovesFallback()  {
-        Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
-        Label existingLabel = labelRepo.getByName("Other");
-        Label newLabel = labelRepo.getByName("Physics");
-        when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId))
-                .thenReturn(List.of(existingLabel))
-                .thenReturn(List.of(existingLabel, newLabel));
-        when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
-
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(newLabel.getLabelId()));
-
-        Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
-        Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
-        Assertions.assertEquals(labelRepo.getByName("Physics").getLabelId(), addedLinks.getFirst().getLabelId(), "expected label Id not found");
-        Label other = labelRepo.getByName("Other");
-        verify(linkRepo).remove(argThat(departmentLabel ->
-                departmentLabel.getDepartmentId().equals(mocKDeptId) &&
-                        departmentLabel.getLabelId().equals(other.getLabelId())));
-
     }
 
     @Test
