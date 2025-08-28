@@ -56,28 +56,23 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public boolean removeDepartmentLabel(Department department, Label labelToRemove) {
-        try {
-            List<Label> existingLabels = linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId());
 
-            if (!existingLabels.contains(labelToRemove)) {
-                LOGGER.warn("Label '{}' was not not linked to department '{}'; no removal performed", labelToRemove.getName(), department.getDepartmentName());
-                return false;
-            }
+        List<Label> existingLabels = linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId());
 
-            linkRepo.remove(new DepartmentLabel(department, labelToRemove));
-
-            if (existingLabels.size() == 1) {
-                Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
-                LOGGER.info("No labels remaining after removal; adding fallback label '{}'", FALLBACK_LABEL_NAME);
-                linkRepo.persist(new DepartmentLabel(department, other));
-            }
-
-            return true;
-
-        } catch (Exception e) {
-            LOGGER.error("Error removing labels linked to department: {}", department.getDepartmentName(), e);
-            throw new RuntimeException("Failed to remove labels linked to department", e);
+        if (!existingLabels.contains(labelToRemove)) {
+            LOGGER.warn("Label '{}' was not not linked to department '{}'; no removal performed", labelToRemove.getName(), department.getDepartmentName());
+            return false;
         }
+
+        linkRepo.remove(new DepartmentLabel(department, labelToRemove));
+
+        if (existingLabels.size() == 1) {
+            Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
+            LOGGER.info("No labels remaining after removal; adding fallback label '{}'", FALLBACK_LABEL_NAME);
+            linkRepo.persist(new DepartmentLabel(department, other));
+        }
+
+        return true;
     }
 
     @Override
@@ -90,37 +85,31 @@ public class DepartmentServiceImpl implements DepartmentService {
             throw new NoResultException("No department found with department id: " + departmentId);
         }
 
-        try {
-            Set<Label> existingLabels = new HashSet<>(linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
-            Set<Label> labelsToAdd = new HashSet<>(newLabels);
-            Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
+        Set<Label> existingLabels = new HashSet<>(linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
+        Set<Label> labelsToAdd = new HashSet<>(newLabels);
+        Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
 
-            labelsToAdd.removeAll(existingLabels);
+        labelsToAdd.removeAll(existingLabels);
 
-            if (labelsToAdd.contains(other) && (!existingLabels.isEmpty() || labelsToAdd.size() > 1)) {
-                LOGGER.info("Cannot have fallback label with other labels; will not add '{}'", FALLBACK_LABEL_NAME);
-                labelsToAdd.remove(other);
-            }
-
-            List<DepartmentLabel> linksToAdd = labelsToAdd.stream()
-                    .map(label -> new DepartmentLabel(department, label))
-                    .toList();
-            
-            if (!linksToAdd.isEmpty()) {
-                linkRepo.persist(linksToAdd);
-            }
-
-            if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
-                LOGGER.info("Cannot have fallback label with other labels; removing '{}'", FALLBACK_LABEL_NAME);
-                removeDepartmentLabel(department, other);
-            }
-
-            return linksToAdd;
-
-        } catch (Exception e) {
-            LOGGER.error("Error adding labels to department: {}", department.getDepartmentName(), e);
-            throw new RuntimeException("Failed to add labels to department", e);
+        if (labelsToAdd.contains(other) && (!existingLabels.isEmpty() || labelsToAdd.size() > 1)) {
+            LOGGER.info("Cannot have fallback label with other labels; will not add '{}'", FALLBACK_LABEL_NAME);
+            labelsToAdd.remove(other);
         }
+
+        List<DepartmentLabel> linksToAdd = labelsToAdd.stream()
+                .map(label -> new DepartmentLabel(department, label))
+                .toList();
+
+        if (!linksToAdd.isEmpty()) {
+            linkRepo.persist(linksToAdd);
+        }
+
+        if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
+            LOGGER.info("Cannot have fallback label with other labels; removing '{}'", FALLBACK_LABEL_NAME);
+            removeDepartmentLabel(department, other);
+        }
+
+        return linksToAdd;
     }
 
     @Override
@@ -133,18 +122,12 @@ public class DepartmentServiceImpl implements DepartmentService {
             throw new NoResultException("No department found with department id: " + departmentId);
         }
 
-        try {
-            String cleanDepartmentName = cleanName(department.getDepartmentName());
-            List<Label> allLabels = labelRepo.getAll();
-            List<Label> matchedLabels = fuzzySearch(cleanDepartmentName, DEPT_LABEL_CUTOFF, allLabels);
-            Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
+        String cleanDepartmentName = cleanName(department.getDepartmentName());
+        List<Label> allLabels = labelRepo.getAll();
+        List<Label> matchedLabels = fuzzySearch(cleanDepartmentName, DEPT_LABEL_CUTOFF, allLabels);
+        Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
 
-            return addDepartmentLabels(departmentId, matchedLabels.isEmpty() ? List.of(other) : matchedLabels);
-
-        } catch (Exception e) {
-            LOGGER.error("Error adding labels to department: {}", department.getDepartmentName(), e);
-            throw new RuntimeException("Failed to add labels to department", e);
-        }
+        return addDepartmentLabels(departmentId, matchedLabels.isEmpty() ? List.of(other) : matchedLabels);
     }
 
     private List<Label> fuzzySearch(String departmentName, Integer cutoff, List<Label> labels) {
