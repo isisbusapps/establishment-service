@@ -66,4 +66,11 @@ public class LabelRepositoryStub implements LabelRepository {
                 .orElseThrow(() -> new RuntimeException("Label not found: " + name));
     }
 
+    public Label findById(Long id) {
+        return labels.stream()
+                .filter(label -> label.getLabelId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Label not found for id: " + id));
+    }
+
 }
