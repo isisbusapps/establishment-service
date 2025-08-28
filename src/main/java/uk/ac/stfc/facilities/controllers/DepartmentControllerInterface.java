@@ -24,6 +24,9 @@ public interface DepartmentControllerInterface {
     Response addDepartmentLabelsAutomatically(@PathParam("departmentId") Long departmentId)
             throws RestControllerException;
 
-
+    @DELETE
+    @Path("/{departmentId}/labels/{labelId}")
+    Response removeDepartmentLabel(@PathParam("departmentId") Long departmentId, @PathParam("labelId") Long labelId)
+            throws RestControllerException;
 
 }

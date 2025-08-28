@@ -42,4 +42,19 @@ public class DepartmentController implements DepartmentControllerInterface {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
         }
     }
+
+    @Override
+    public Response removeDepartmentLabel(Long departmentId, Long labelId) throws RestControllerException {
+
+        boolean removed = service.removeDepartmentLabel(departmentId, labelId);
+
+        if (removed) {
+            return Response.ok()
+                    .entity("{\"message\":\"DepartmentLabel removed successfully\"}")
+                    .build();
+        } else {
+            throw new RestControllerException(ReasonCode. NoResults, "No such DepartmentLabel found");
+        }
+    }
 }
+
