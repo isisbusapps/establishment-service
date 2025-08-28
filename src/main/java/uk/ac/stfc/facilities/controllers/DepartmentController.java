@@ -19,7 +19,7 @@ public class DepartmentController implements DepartmentControllerInterface {
 
     @Override
     public Response addDepartmentLabelsManually(Long departmentId, List<Long> labelIds) throws RestControllerException {
-        if (departmentId == null) {
+        if (departmentId == null || labelIds == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
         }
         try{
