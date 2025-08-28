@@ -14,7 +14,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
 
     @Override
     public Department findByNameAndEstablishmentId(String name, Long establishmentId) {
-        return find("name = ?1 and establishmentId = ?2", name, establishmentId).firstResult();
+        return find("departmentName = ?1 and establishmentId = ?2", name, establishmentId).firstResult();
     }
 
     @Override
