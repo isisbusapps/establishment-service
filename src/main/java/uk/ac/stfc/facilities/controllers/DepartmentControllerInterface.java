@@ -29,4 +29,8 @@ public interface DepartmentControllerInterface {
     Response removeDepartmentLabel(@PathParam("departmentId") Long departmentId, @PathParam("labelId") Long labelId)
             throws RestControllerException;
 
+    @POST
+    Response createDepartmentAndLabels(String name, Long establishmentId)
+        throws RestControllerException;
+
 }

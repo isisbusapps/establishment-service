@@ -4,9 +4,11 @@ import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import uk.ac.stfc.facilities.domains.department.Department;
 import uk.ac.stfc.facilities.domains.department.DepartmentLabel;
 import uk.ac.stfc.facilities.domains.department.DepartmentService;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
+import uk.ac.stfc.facilities.helpers.CreateDepartmentResponse;
 import uk.ac.stfc.facilities.helpers.ReasonCode;
 
 import java.util.List;
@@ -54,6 +56,23 @@ public class DepartmentController implements DepartmentControllerInterface {
                     .build();
         } else {
             throw new RestControllerException(ReasonCode. NoResults, "No such DepartmentLabel found");
+        }
+    }
+
+    @Override
+    public Response createDepartmentAndLabels(String name, Long establishmentId) throws RestControllerException {
+        if (name == null || establishmentId == null) {
+            throw new RestControllerException(ReasonCode.BadRequest, "Establishment name must not be null or empty");
+        }
+
+        try{
+            Department department = service.createDepartment(name, establishmentId);
+            List<DepartmentLabel> departmentLabels = service.addDepartmentLabelsAutomatically(department.getDepartmentId());
+            CreateDepartmentResponse response = new CreateDepartmentResponse(department, departmentLabels);
+
+            return Response.status(Response.Status.OK).entity(response).build();
+        } catch (IllegalArgumentException e) {
+            throw new RestControllerException(ReasonCode.DuplicateResults, e.getMessage());
         }
     }
 }

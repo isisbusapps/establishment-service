@@ -32,6 +32,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Department createDepartment(String name, Long establishmentId) {
+
+        Department existingDep = depRepo.findByNameAndEstablishmentId(name, establishmentId);
+        if (existingDep != null) {
+            throw new IllegalArgumentException(
+                    "Department with name '" + name + "' already exists for establishment with id + " + establishmentId
+            );
+        }
+
         Department dep = new Department(name, establishmentId);
         depRepo.persist(dep);
         return dep;

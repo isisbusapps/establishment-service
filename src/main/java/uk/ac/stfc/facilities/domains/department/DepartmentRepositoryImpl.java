@@ -13,6 +13,11 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
     }
 
     @Override
+    public Department findByNameAndEstablishmentId(String name, Long establishmentId) {
+        return find("name = ?1 and establishmentId = ?2", name, establishmentId).firstResult();
+    }
+
+    @Override
     public void create(Department department) {
 
     }
