@@ -55,21 +55,29 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public boolean removeDepartmentLabel(Department department, Label labelToRemove) {
+    public boolean removeDepartmentLabel(Long departmentId, Long labelId) {
 
-        List<Label> existingLabels = linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId());
+        DepartmentLabelId id = new DepartmentLabelId(departmentId, labelId);
+        boolean removed = linkRepo.deleteById(id);
 
-        if (!existingLabels.contains(labelToRemove)) {
-            LOGGER.warn("Label '{}' was not not linked to department '{}'; no removal performed", labelToRemove.getName(), department.getDepartmentName());
+        if (!removed) {
+            LOGGER.warn("Label with ID '{}' was not linked to department ID '{}'; no removal performed",
+                    labelId, departmentId);
             return false;
         }
 
-        linkRepo.remove(new DepartmentLabel(department, labelToRemove));
+        Department department = depRepo.findById(departmentId);
 
-        if (existingLabels.size() == 1) {
-            Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
+        if (department == null) {
+            LOGGER.warn("Deleted link was orphaned since no department exists with id: " + departmentId);
+            return true;
+        }
+
+        long remainingLabels = linkRepo.count("id.departmentId", departmentId);
+        if (remainingLabels == 0) {
+            Label fallback = labelRepo.getByName(FALLBACK_LABEL_NAME);
             LOGGER.info("No labels remaining after removal; adding fallback label '{}'", FALLBACK_LABEL_NAME);
-            linkRepo.persist(new DepartmentLabel(department, other));
+            linkRepo.persist(new DepartmentLabel(department, fallback));
         }
 
         return true;
@@ -116,7 +124,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
             LOGGER.info("Cannot have fallback label with other labels; removing '{}'", FALLBACK_LABEL_NAME);
-            removeDepartmentLabel(department, other);
+            removeDepartmentLabel(department.getDepartmentId(), other.getLabelId());
         }
 
         return linksToAdd;
