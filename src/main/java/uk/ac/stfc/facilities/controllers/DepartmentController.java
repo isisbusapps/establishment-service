@@ -8,6 +8,7 @@ import uk.ac.stfc.facilities.domains.department.Department;
 import uk.ac.stfc.facilities.domains.department.DepartmentLabel;
 import uk.ac.stfc.facilities.domains.department.DepartmentService;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
+import uk.ac.stfc.facilities.helpers.CreateDepartmentRequest;
 import uk.ac.stfc.facilities.helpers.CreateDepartmentResponse;
 import uk.ac.stfc.facilities.helpers.ReasonCode;
 
@@ -60,9 +61,12 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
-    public Response createDepartmentAndLabels(String name, Long establishmentId) throws RestControllerException {
+    public Response createDepartmentAndLabels(CreateDepartmentRequest request) throws RestControllerException {
+        String name = request.getName();
+        Long establishmentId = request.getEstablishmentId();
+
         if (name == null || establishmentId == null) {
-            throw new RestControllerException(ReasonCode.BadRequest, "Establishment name must not be null or empty");
+            throw new RestControllerException(ReasonCode.BadRequest, "Request must have a name and establishmentId");
         }
 
         try{

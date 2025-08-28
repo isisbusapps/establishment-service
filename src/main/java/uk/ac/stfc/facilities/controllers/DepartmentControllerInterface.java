@@ -4,6 +4,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
+import uk.ac.stfc.facilities.helpers.CreateDepartmentRequest;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface DepartmentControllerInterface {
             throws RestControllerException;
 
     @POST
-    Response createDepartmentAndLabels(String name, Long establishmentId)
+    Response createDepartmentAndLabels(CreateDepartmentRequest request)
         throws RestControllerException;
 
 }
