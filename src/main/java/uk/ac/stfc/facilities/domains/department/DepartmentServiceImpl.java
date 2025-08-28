@@ -76,7 +76,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Label> newLabels) {
+    public List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Long> LabelIds) {
 
         Department department = depRepo.findById(departmentId);
 
@@ -85,8 +85,18 @@ public class DepartmentServiceImpl implements DepartmentService {
             throw new NoResultException("No department found with department id: " + departmentId);
         }
 
+        Set<Label> labelsToAdd = LabelIds.stream()
+                .map(id -> {
+                    Label label = labelRepo.findById(id);
+                    if (label == null) {
+                        throw new NoResultException("Label not found for id: " + id);
+                    }
+                    return label;
+                })
+                .collect(Collectors.toSet());
+
         Set<Label> existingLabels = new HashSet<>(linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
-        Set<Label> labelsToAdd = new HashSet<>(newLabels);
+
         Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
 
         labelsToAdd.removeAll(existingLabels);
@@ -125,9 +135,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         String cleanDepartmentName = cleanName(department.getDepartmentName());
         List<Label> allLabels = labelRepo.getAll();
         List<Label> matchedLabels = fuzzySearch(cleanDepartmentName, DEPT_LABEL_CUTOFF, allLabels);
-        Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
 
-        return addDepartmentLabels(departmentId, matchedLabels.isEmpty() ? List.of(other) : matchedLabels);
+        List<Long> matchedLabelIds = matchedLabels.stream().map(Label::getLabelId).toList();
+        Long otherId = labelRepo.getByName(FALLBACK_LABEL_NAME).getLabelId();
+
+        return addDepartmentLabels(departmentId, matchedLabels.isEmpty() ? List.of(otherId) : matchedLabelIds);
     }
 
     private List<Label> fuzzySearch(String departmentName, Integer cutoff, List<Label> labels) {
