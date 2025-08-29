@@ -57,7 +57,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public List<Department> getDepartmentsByEstablishmentId(Long establishmentId) {
-        return List.of();
+        return depRepo.list("establishmentId", establishmentId);
     }
 
     @Override

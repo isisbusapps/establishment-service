@@ -104,9 +104,5 @@ public class DepartmentController implements DepartmentControllerInterface {
                 .entity("{\"message\":\"Department and associated DepartmentLabels removed successfully\"}")
                 .build();
     }
-
-
-
-
 }
 
