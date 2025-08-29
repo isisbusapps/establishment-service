@@ -100,7 +100,7 @@ public class DepartmentController implements DepartmentControllerInterface {
             throw new RestControllerException(ReasonCode.NoResults, "No such Department found");
         }
 
-        boolean deleted = service.deleteDepartment(departmentId);
+        service.deleteDepartment(departmentId);
 
         return Response.ok()
                 .entity("{\"message\":\"Department and associated DepartmentLabels removed successfully\"}")
