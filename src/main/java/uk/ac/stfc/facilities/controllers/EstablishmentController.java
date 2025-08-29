@@ -72,9 +72,9 @@ public class EstablishmentController implements EstablishmentControllerInterface
             EstablishmentDTO estEnrichedDTO = mapper.toDTO(estEnriched);
 
             List<EstablishmentAlias> aliases = estService.addEstablishmentAliasesFromRor(establishmentId, rorMatch);
-            List<EstablishmentCategoryLink> types = estService.addEstablishmentCategoryLinksFromRor(establishmentId, rorMatch);
+            List<EstablishmentCategoryLink> estCatLinks = estService.addEstablishmentCategoryLinksFromRor(establishmentId, rorMatch);
 
-            EnrichedEstablishmentResponse response = new EnrichedEstablishmentResponse(estEnrichedDTO, aliases, types);
+            EnrichedEstablishmentResponse response = new EnrichedEstablishmentResponse(estEnrichedDTO, aliases, estCatLinks);
 
             return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {
@@ -115,13 +115,13 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
-    public Response addEstablishmentTypes(Long establishmentId, List<String> typeNames) throws RestControllerException {
-        if (establishmentId == null || typeNames == null || typeNames.isEmpty()) {
+    public Response addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds) throws RestControllerException {
+        if (establishmentId == null || categoryIds == null || categoryIds.isEmpty()) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
         }
         try{
-            List<EstablishmentCategoryLink> types = estService.addEstablishmentCategoryLinks(establishmentId, typeNames);
-            return Response.status(Response.Status.OK).entity(types).build();
+            List<EstablishmentCategoryLink> estCatLinks = estService.addEstablishmentCategoryLinks(establishmentId, categoryIds);
+            return Response.status(Response.Status.OK).entity(estCatLinks).build();
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
         }
