@@ -143,11 +143,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             depService.deleteDepartment(dep.getDepartmentId());
         }
 
-        boolean deleted = estService.deleteEstablishment(establishmentId);
-
-        if (!deleted) {
-            throw new RestControllerException(ReasonCode.NoResults, "Failed to delete establishment");
-        }
+        estService.deleteEstablishment(establishmentId);
 
         return Response.ok()
                 .entity("{\"message\":\"Establishment and associated Departments removed successfully\"}")
