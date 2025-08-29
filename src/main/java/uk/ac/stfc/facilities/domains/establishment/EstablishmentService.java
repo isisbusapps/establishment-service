@@ -22,7 +22,7 @@ public interface EstablishmentService {
 
     Establishment createUnverifiedEstablishment(String name);
 
-    boolean deleteEstablishment(Long establishmentId) throws NoResultException;
+    void deleteEstablishment(Long establishmentId) throws NoResultException;
 
     Establishment updateEstablishment(Long establishmentId, Establishment updateEst);
 

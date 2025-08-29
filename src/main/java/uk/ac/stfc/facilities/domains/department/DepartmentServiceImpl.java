@@ -61,9 +61,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public boolean deleteDepartment(Long depId) throws NoResultException {
+    public void deleteDepartment(Long depId) throws NoResultException {
         depLabelRepo.delete("id.departmentId", depId);
-        return depRepo.deleteById(depId);
+        depRepo.deleteById(depId);
     }
 
     @Override
@@ -72,8 +72,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public boolean deleteDepartmentLabel(DepartmentLabelId id) {
-        return depLabelRepo.deleteById(id);
+    public void deleteDepartmentLabel(DepartmentLabelId id) {
+        depLabelRepo.deleteById(id);
     }
 
     @Override

@@ -159,10 +159,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public boolean deleteEstablishment(Long estId) throws NoResultException {
+    public void deleteEstablishment(Long estId) throws NoResultException {
         aliasRepo.delete("establishmentId", estId);
         typeRepo.delete("establishmentId", estId);
-        return estRepo.deleteById(estId);
+        estRepo.deleteById(estId);
     }
 
     @Override

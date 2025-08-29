@@ -14,13 +14,13 @@ public interface DepartmentService {
 
     List<Department> getDepartmentsByEstablishmentId(Long establishmentId);
 
-    boolean deleteDepartment(Long depId) throws NoResultException;
+    void deleteDepartment(Long depId) throws NoResultException;
 
     List<DepartmentLabel> addDepartmentLabelsAutomatically(Long departmentId);
 
     List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Long> LabelIds);
 
-    boolean deleteDepartmentLabel(DepartmentLabelId id);
+    void deleteDepartmentLabel(DepartmentLabelId id);
 
     boolean addFallbackLabelIfNeeded(Long departmentId);
 
