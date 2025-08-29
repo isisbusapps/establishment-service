@@ -20,7 +20,7 @@ import java.util.List;
 public class DepartmentController implements DepartmentControllerInterface {
 
     @Inject
-    DepartmentService service;
+    DepartmentService depService;
     @Inject
     EstablishmentService estService;
 
@@ -30,7 +30,7 @@ public class DepartmentController implements DepartmentControllerInterface {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
         }
         try{
-            List<DepartmentLabel> labels = service.addDepartmentLabels(departmentId, labelIds);
+            List<DepartmentLabel> labels = depService.addDepartmentLabels(departmentId, labelIds);
             return Response.status(Response.Status.OK).entity(labels).build();
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
@@ -43,7 +43,7 @@ public class DepartmentController implements DepartmentControllerInterface {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
         }
         try{
-            List<DepartmentLabel> labels = service.addDepartmentLabelsAutomatically(departmentId);
+            List<DepartmentLabel> labels = depService.addDepartmentLabelsAutomatically(departmentId);
             return Response.status(Response.Status.OK).entity(labels).build();
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
@@ -55,12 +55,12 @@ public class DepartmentController implements DepartmentControllerInterface {
 
         DepartmentLabelId id = new DepartmentLabelId(departmentId, labelId);
 
-        if (service.getDepartmentLabel(id) == null) {
+        if (depService.getDepartmentLabel(id) == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No such DepartmentLabel found");
         }
 
-        service.deleteDepartmentLabel(id);
-        boolean fallbackAdded = service.addFallbackLabelIfNeeded(departmentId);
+        depService.deleteDepartmentLabel(id);
+        boolean fallbackAdded = depService.addFallbackLabelIfNeeded(departmentId);
 
         if (fallbackAdded) {
             return Response.ok()
@@ -87,8 +87,8 @@ public class DepartmentController implements DepartmentControllerInterface {
         }
 
         try{
-            Department department = service.createDepartment(name, establishmentId);
-            List<DepartmentLabel> departmentLabels = service.addDepartmentLabelsAutomatically(department.getDepartmentId());
+            Department department = depService.createDepartment(name, establishmentId);
+            List<DepartmentLabel> departmentLabels = depService.addDepartmentLabelsAutomatically(department.getDepartmentId());
             CreateDepartmentResponse response = new CreateDepartmentResponse(department, departmentLabels);
 
             return Response.status(Response.Status.OK).entity(response).build();
@@ -103,11 +103,11 @@ public class DepartmentController implements DepartmentControllerInterface {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
         }
 
-        if (service.getDepartment(departmentId) == null) {
+        if (depService.getDepartment(departmentId) == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No such Department found");
         }
 
-        service.deleteDepartment(departmentId);
+        depService.deleteDepartment(departmentId);
 
         return Response.ok()
                 .entity("{\"message\":\"Department and associated DepartmentLabels removed successfully\"}")
