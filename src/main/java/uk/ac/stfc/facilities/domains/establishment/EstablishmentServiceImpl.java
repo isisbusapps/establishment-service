@@ -82,7 +82,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public Establishment addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror){
-
         Establishment est = repo.findById(establishmentId);
 
         if (est == null) {
@@ -126,7 +125,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public List<EstablishmentAlias> addEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror) {
-
         Set<Type> aliasTypes = Set.of(Type.ACRONYM, Type.ALIAS, Type.LABEL);
 
         List<String> aliasNames = ror.getNames().stream()
@@ -140,7 +138,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public List<EstablishmentType> addEstablishmentTypesFromRor(Long establishmentId, RorSchemaV21 ror) {
-
         List<String> typeNames = ror.getTypes().stream()
                 .map(Type_::toString)
                 .toList();
@@ -163,7 +160,6 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public Establishment updateEstablishment(Long establishmentId, Establishment updateEst) {
-
         Establishment est = repo.findById(establishmentId);
 
         if (est == null) {

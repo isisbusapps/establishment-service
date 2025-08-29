@@ -68,14 +68,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public boolean deleteDepartmentLabel(Long departmentId, Long labelId) {
-
         DepartmentLabelId id = new DepartmentLabelId(departmentId, labelId);
         return depLabelRepo.deleteById(id);
     }
 
     @Override
     public boolean addFallbackLabelIfNeeded(Long departmentId) {
-
         Department department = depRepo.findById(departmentId);
 
         if (department == null) {
@@ -98,7 +96,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Long> LabelIds) {
-
         Department department = depRepo.findById(departmentId);
 
         if (department == null) {
@@ -145,7 +142,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public List<DepartmentLabel> addDepartmentLabelsAutomatically(Long departmentId) {
-
         Department department = depRepo.findById(departmentId);
 
         if (department == null) {
