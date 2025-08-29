@@ -10,7 +10,7 @@ public interface DepartmentService {
 
     List<Department> getAllDepartments();
 
-    Department getDepartmentsById(Long depId);
+    Department getDepartment(Long depId);
 
     List<Department> getDepartmentsByEstablishmentId(Long establishmentId);
 

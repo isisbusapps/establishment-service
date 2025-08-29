@@ -51,8 +51,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Department getDepartmentsById(Long depId) {
-        return null;
+    public Department getDepartment(Long depId) {
+        return depRepo.findById(depId);
     }
 
     @Override

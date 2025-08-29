@@ -94,11 +94,11 @@ public class DepartmentController implements DepartmentControllerInterface {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
         }
 
-         boolean deleted = service.deleteDepartment(departmentId);
-
-        if (!deleted) {
-            throw new RestControllerException(ReasonCode.NoResults, "No such Department found");
+        if (service.getDepartment(departmentId) == null) {
+            throw new RestControllerException(ReasonCode.NoResults, "No such Establishment found");
         }
+
+        boolean deleted = service.deleteDepartment(departmentId);
 
         return Response.ok()
                 .entity("{\"message\":\"Department and associated DepartmentLabels removed successfully\"}")
