@@ -20,8 +20,10 @@ public interface DepartmentService {
 
     List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Long> LabelIds);
 
-    boolean deleteDepartmentLabel(Long departmentId, Long labelId);
+    boolean deleteDepartmentLabel(DepartmentLabelId id);
 
     boolean addFallbackLabelIfNeeded(Long departmentId);
+
+    DepartmentLabel getDepartmentLabel(DepartmentLabelId id);
 
 }

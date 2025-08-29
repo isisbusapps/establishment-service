@@ -67,8 +67,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public boolean deleteDepartmentLabel(Long departmentId, Long labelId) {
-        DepartmentLabelId id = new DepartmentLabelId(departmentId, labelId);
+    public DepartmentLabel getDepartmentLabel(DepartmentLabelId id) {
+        return depLabelRepo.findById(id);
+    }
+
+    @Override
+    public boolean deleteDepartmentLabel(DepartmentLabelId id) {
         return depLabelRepo.deleteById(id);
     }
 
@@ -134,7 +138,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
             LOGGER.info("Cannot have fallback label with other labels; removing '{}'", FALLBACK_LABEL_NAME);
-            this.deleteDepartmentLabel(department.getDepartmentId(), other.getLabelId());
+            this.deleteDepartmentLabel(new DepartmentLabelId(department.getDepartmentId(), other.getLabelId()));
         }
 
         return depLabelsToAdd;

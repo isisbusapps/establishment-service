@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import uk.ac.stfc.facilities.domains.department.Department;
 import uk.ac.stfc.facilities.domains.department.DepartmentLabel;
+import uk.ac.stfc.facilities.domains.department.DepartmentLabelId;
 import uk.ac.stfc.facilities.domains.department.DepartmentService;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 import uk.ac.stfc.facilities.helpers.CreateDepartmentRequest;
@@ -49,12 +50,13 @@ public class DepartmentController implements DepartmentControllerInterface {
     @Override
     public Response removeDepartmentLabel(Long departmentId, Long labelId) throws RestControllerException {
 
-        boolean deleted = service.deleteDepartmentLabel(departmentId, labelId);
+        DepartmentLabelId id = new DepartmentLabelId(departmentId, labelId);
 
-        if (!deleted) {
+        if (service.getDepartmentLabel(id) == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No such DepartmentLabel found");
         }
 
+        service.deleteDepartmentLabel(id);
         boolean fallbackAdded = service.addFallbackLabelIfNeeded(departmentId);
 
         if (fallbackAdded) {
@@ -95,7 +97,7 @@ public class DepartmentController implements DepartmentControllerInterface {
         }
 
         if (service.getDepartment(departmentId) == null) {
-            throw new RestControllerException(ReasonCode.NoResults, "No such Establishment found");
+            throw new RestControllerException(ReasonCode.NoResults, "No such Department found");
         }
 
         boolean deleted = service.deleteDepartment(departmentId);
