@@ -30,7 +30,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     private static final Logger LOGGER = Logger.getLogger(EstablishmentService.class);
 
-    private EstablishmentRepository repo;
+    private EstablishmentRepository estRepo;
     private EstablishmentAliasRepository aliasRepo;
     private EstablishmentTypeRepository typeRepo;
 
@@ -38,7 +38,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Inject
     public EstablishmentServiceImpl(EstablishmentRepository repo, EstablishmentAliasRepository aliasRepo, EstablishmentTypeRepository typeRepo) {
-        this.repo = repo;
+        this.estRepo = repo;
         this.aliasRepo = aliasRepo;
         this.typeRepo = typeRepo;
     }
@@ -50,12 +50,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public Establishment getEstablishment(Long establishmentId) {
-        return repo.findById(establishmentId);
+        return estRepo.findById(establishmentId);
     }
 
     @Override
     public List<Establishment> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) {
-        List<Establishment>  allEst = onlyVerified?  repo.getVerified() : repo.getAll();
+        List<Establishment>  allEst = onlyVerified?  estRepo.getVerified() : estRepo.getAll();
 
         return fuzzySearch(searchQuery, EST_SEARCH_CUTOFF, useAliases, allEst)
                 .stream()
@@ -87,7 +87,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public Establishment addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror){
-        Establishment est = repo.findById(establishmentId);
+        Establishment est = estRepo.findById(establishmentId);
 
         if (est == null) {
             LOGGER.warn("No establishment found with establishment id: " + establishmentId);
@@ -124,7 +124,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         est.setEstablishmentUrl(establishmentUrl);
         est.setVerified(true);
 
-        repo.persist(est);
+        estRepo.persist(est);
         return est;
     }
 
@@ -154,18 +154,18 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     public Establishment createUnverifiedEstablishment(String name) {
         Establishment unverifiedEst = new Establishment(name);
         unverifiedEst.setVerified(false);
-        repo.persist(unverifiedEst);
+        estRepo.persist(unverifiedEst);
         return unverifiedEst;
     }
 
     @Override
     public boolean deleteEstablishment(Long estId) throws NoResultException {
-        return repo.deleteById(estId);
+        return estRepo.deleteById(estId);
     }
 
     @Override
     public Establishment updateEstablishment(Long establishmentId, Establishment updateEst) {
-        Establishment est = repo.findById(establishmentId);
+        Establishment est = estRepo.findById(establishmentId);
 
         if (est == null) {
             LOGGER.info("No establishment found with establishment id: " + establishmentId);
@@ -178,19 +178,19 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         est.setEstablishmentUrl(updateEst.getEstablishmentUrl());
         est.setVerified(updateEst.getVerified());
 
-        repo.persist(est);
+        estRepo.persist(est);
         return est;
     }
 
     @Override
     public List<Establishment> getUnverifiedEstablishments() {
-        return repo.getUnverified();
+        return estRepo.getUnverified();
     }
 
     @Override
     public List<EstablishmentAlias> addEstablishmentAliases(Long establishmentId, List<String> aliasNames) {
 
-        if (repo.findById(establishmentId) == null) {
+        if (estRepo.findById(establishmentId) == null) {
             LOGGER.warn("No establishment found with establishment id: " + establishmentId);
             throw new NoResultException("No establishment found with establishment id: " + establishmentId);
         }
@@ -210,7 +210,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public List<EstablishmentType> addEstablishmentTypes(Long establishmentId, List<String> typeNames) {
-        if (repo.findById(establishmentId) == null) {
+        if (estRepo.findById(establishmentId) == null) {
             LOGGER.warn("No establishment found with establishment id: " + establishmentId);
             throw new NoResultException("No establishment found with establishment id: " + establishmentId);
         }
