@@ -26,7 +26,7 @@ class EstablishmentServiceTest {
     private EstablishmentAliasRepository aliasRepo;
 
     @Mock
-    private EstablishmentTypeRepository typeRepo;
+    private EstablishmentCategoryRepository typeRepo;
 
     @InjectMocks
     EstablishmentServiceImpl service;
@@ -181,17 +181,17 @@ class EstablishmentServiceTest {
     }
 
     @Test
-    void test_addEstablishmentTypesFromRor_RorData_ReturnsEstablishmentTypes() {
+    void test_addEstablishmentCategoriesFromRor_RorData_ReturnsEstablishmentCategoryLinks() {
         RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
         when(repo.findById(est.getEstablishmentId())).thenReturn(est);
 
-        List<EstablishmentType> results =  service.addEstablishmentTypesFromRor(est.getEstablishmentId(), ror);
+        List<EstablishmentCategoryLink> results =  service.addEstablishmentCategoriesFromRor(est.getEstablishmentId(), ror);
 
         List<Long> expectedEstId = List.of(est.getEstablishmentId(),est.getEstablishmentId());
-        List<String> expectedTypes = List.of("education", "funder");
-        Assertions.assertEquals(expectedEstId, results.stream().map(EstablishmentType::getEstablishmentId).toList(), "unexpected establishment id");
-        Assertions.assertEquals(expectedTypes, results.stream().map(EstablishmentType::getType).toList(), "unexpected types");
+        List<String> expectedCategories = List.of("education", "funder");
+        Assertions.assertEquals(expectedEstId, results.stream().map(EstablishmentCategoryLink::getEstablishmentId).toList(), "unexpected establishment id");
+        Assertions.assertEquals(expectedCategories, results.stream().map(EstablishmentCategoryLink::getType).toList(), "unexpected categories");
     }
 
     @Test

@@ -19,15 +19,15 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private DepartmentRepository depRepo;
     private LabelRepository labelRepo;
-    private DepartmentLabelRepository depLabelRepo;
+    private DepartmentLabelLinkRepository depLabelLinkRepo;
 
     public DepartmentServiceImpl() {}
 
     @Inject
-    public DepartmentServiceImpl(DepartmentRepository depRepo, LabelRepository labelRepo, DepartmentLabelRepository depLabelRepo) {
+    public DepartmentServiceImpl(DepartmentRepository depRepo, LabelRepository labelRepo, DepartmentLabelLinkRepository depLabelLinkRepo) {
         this.depRepo = depRepo;
         this.labelRepo = labelRepo;
-        this.depLabelRepo = depLabelRepo;
+        this.depLabelLinkRepo = depLabelLinkRepo;
     }
 
     @Override
@@ -62,18 +62,18 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void deleteDepartment(Long depId) throws NoResultException {
-        depLabelRepo.delete("id.departmentId", depId);
+        depLabelLinkRepo.delete("id.departmentId", depId);
         depRepo.deleteById(depId);
     }
 
     @Override
-    public DepartmentLabel getDepartmentLabel(DepartmentLabelId id) {
-        return depLabelRepo.findById(id);
+    public DepartmentLabelLink getDepartmentLabelLink(DepartmentLabelLinkId id) {
+        return depLabelLinkRepo.findById(id);
     }
 
     @Override
-    public void deleteDepartmentLabel(DepartmentLabelId id) {
-        depLabelRepo.deleteById(id);
+    public void deleteDepartmentLabelLink(DepartmentLabelLinkId id) {
+        depLabelLinkRepo.deleteById(id);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             return false;
         }
 
-        long labelCount = depLabelRepo.count("id.departmentId", departmentId);
+        long labelCount = depLabelLinkRepo.count("id.departmentId", departmentId);
         if (labelCount > 0) {
             LOGGER.warn("No fallback added since department already has labels");
             return false;
@@ -93,13 +93,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         Label fallback = labelRepo.getByName(FALLBACK_LABEL_NAME);
         LOGGER.info("No labels attached to department; adding fallback label '{}'", FALLBACK_LABEL_NAME);
-        depLabelRepo.persist(new DepartmentLabel(department, fallback));
+        depLabelLinkRepo.persist(new DepartmentLabelLink(department, fallback));
         return true;
     }
 
 
     @Override
-    public List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Long> LabelIds) {
+    public List<DepartmentLabelLink> addDepartmentLabelLinks(Long departmentId, List<Long> LabelIds) {
         Department department = depRepo.findById(departmentId);
 
         if (department == null) {
@@ -117,7 +117,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 })
                 .collect(Collectors.toSet());
 
-        Set<Label> existingLabels = new HashSet<>(depLabelRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
+        Set<Label> existingLabels = new HashSet<>(depLabelLinkRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
 
         Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
 
@@ -128,24 +128,24 @@ public class DepartmentServiceImpl implements DepartmentService {
             labelsToAdd.remove(other);
         }
 
-        List<DepartmentLabel> depLabelsToAdd = labelsToAdd.stream()
-                .map(label -> new DepartmentLabel(department, label))
+        List<DepartmentLabelLink> depLabelLinksToAdd = labelsToAdd.stream()
+                .map(label -> new DepartmentLabelLink(department, label))
                 .toList();
 
-        if (!depLabelsToAdd.isEmpty()) {
-            depLabelRepo.persist(depLabelsToAdd);
+        if (!depLabelLinksToAdd.isEmpty()) {
+            depLabelLinkRepo.persist(depLabelLinksToAdd);
         }
 
         if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
             LOGGER.info("Cannot have fallback label with other labels; removing '{}'", FALLBACK_LABEL_NAME);
-            this.deleteDepartmentLabel(new DepartmentLabelId(department.getDepartmentId(), other.getLabelId()));
+            this.deleteDepartmentLabelLink(new DepartmentLabelLinkId(department.getDepartmentId(), other.getLabelId()));
         }
 
-        return depLabelsToAdd;
+        return depLabelLinksToAdd;
     }
 
     @Override
-    public List<DepartmentLabel> addDepartmentLabelsAutomatically(Long departmentId) {
+    public List<DepartmentLabelLink> addDepartmentLabelLinksAutomatically(Long departmentId) {
         Department department = depRepo.findById(departmentId);
 
         if (department == null) {
@@ -160,7 +160,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         List<Long> matchedLabelIds = matchedLabels.stream().map(Label::getLabelId).toList();
         Long otherId = labelRepo.getByName(FALLBACK_LABEL_NAME).getLabelId();
 
-        return addDepartmentLabels(departmentId, matchedLabels.isEmpty() ? List.of(otherId) : matchedLabelIds);
+        return addDepartmentLabelLinks(departmentId, matchedLabels.isEmpty() ? List.of(otherId) : matchedLabelIds);
     }
 
     private List<Label> fuzzySearch(String departmentName, Integer cutoff, List<Label> labels) {

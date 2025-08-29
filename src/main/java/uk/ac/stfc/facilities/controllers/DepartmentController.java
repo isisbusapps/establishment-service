@@ -5,8 +5,8 @@ import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 import uk.ac.stfc.facilities.domains.department.Department;
-import uk.ac.stfc.facilities.domains.department.DepartmentLabel;
-import uk.ac.stfc.facilities.domains.department.DepartmentLabelId;
+import uk.ac.stfc.facilities.domains.department.DepartmentLabelLink;
+import uk.ac.stfc.facilities.domains.department.DepartmentLabelLinkId;
 import uk.ac.stfc.facilities.domains.department.DepartmentService;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentService;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
@@ -25,41 +25,41 @@ public class DepartmentController implements DepartmentControllerInterface {
     EstablishmentService estService;
 
     @Override
-    public Response addDepartmentLabelsManually(Long departmentId, List<Long> labelIds) throws RestControllerException {
+    public Response addDepartmentLabelLinksManually(Long departmentId, List<Long> labelIds) throws RestControllerException {
         if (departmentId == null || labelIds == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
         }
         try{
-            List<DepartmentLabel> labels = depService.addDepartmentLabels(departmentId, labelIds);
-            return Response.status(Response.Status.OK).entity(labels).build();
+            List<DepartmentLabelLink> departmentLabelLinks = depService.addDepartmentLabelLinks(departmentId, labelIds);
+            return Response.status(Response.Status.OK).entity(departmentLabelLinks).build();
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
         }
     }
 
     @Override
-    public Response addDepartmentLabelsAutomatically(Long departmentId) throws RestControllerException {
+    public Response addDepartmentLabelLinksAutomatically(Long departmentId) throws RestControllerException {
         if (departmentId == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
         }
         try{
-            List<DepartmentLabel> labels = depService.addDepartmentLabelsAutomatically(departmentId);
-            return Response.status(Response.Status.OK).entity(labels).build();
+            List<DepartmentLabelLink> departmentLabelLinks = depService.addDepartmentLabelLinksAutomatically(departmentId);
+            return Response.status(Response.Status.OK).entity(departmentLabelLinks).build();
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
         }
     }
 
     @Override
-    public Response removeDepartmentLabel(Long departmentId, Long labelId) throws RestControllerException {
+    public Response removeDepartmentLabelLink(Long departmentId, Long labelId) throws RestControllerException {
 
-        DepartmentLabelId id = new DepartmentLabelId(departmentId, labelId);
+        DepartmentLabelLinkId id = new DepartmentLabelLinkId(departmentId, labelId);
 
-        if (depService.getDepartmentLabel(id) == null) {
+        if (depService.getDepartmentLabelLink(id) == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No such DepartmentLabel found");
         }
 
-        depService.deleteDepartmentLabel(id);
+        depService.deleteDepartmentLabelLink(id);
         boolean fallbackAdded = depService.addFallbackLabelIfNeeded(departmentId);
 
         if (fallbackAdded) {
@@ -74,7 +74,7 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
-    public Response createDepartmentAndDepLabels(CreateDepartmentRequest request) throws RestControllerException {
+    public Response createDepartmentAndDepLabelLinks(CreateDepartmentRequest request) throws RestControllerException {
         String name = request.getName();
         Long establishmentId = request.getEstablishmentId();
 
@@ -88,8 +88,8 @@ public class DepartmentController implements DepartmentControllerInterface {
 
         try{
             Department department = depService.createDepartment(name, establishmentId);
-            List<DepartmentLabel> departmentLabels = depService.addDepartmentLabelsAutomatically(department.getDepartmentId());
-            CreateDepartmentResponse response = new CreateDepartmentResponse(department, departmentLabels);
+            List<DepartmentLabelLink> departmentLabelLinks = depService.addDepartmentLabelLinksAutomatically(department.getDepartmentId());
+            CreateDepartmentResponse response = new CreateDepartmentResponse(department, departmentLabelLinks);
 
             return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {
@@ -98,7 +98,7 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
-    public Response deleteDepartmentAndDepLabels(Long departmentId) throws RestControllerException {
+    public Response deleteDepartmentAndDepLabelLinks(Long departmentId) throws RestControllerException {
         if (departmentId == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
         }

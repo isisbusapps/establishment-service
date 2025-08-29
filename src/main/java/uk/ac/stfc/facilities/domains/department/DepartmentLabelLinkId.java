@@ -5,13 +5,13 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class DepartmentLabelId implements Serializable {
+public class DepartmentLabelLinkId implements Serializable {
     private Long departmentId;
     private Long labelId;
 
-    public DepartmentLabelId() {}
+    public DepartmentLabelLinkId() {}
 
-    public DepartmentLabelId(Long departmentId, Long labelId) {
+    public DepartmentLabelLinkId(Long departmentId, Long labelId) {
         this.departmentId = departmentId;
         this.labelId = labelId;
     }
@@ -35,8 +35,8 @@ public class DepartmentLabelId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DepartmentLabelId)) return false;
-        DepartmentLabelId that = (DepartmentLabelId) o;
+        if (!(o instanceof DepartmentLabelLinkId)) return false;
+        DepartmentLabelLinkId that = (DepartmentLabelLinkId) o;
         return Objects.equals(departmentId, that.departmentId) &&
                 Objects.equals(labelId, that.labelId);
     }

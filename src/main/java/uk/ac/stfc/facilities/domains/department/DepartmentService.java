@@ -16,14 +16,14 @@ public interface DepartmentService {
 
     void deleteDepartment(Long depId) throws NoResultException;
 
-    List<DepartmentLabel> addDepartmentLabelsAutomatically(Long departmentId);
+    List<DepartmentLabelLink> addDepartmentLabelLinksAutomatically(Long departmentId);
 
-    List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Long> LabelIds);
+    List<DepartmentLabelLink> addDepartmentLabelLinks(Long departmentId, List<Long> LabelIds);
 
-    void deleteDepartmentLabel(DepartmentLabelId id);
+    void deleteDepartmentLabelLink(DepartmentLabelLinkId id);
 
     boolean addFallbackLabelIfNeeded(Long departmentId);
 
-    DepartmentLabel getDepartmentLabel(DepartmentLabelId id);
+    DepartmentLabelLink getDepartmentLabelLink(DepartmentLabelLinkId id);
 
 }

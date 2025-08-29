@@ -17,26 +17,26 @@ public interface DepartmentControllerInterface {
 
     @PUT
     @Path("/{departmentId}/add-label-manual")
-    Response addDepartmentLabelsManually(@PathParam("departmentId") Long departmentId, List<Long> LabelIds)
+    Response addDepartmentLabelLinksManually(@PathParam("departmentId") Long departmentId, List<Long> LabelIds)
             throws RestControllerException;
 
     @PUT
     @Path("/{departmentId}/add-label-auto")
-    Response addDepartmentLabelsAutomatically(@PathParam("departmentId") Long departmentId)
+    Response addDepartmentLabelLinksAutomatically(@PathParam("departmentId") Long departmentId)
             throws RestControllerException;
 
     @DELETE
     @Path("/{departmentId}/labels/{labelId}")
-    Response removeDepartmentLabel(@PathParam("departmentId") Long departmentId, @PathParam("labelId") Long labelId)
+    Response removeDepartmentLabelLink(@PathParam("departmentId") Long departmentId, @PathParam("labelId") Long labelId)
             throws RestControllerException;
 
     @POST
-    Response createDepartmentAndDepLabels(CreateDepartmentRequest request)
+    Response createDepartmentAndDepLabelLinks(CreateDepartmentRequest request)
         throws RestControllerException;
 
     @DELETE
     @Path("/{departmentId}")
-    Response deleteDepartmentAndDepLabels(@PathParam("departmentId") Long departmentId)
+    Response deleteDepartmentAndDepLabelLinks(@PathParam("departmentId") Long departmentId)
             throws RestControllerException;
 
 }

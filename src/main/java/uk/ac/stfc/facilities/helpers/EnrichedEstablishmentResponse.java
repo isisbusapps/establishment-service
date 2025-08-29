@@ -2,18 +2,18 @@ package uk.ac.stfc.facilities.helpers;
 
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentAlias;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
-import uk.ac.stfc.facilities.domains.establishment.EstablishmentType;
+import uk.ac.stfc.facilities.domains.establishment.EstablishmentCategoryLink;
 
 import java.util.List;
 
 public class EnrichedEstablishmentResponse {
     private EstablishmentDTO establishment;
     private List<EstablishmentAlias> aliases;
-    private List<EstablishmentType> types;
+    private List<EstablishmentCategoryLink> types;
 
     public EnrichedEstablishmentResponse() {}
 
-    public EnrichedEstablishmentResponse(EstablishmentDTO establishment, List<EstablishmentAlias> aliases, List<EstablishmentType> types) {
+    public EnrichedEstablishmentResponse(EstablishmentDTO establishment, List<EstablishmentAlias> aliases, List<EstablishmentCategoryLink> types) {
         this.establishment = establishment;
         this.aliases = aliases;
         this.types = types;
@@ -35,11 +35,11 @@ public class EnrichedEstablishmentResponse {
         this.aliases = aliases;
     }
 
-    public List<EstablishmentType> getTypes() {
+    public List<EstablishmentCategoryLink> getTypes() {
         return types;
     }
 
-    public void setTypes(List<EstablishmentType> types) {
+    public void setTypes(List<EstablishmentCategoryLink> types) {
         this.types = types;
     }
 }

@@ -72,7 +72,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             EstablishmentDTO estEnrichedDTO = mapper.toDTO(estEnriched);
 
             List<EstablishmentAlias> aliases = estService.addEstablishmentAliasesFromRor(establishmentId, rorMatch);
-            List<EstablishmentType> types = estService.addEstablishmentTypesFromRor(establishmentId, rorMatch);
+            List<EstablishmentCategoryLink> types = estService.addEstablishmentCategoriesFromRor(establishmentId, rorMatch);
 
             EnrichedEstablishmentResponse response = new EnrichedEstablishmentResponse(estEnrichedDTO, aliases, types);
 
@@ -120,7 +120,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
         }
         try{
-            List<EstablishmentType> types = estService.addEstablishmentTypes(establishmentId, typeNames);
+            List<EstablishmentCategoryLink> types = estService.addEstablishmentCategoryLinks(establishmentId, typeNames);
             return Response.status(Response.Status.OK).entity(types).build();
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());

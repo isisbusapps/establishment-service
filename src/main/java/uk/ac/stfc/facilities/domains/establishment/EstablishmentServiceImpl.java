@@ -32,12 +32,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     private EstablishmentRepository estRepo;
     private EstablishmentAliasRepository aliasRepo;
-    private EstablishmentTypeRepository typeRepo;
+    private EstablishmentCategoryRepository typeRepo;
 
     public EstablishmentServiceImpl() {}
 
     @Inject
-    public EstablishmentServiceImpl(EstablishmentRepository estRepo, EstablishmentAliasRepository aliasRepo, EstablishmentTypeRepository typeRepo) {
+    public EstablishmentServiceImpl(EstablishmentRepository estRepo, EstablishmentAliasRepository aliasRepo, EstablishmentCategoryRepository typeRepo) {
         this.estRepo = estRepo;
         this.aliasRepo = aliasRepo;
         this.typeRepo = typeRepo;
@@ -142,12 +142,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<EstablishmentType> addEstablishmentTypesFromRor(Long establishmentId, RorSchemaV21 ror) {
+    public List<EstablishmentCategoryLink> addEstablishmentCategoriesFromRor(Long establishmentId, RorSchemaV21 ror) {
         List<String> typeNames = ror.getTypes().stream()
                 .map(Type_::toString)
                 .toList();
 
-        return addEstablishmentTypes(establishmentId, typeNames);
+        return addEstablishmentCategoryLinks(establishmentId, typeNames);
     }
 
     @Override
@@ -211,19 +211,19 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<EstablishmentType> addEstablishmentTypes(Long establishmentId, List<String> typeNames) {
+    public List<EstablishmentCategoryLink> addEstablishmentCategoryLinks(Long establishmentId, List<String> typeNames) {
         if (estRepo.findById(establishmentId) == null) {
             LOGGER.warn("No establishment found with establishment id: " + establishmentId);
             throw new NoResultException("No establishment found with establishment id: " + establishmentId);
         }
 
-        Set<String> existingTypes = typeRepo.getTypesFromEstablishment(establishmentId).stream()
-                .map(EstablishmentType::getType)
+        Set<String> existingTypes = typeRepo.getFromEstablishment(establishmentId).stream()
+                .map(EstablishmentCategoryLink::getType)
                 .collect(Collectors.toSet());
 
-        List<EstablishmentType> newTypes = typeNames.stream()
+        List<EstablishmentCategoryLink> newTypes = typeNames.stream()
                 .filter(typeName -> !existingTypes.contains(typeName))
-                .map(typeName -> new EstablishmentType(establishmentId, typeName))
+                .map(typeName -> new EstablishmentCategoryLink(establishmentId, typeName))
                 .toList();
 
         typeRepo.persist(newTypes);

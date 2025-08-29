@@ -4,9 +4,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 
 @ApplicationScoped
-public class EstablishmentTypeRepositoryImpl implements EstablishmentTypeRepository {
+public class EstablishmentCategoryRepositoryImpl implements EstablishmentCategoryRepository {
     @Override
-    public List<EstablishmentType> getTypesFromEstablishment(Long establishmentId) {
+    public List<EstablishmentCategoryLink> getFromEstablishment(Long establishmentId) {
         return find("establishmentId", establishmentId).list();
     }
 }

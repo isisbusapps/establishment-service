@@ -3,8 +3,8 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 
 import java.util.List;
 
-public interface DepartmentLabelRepository extends PanacheRepositoryBase<DepartmentLabel, DepartmentLabelId> {
+public interface DepartmentLabelLinkRepository extends PanacheRepositoryBase<DepartmentLabelLink, DepartmentLabelLinkId> {
 
     List<Label> findLabelsLinkedToDepartment(Long departmentId);
-    void remove(DepartmentLabel departmentLabel);
+    void remove(DepartmentLabelLink departmentLabelLink);
 }

@@ -1,10 +1,5 @@
 package uk.ac.stfc.facilities.helpers;
 
-import uk.ac.stfc.facilities.domains.department.Department;
-import uk.ac.stfc.facilities.domains.department.DepartmentLabel;
-
-import java.util.List;
-
 public class CreateDepartmentRequest {
     private String name;
     private Long establishmentId;

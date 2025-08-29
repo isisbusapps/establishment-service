@@ -5,17 +5,17 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 
 @ApplicationScoped
-public class DepartmentLabelRepositoryImpl implements DepartmentLabelRepository {
+public class DepartmentLabelLinkRepositoryImpl implements DepartmentLabelLinkRepository {
     @Override
     public List<Label> findLabelsLinkedToDepartment(Long departmentId) {
         return list("department.id", departmentId)
                 .stream()
-                .map(DepartmentLabel::getLabel)
+                .map(DepartmentLabelLink::getLabel)
                 .toList();
     }
 
     @Override
-    public void remove(DepartmentLabel departmentLabel) {
+    public void remove(DepartmentLabelLink departmentLabelLink) {
 
     }
 }

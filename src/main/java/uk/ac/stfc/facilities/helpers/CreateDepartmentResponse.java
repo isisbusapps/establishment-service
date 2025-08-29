@@ -1,20 +1,20 @@
 package uk.ac.stfc.facilities.helpers;
 
 import uk.ac.stfc.facilities.domains.department.Department;
-import uk.ac.stfc.facilities.domains.department.DepartmentLabel;
+import uk.ac.stfc.facilities.domains.department.DepartmentLabelLink;
 
 import java.util.List;
 
 public class CreateDepartmentResponse {
     private Department department;
-    private List<DepartmentLabel> departmentLabels;
+    private List<DepartmentLabelLink> departmentLabelLinks;
 
 
     public CreateDepartmentResponse() {}
 
-    public CreateDepartmentResponse(Department department, List<DepartmentLabel> departmentLabels) {
+    public CreateDepartmentResponse(Department department, List<DepartmentLabelLink> departmentLabelLinks) {
         this.department = department;
-        this.departmentLabels = departmentLabels;
+        this.departmentLabelLinks = departmentLabelLinks;
     }
 
     public Department getDepartment() {
@@ -25,11 +25,11 @@ public class CreateDepartmentResponse {
         this.department = department;
     }
 
-    public List<DepartmentLabel> getDepartmentLabels() {
-        return departmentLabels;
+    public List<DepartmentLabelLink> getDepartmentLabels() {
+        return departmentLabelLinks;
     }
 
-    public void setDepartmentLabels(List<DepartmentLabel> departmentLabels) {
-        this.departmentLabels = departmentLabels;
+    public void setDepartmentLabels(List<DepartmentLabelLink> departmentLabelLinks) {
+        this.departmentLabelLinks = departmentLabelLinks;
     }
 }

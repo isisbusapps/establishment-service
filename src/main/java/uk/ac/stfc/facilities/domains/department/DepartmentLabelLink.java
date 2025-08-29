@@ -2,11 +2,11 @@ package uk.ac.stfc.facilities.domains.department;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "DEPARTMENT_LABEL")
-public class DepartmentLabel {
+@Table(name = "DEPARTMENT_LABEL_LINK")
+public class DepartmentLabelLink {
 
     @EmbeddedId
-    private DepartmentLabelId id;
+    private DepartmentLabelLinkId id;
 
     @ManyToOne
     @MapsId("departmentId")
@@ -18,17 +18,17 @@ public class DepartmentLabel {
     @JoinColumn(name = "LABEL_ID")
     private Label label;
 
-    public DepartmentLabel() { }
+    public DepartmentLabelLink() { }
 
-    public DepartmentLabel(Department department, Label label) {
+    public DepartmentLabelLink(Department department, Label label) {
         this.department = department;
         this.label = label;
-        this.id = new DepartmentLabelId(department.getDepartmentId(), label.getLabelId());
+        this.id = new DepartmentLabelLinkId(department.getDepartmentId(), label.getLabelId());
     }
 
-    public DepartmentLabelId getId() {return id;}
+    public DepartmentLabelLinkId getId() {return id;}
 
-    public void setId(DepartmentLabelId id) {this.id = id;}
+    public void setId(DepartmentLabelLinkId id) {this.id = id;}
 
     public Department getDepartment() {
         return department;

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "ESTABLISHMENT_TYPE")
-public class EstablishmentType {
+public class EstablishmentCategoryLink {
 
     @Id
     @SequenceGenerator(name="ESTABLISHMENT_TYPE_RID_SEQ", sequenceName="ESTABLISHMENT_TYPE_RID_SEQ", allocationSize=1)
@@ -18,15 +18,15 @@ public class EstablishmentType {
     @Column(name = "TYPE", nullable = false)
     private String type;
 
-    public EstablishmentType() {
+    public EstablishmentCategoryLink() {
     }
 
-    public EstablishmentType(Long establishmentId, String type) {
+    public EstablishmentCategoryLink(Long establishmentId, String type) {
         this.establishmentId = establishmentId;
         this.type = type;
     }
 
-    public EstablishmentType(Long RID, Long establishmentId, String type) {
+    public EstablishmentCategoryLink(Long RID, Long establishmentId, String type) {
         this.estTypeId = estTypeId;
         this.establishmentId = establishmentId;
         this.type = type;
