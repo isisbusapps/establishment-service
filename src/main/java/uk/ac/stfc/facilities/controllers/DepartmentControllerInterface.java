@@ -31,12 +31,12 @@ public interface DepartmentControllerInterface {
             throws RestControllerException;
 
     @POST
-    Response createDepartmentAndLabels(CreateDepartmentRequest request)
+    Response createDepartmentAndDepLabels(CreateDepartmentRequest request)
         throws RestControllerException;
 
     @DELETE
     @Path("/{departmentId}")
-    Response deleteDepartmentAndLabels(@PathParam("departmentId") Long departmentId)
+    Response deleteDepartmentAndDepLabels(@PathParam("departmentId") Long departmentId)
             throws RestControllerException;
 
 }

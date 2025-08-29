@@ -69,7 +69,7 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
-    public Response createDepartmentAndLabels(CreateDepartmentRequest request) throws RestControllerException {
+    public Response createDepartmentAndDepLabels(CreateDepartmentRequest request) throws RestControllerException {
         String name = request.getName();
         Long establishmentId = request.getEstablishmentId();
 
@@ -89,7 +89,7 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
-    public Response deleteDepartmentAndLabels(Long departmentId) throws RestControllerException {
+    public Response deleteDepartmentAndDepLabels(Long departmentId) throws RestControllerException {
         if (departmentId == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
         }
