@@ -26,14 +26,14 @@ public class EstablishmentAlias {
         this.alias = alias;
     }
 
-    public EstablishmentAlias(Long RID, Long establishmentId, String alias) {
-        this.aliasId = aliasId;
+    public EstablishmentAlias(Long aliasId, Long establishmentId, String alias) {
+        this.aliasId = this.aliasId;
         this.establishmentId = establishmentId;
         this.alias = alias;
     }
 
-    public Long getRID() {return aliasId;}
-    public void setRID(Long RID) {this.aliasId = aliasId;}
+    public Long getAliasId() {return aliasId;}
+    public void setAliasId(Long aliasId) {this.aliasId = aliasId;}
     public Long getEstablishmentId() {return establishmentId;}
     public void setEstablishmentId(Long establishmentId) {this.establishmentId = establishmentId;}
     public String getAlias() {return alias;}
