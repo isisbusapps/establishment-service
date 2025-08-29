@@ -49,15 +49,23 @@ public class DepartmentController implements DepartmentControllerInterface {
     @Override
     public Response removeDepartmentLabel(Long departmentId, Long labelId) throws RestControllerException {
 
-        boolean removed = service.removeDepartmentLabel(departmentId, labelId);
+        boolean deleted = service.deleteDepartmentLabel(departmentId, labelId);
 
-        if (removed) {
-            return Response.ok()
-                    .entity("{\"message\":\"DepartmentLabel removed successfully\"}")
-                    .build();
-        } else {
-            throw new RestControllerException(ReasonCode. NoResults, "No such DepartmentLabel found");
+        if (!deleted) {
+            throw new RestControllerException(ReasonCode.NoResults, "No such DepartmentLabel found");
         }
+
+        boolean fallbackAdded = service.addFallbackLabelIfNeeded(departmentId);
+
+        if (fallbackAdded) {
+            return Response.ok()
+                    .entity("{\"message\":\"DepartmentLabel removed successfully and fallback added since no labels were remaining after deletion\"}")
+                    .build();
+        }
+
+        return Response.ok()
+                .entity("{\"message\":\"DepartmentLabel removed successfully\"}")
+                .build();
     }
 
     @Override
@@ -88,13 +96,13 @@ public class DepartmentController implements DepartmentControllerInterface {
 
          boolean deleted = service.deleteDepartment(departmentId);
 
-        if (deleted) {
-            return Response.ok()
-                    .entity("{\"message\":\"DepartmentLabel removed successfully\"}")
-                    .build();
-        } else {
-            throw new RestControllerException(ReasonCode. NoResults, "No such Department found");
+        if (!deleted) {
+            throw new RestControllerException(ReasonCode.NoResults, "No such DepartmentLabel found");
         }
+
+        return Response.ok()
+                .entity("{\"message\":\"DepartmentLabel removed successfully\"}")
+                .build();
     }
 
 

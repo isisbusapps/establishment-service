@@ -66,33 +66,34 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public boolean removeDepartmentLabel(Long departmentId, Long labelId) {
+    public boolean deleteDepartmentLabel(Long departmentId, Long labelId) {
 
         DepartmentLabelId id = new DepartmentLabelId(departmentId, labelId);
-        boolean removed = linkRepo.deleteById(id);
+        return linkRepo.deleteById(id);
+    }
 
-        if (!removed) {
-            LOGGER.warn("Label with ID '{}' was not linked to department ID '{}'; no removal performed",
-                    labelId, departmentId);
-            return false;
-        }
+    @Override
+    public boolean addFallbackLabelIfNeeded(Long departmentId) {
 
         Department department = depRepo.findById(departmentId);
 
         if (department == null) {
-            LOGGER.warn("Deleted link was orphaned since no department exists with id: " + departmentId);
-            return true;
+            LOGGER.warn("No fallback added since no department exists with id: {}", departmentId);
+            return false;
         }
 
-        long remainingLabels = linkRepo.count("id.departmentId", departmentId);
-        if (remainingLabels == 0) {
-            Label fallback = labelRepo.getByName(FALLBACK_LABEL_NAME);
-            LOGGER.info("No labels remaining after removal; adding fallback label '{}'", FALLBACK_LABEL_NAME);
-            linkRepo.persist(new DepartmentLabel(department, fallback));
+        long labelCount = linkRepo.count("id.departmentId", departmentId);
+        if (labelCount > 0) {
+            LOGGER.warn("No fallback added since department already has labels");
+            return false;
         }
 
+        Label fallback = labelRepo.getByName(FALLBACK_LABEL_NAME);
+        LOGGER.info("No labels attached to department; adding fallback label '{}'", FALLBACK_LABEL_NAME);
+        linkRepo.persist(new DepartmentLabel(department, fallback));
         return true;
     }
+
 
     @Override
     public List<DepartmentLabel> addDepartmentLabels(Long departmentId, List<Long> LabelIds) {
@@ -135,7 +136,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
             LOGGER.info("Cannot have fallback label with other labels; removing '{}'", FALLBACK_LABEL_NAME);
-            removeDepartmentLabel(department.getDepartmentId(), other.getLabelId());
+            this.deleteDepartmentLabel(department.getDepartmentId(), other.getLabelId());
         }
 
         return linksToAdd;
