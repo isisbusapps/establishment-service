@@ -62,7 +62,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public boolean deleteDepartment(Long depId) throws NoResultException {
-        return false;
+        linkRepo.delete("id.departmentId", depId);
+        return depRepo.deleteById(depId);
     }
 
     @Override
