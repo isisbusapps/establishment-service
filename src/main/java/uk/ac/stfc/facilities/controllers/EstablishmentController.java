@@ -134,7 +134,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
         }
 
         if (estService.getEstablishment(establishmentId) == null) {
-            throw new RestControllerException(ReasonCode.NoResults, "No such Establishment found");
+            throw new RestControllerException(ReasonCode.NoResults, "Establishment not found");
         }
 
         List<Department> linkedDepartments = depService.getDepartmentsByEstablishmentId(establishmentId);

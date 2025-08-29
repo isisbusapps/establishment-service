@@ -8,6 +8,7 @@ import uk.ac.stfc.facilities.domains.department.Department;
 import uk.ac.stfc.facilities.domains.department.DepartmentLabel;
 import uk.ac.stfc.facilities.domains.department.DepartmentLabelId;
 import uk.ac.stfc.facilities.domains.department.DepartmentService;
+import uk.ac.stfc.facilities.domains.establishment.EstablishmentService;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 import uk.ac.stfc.facilities.helpers.CreateDepartmentRequest;
 import uk.ac.stfc.facilities.helpers.CreateDepartmentResponse;
@@ -20,6 +21,8 @@ public class DepartmentController implements DepartmentControllerInterface {
 
     @Inject
     DepartmentService service;
+    @Inject
+    EstablishmentService estService;
 
     @Override
     public Response addDepartmentLabelsManually(Long departmentId, List<Long> labelIds) throws RestControllerException {
@@ -77,6 +80,10 @@ public class DepartmentController implements DepartmentControllerInterface {
 
         if (name == null || establishmentId == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Request must have a name and departmentId");
+        }
+
+        if (estService.getEstablishment(establishmentId) == null) {
+            throw new RestControllerException(ReasonCode.NoResults, "Cannot create department: establishment not found");
         }
 
         try{
