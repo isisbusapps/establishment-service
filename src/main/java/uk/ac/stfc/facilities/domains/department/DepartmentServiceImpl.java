@@ -19,15 +19,15 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private DepartmentRepository depRepo;
     private LabelRepository labelRepo;
-    private DepartmentLabelRepository linkRepo;
+    private DepartmentLabelRepository depLabelRepo;
 
     public DepartmentServiceImpl() {}
 
     @Inject
-    public DepartmentServiceImpl(DepartmentRepository depRepo, LabelRepository labelRepo, DepartmentLabelRepository linkRepo) {
+    public DepartmentServiceImpl(DepartmentRepository depRepo, LabelRepository labelRepo, DepartmentLabelRepository depLabelRepo) {
         this.depRepo = depRepo;
         this.labelRepo = labelRepo;
-        this.linkRepo = linkRepo;
+        this.depLabelRepo = depLabelRepo;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public boolean deleteDepartment(Long depId) throws NoResultException {
-        linkRepo.delete("id.departmentId", depId);
+        depLabelRepo.delete("id.departmentId", depId);
         return depRepo.deleteById(depId);
     }
 
@@ -70,7 +70,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public boolean deleteDepartmentLabel(Long departmentId, Long labelId) {
 
         DepartmentLabelId id = new DepartmentLabelId(departmentId, labelId);
-        return linkRepo.deleteById(id);
+        return depLabelRepo.deleteById(id);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             return false;
         }
 
-        long labelCount = linkRepo.count("id.departmentId", departmentId);
+        long labelCount = depLabelRepo.count("id.departmentId", departmentId);
         if (labelCount > 0) {
             LOGGER.warn("No fallback added since department already has labels");
             return false;
@@ -91,7 +91,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         Label fallback = labelRepo.getByName(FALLBACK_LABEL_NAME);
         LOGGER.info("No labels attached to department; adding fallback label '{}'", FALLBACK_LABEL_NAME);
-        linkRepo.persist(new DepartmentLabel(department, fallback));
+        depLabelRepo.persist(new DepartmentLabel(department, fallback));
         return true;
     }
 
@@ -116,7 +116,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 })
                 .collect(Collectors.toSet());
 
-        Set<Label> existingLabels = new HashSet<>(linkRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
+        Set<Label> existingLabels = new HashSet<>(depLabelRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
 
         Label other = labelRepo.getByName(FALLBACK_LABEL_NAME);
 
@@ -127,12 +127,12 @@ public class DepartmentServiceImpl implements DepartmentService {
             labelsToAdd.remove(other);
         }
 
-        List<DepartmentLabel> linksToAdd = labelsToAdd.stream()
+        List<DepartmentLabel> depLabelsToAdd = labelsToAdd.stream()
                 .map(label -> new DepartmentLabel(department, label))
                 .toList();
 
-        if (!linksToAdd.isEmpty()) {
-            linkRepo.persist(linksToAdd);
+        if (!depLabelsToAdd.isEmpty()) {
+            depLabelRepo.persist(depLabelsToAdd);
         }
 
         if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
@@ -140,7 +140,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             this.deleteDepartmentLabel(department.getDepartmentId(), other.getLabelId());
         }
 
-        return linksToAdd;
+        return depLabelsToAdd;
     }
 
     @Override

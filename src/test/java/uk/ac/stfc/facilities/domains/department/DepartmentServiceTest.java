@@ -19,7 +19,7 @@ public class DepartmentServiceTest {
     private DepartmentRepository depRepo;
 
     @Mock
-    private  DepartmentLabelRepository linkRepo;
+    private  DepartmentLabelRepository depLabelRepo;
 
     private LabelRepository labelRepo;
     private DepartmentService service;
@@ -27,7 +27,7 @@ public class DepartmentServiceTest {
     @BeforeEach
     public void setUp() {
         labelRepo = new LabelRepositoryStub();
-        service = new DepartmentServiceImpl(depRepo, labelRepo, linkRepo);
+        service = new DepartmentServiceImpl(depRepo, labelRepo, depLabelRepo);
     }
 
 
@@ -36,11 +36,11 @@ public class DepartmentServiceTest {
         Department dep = new Department(mocKDeptId, "Department of Physics", mocKDEstId);
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
-        Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
-        Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
-        Assertions.assertEquals(labelRepo.getByName("Physics").getLabelId(), addedLinks.getFirst().getLabelId(), "expected label Id not found");
+        Assertions.assertEquals(1, addedDepLabels.size(), "Unexpected number of labels added");
+        Assertions.assertEquals(mocKDeptId, addedDepLabels.getFirst().getDepartmentId(), "expected department Id not found");
+        Assertions.assertEquals(labelRepo.getByName("Physics").getLabelId(), addedDepLabels.getFirst().getLabelId(), "expected label Id not found");
     }
 
     @Test
@@ -48,10 +48,10 @@ public class DepartmentServiceTest {
         Department dep = new Department(mocKDeptId, "Department of Physics and Biology", mocKDEstId);
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
-        List<Long> addedLabelIds = addedLinks.stream().map(DepartmentLabel::getLabelId).toList();
-        Assertions.assertEquals(2, addedLinks.size(), "Unexpected number of labels added");
+        List<Long> addedLabelIds = addedDepLabels.stream().map(DepartmentLabel::getLabelId).toList();
+        Assertions.assertEquals(2, addedDepLabels.size(), "Unexpected number of labels added");
         Assertions.assertTrue(addedLabelIds.contains(labelRepo.getByName("Biology").getLabelId()), "Biology label not found");
         Assertions.assertTrue(addedLabelIds.contains(labelRepo.getByName("Physics").getLabelId()), "Physics label not found");
     }
@@ -61,11 +61,11 @@ public class DepartmentServiceTest {
         Department dep = new Department(mocKDeptId, "Ministry of Magic", mocKDEstId);
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
-        Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
-        Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
-        Assertions.assertEquals(labelRepo.getByName("Other").getLabelId(), addedLinks.getFirst().getLabelId(), "expected label Id not found");
+        Assertions.assertEquals(1, addedDepLabels.size(), "Unexpected number of labels added");
+        Assertions.assertEquals(mocKDeptId, addedDepLabels.getFirst().getDepartmentId(), "expected department Id not found");
+        Assertions.assertEquals(labelRepo.getByName("Other").getLabelId(), addedDepLabels.getFirst().getLabelId(), "expected label Id not found");
     }
 
     @Test
@@ -73,11 +73,11 @@ public class DepartmentServiceTest {
         Department dep = new Department(mocKDeptId, "DEPARTMENT OF COMPUTER SCIENCE", mocKDEstId);
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
-        Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
-        Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
-        Assertions.assertEquals(labelRepo.getByName("Computer Science").getLabelId(), addedLinks.getFirst().getLabelId(), "expected label Id not found");
+        Assertions.assertEquals(1, addedDepLabels.size(), "Unexpected number of labels added");
+        Assertions.assertEquals(mocKDeptId, addedDepLabels.getFirst().getDepartmentId(), "expected department Id not found");
+        Assertions.assertEquals(labelRepo.getByName("Computer Science").getLabelId(), addedDepLabels.getFirst().getLabelId(), "expected label Id not found");
     }
 
     @Test
@@ -85,11 +85,11 @@ public class DepartmentServiceTest {
         Department dep = new Department(mocKDeptId, "Physiacial Sciences", mocKDEstId);
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
-        Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
-        Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
-        Assertions.assertEquals(labelRepo.getByName("Physics").getLabelId(), addedLinks.getFirst().getLabelId(), "expected label Id not found");
+        Assertions.assertEquals(1, addedDepLabels.size(), "Unexpected number of labels added");
+        Assertions.assertEquals(mocKDeptId, addedDepLabels.getFirst().getDepartmentId(), "expected department Id not found");
+        Assertions.assertEquals(labelRepo.getByName("Physics").getLabelId(), addedDepLabels.getFirst().getLabelId(), "expected label Id not found");
     }
 
     @Test
@@ -97,24 +97,24 @@ public class DepartmentServiceTest {
         Department dep = new Department(mocKDeptId, "Issaac Newton School and Department of Physiacial Sciences", mocKDEstId);
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
         
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabelsAutomatically(dep.getDepartmentId());
 
-        Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
-        Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
-        Assertions.assertEquals(labelRepo.getByName("Physics").getLabelId(), addedLinks.getFirst().getLabelId(), "expected label Id not found");
+        Assertions.assertEquals(1, addedDepLabels.size(), "Unexpected number of labels added");
+        Assertions.assertEquals(mocKDeptId, addedDepLabels.getFirst().getDepartmentId(), "expected department Id not found");
+        Assertions.assertEquals(labelRepo.getByName("Physics").getLabelId(), addedDepLabels.getFirst().getLabelId(), "expected label Id not found");
     }
 
     @Test
     public void test_addDepartmentLabels_LabelsNotAlreadyLinked_AddsLinks()  {
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         List<Label> existingLabels = List.of(labelRepo.getByName("Physics"));
-        when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(existingLabels);
+        when(depLabelRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(existingLabels);
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(labelRepo.getByName("Biology").getLabelId(), labelRepo.getByName("Chemistry").getLabelId()));
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabels(dep.getDepartmentId(), List.of(labelRepo.getByName("Biology").getLabelId(), labelRepo.getByName("Chemistry").getLabelId()));
 
-        List<Long> addedLabelIds = addedLinks.stream().map(DepartmentLabel::getLabelId).toList();
-        Assertions.assertEquals(2, addedLinks.size(), "Unexpected number of labels added");
+        List<Long> addedLabelIds = addedDepLabels.stream().map(DepartmentLabel::getLabelId).toList();
+        Assertions.assertEquals(2, addedDepLabels.size(), "Unexpected number of labels added");
         Assertions.assertTrue(addedLabelIds.contains(labelRepo.getByName("Biology").getLabelId()), "Biology label not found");
         Assertions.assertTrue(addedLabelIds.contains(labelRepo.getByName("Chemistry").getLabelId()), "Chemistry label not found");
     }
@@ -123,13 +123,13 @@ public class DepartmentServiceTest {
     public void test_addDepartmentLabels_LabelAlreadyLinked_LinkNotAdded()  {
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         List<Label> existingLabels = List.of(labelRepo.getByName("Physics"));
-        when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(existingLabels);
+        when(depLabelRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(existingLabels);
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(labelRepo.getByName("Physics").getLabelId(), labelRepo.getByName("Chemistry").getLabelId()));
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabels(dep.getDepartmentId(), List.of(labelRepo.getByName("Physics").getLabelId(), labelRepo.getByName("Chemistry").getLabelId()));
 
-        List<Long> addedLabelIds = addedLinks.stream().map(DepartmentLabel::getLabelId).toList();
-        Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
+        List<Long> addedLabelIds = addedDepLabels.stream().map(DepartmentLabel::getLabelId).toList();
+        Assertions.assertEquals(1, addedDepLabels.size(), "Unexpected number of labels added");
         Assertions.assertFalse(addedLabelIds.contains(labelRepo.getByName("Physics").getLabelId()), "Physics label should not be added again");
         Assertions.assertTrue(addedLabelIds.contains(labelRepo.getByName("Chemistry").getLabelId()), "Chemistry label not found");
     }
@@ -139,12 +139,12 @@ public class DepartmentServiceTest {
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         Label existingLabel = labelRepo.getByName("Biology");
         Label newLabel = labelRepo.getByName("Other");
-        when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(List.of(existingLabel));
+        when(depLabelRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(List.of(existingLabel));
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(newLabel.getLabelId()));
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabels(dep.getDepartmentId(), List.of(newLabel.getLabelId()));
 
-        Assertions.assertEquals(0, addedLinks.size(), "Unexpected number of labels added");
+        Assertions.assertEquals(0, addedDepLabels.size(), "Unexpected number of labels added");
 
     }
 
@@ -152,14 +152,14 @@ public class DepartmentServiceTest {
     public void test_addDepartmentLabels_AddFallbackWhereNoExistingLabel_FallbackAdded()  {
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         Label newLabel = labelRepo.getByName("Other");
-        when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(List.of());
+        when(depLabelRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(List.of());
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), List.of(newLabel.getLabelId()));
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabels(dep.getDepartmentId(), List.of(newLabel.getLabelId()));
 
-        Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
-        Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
-        Assertions.assertEquals(labelRepo.getByName("Other").getLabelId(), addedLinks.getFirst().getLabelId(), "expected label Id not found");
+        Assertions.assertEquals(1, addedDepLabels.size(), "Unexpected number of labels added");
+        Assertions.assertEquals(mocKDeptId, addedDepLabels.getFirst().getDepartmentId(), "expected department Id not found");
+        Assertions.assertEquals(labelRepo.getByName("Other").getLabelId(), addedDepLabels.getFirst().getLabelId(), "expected label Id not found");
 
     }
 
@@ -167,14 +167,14 @@ public class DepartmentServiceTest {
     public void test_addDepartmentLabels_AddDuplicateLabels_DuplicatesNotAdded()  {
         Department dep = new Department(mocKDeptId, "ISIS", mocKDEstId);
         List<Long> newLabelIds = List.of(labelRepo.getByName("Physics").getLabelId(),labelRepo.getByName("Physics").getLabelId());
-        when(linkRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(List.of());
+        when(depLabelRepo.findLabelsLinkedToDepartment(mocKDeptId)).thenReturn(List.of());
         when(depRepo.findById(dep.getDepartmentId())).thenReturn(dep);
 
-        List<DepartmentLabel> addedLinks = service.addDepartmentLabels(dep.getDepartmentId(), newLabelIds);
+        List<DepartmentLabel> addedDepLabels = service.addDepartmentLabels(dep.getDepartmentId(), newLabelIds);
 
-        Assertions.assertEquals(1, addedLinks.size(), "Unexpected number of labels added");
-        Assertions.assertEquals(mocKDeptId, addedLinks.getFirst().getDepartmentId(), "expected department Id not found");
-        Assertions.assertEquals(labelRepo.getByName("Physics").getLabelId(), addedLinks.getFirst().getLabelId(), "expected label Id not found");
+        Assertions.assertEquals(1, addedDepLabels.size(), "Unexpected number of labels added");
+        Assertions.assertEquals(mocKDeptId, addedDepLabels.getFirst().getDepartmentId(), "expected department Id not found");
+        Assertions.assertEquals(labelRepo.getByName("Physics").getLabelId(), addedDepLabels.getFirst().getLabelId(), "expected label Id not found");
 
     }
 
