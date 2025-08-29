@@ -19,6 +19,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,16 +32,19 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private static final Logger LOGGER = Logger.getLogger(EstablishmentService.class);
 
     private EstablishmentRepository estRepo;
+    private CategoryRepository categoryRepo;
+    private EstablishmentCategoryLinkRepository estCatLinkRepo;
     private EstablishmentAliasRepository aliasRepo;
-    private EstablishmentCategoryRepository typeRepo;
-
     public EstablishmentServiceImpl() {}
 
     @Inject
-    public EstablishmentServiceImpl(EstablishmentRepository estRepo, EstablishmentAliasRepository aliasRepo, EstablishmentCategoryRepository typeRepo) {
+    public EstablishmentServiceImpl(EstablishmentRepository estRepo, CategoryRepository categoryRepo,
+                                    EstablishmentCategoryLinkRepository establishmentCategoryLinkRepo,
+                                    EstablishmentAliasRepository aliasRepo) {
         this.estRepo = estRepo;
+        this.categoryRepo = categoryRepo;
+        this.estCatLinkRepo = establishmentCategoryLinkRepo;
         this.aliasRepo = aliasRepo;
-        this.typeRepo = typeRepo;
     }
 
     @Override
@@ -142,12 +146,17 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<EstablishmentCategoryLink> addEstablishmentCategoriesFromRor(Long establishmentId, RorSchemaV21 ror) {
-        List<String> typeNames = ror.getTypes().stream()
+    public List<EstablishmentCategoryLink> addEstablishmentCategoryLinksFromRor(Long establishmentId, RorSchemaV21 ror) {
+        List<String> categoryNames = ror.getTypes().stream()
                 .map(Type_::toString)
                 .toList();
 
-        return addEstablishmentCategoryLinks(establishmentId, typeNames);
+        List<Long> categoryIds = categoryNames.stream()
+                .map(name -> categoryRepo.getByName(name))
+                .map(Category::getCategoryId)
+                .toList();
+
+        return addEstablishmentCategoryLinks(establishmentId, categoryIds);
     }
 
     @Override
@@ -161,7 +170,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public void deleteEstablishment(Long estId) throws NoResultException {
         aliasRepo.delete("establishmentId", estId);
-        typeRepo.delete("establishmentId", estId);
+        categoryRepo.delete("establishmentId", estId);
         estRepo.deleteById(estId);
     }
 
@@ -211,23 +220,24 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<EstablishmentCategoryLink> addEstablishmentCategoryLinks(Long establishmentId, List<String> typeNames) {
-        if (estRepo.findById(establishmentId) == null) {
+    public List<EstablishmentCategoryLink> addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds) {
+
+        Establishment est = estRepo.findById(establishmentId);
+
+        if (est == null) {
             LOGGER.warn("No establishment found with establishment id: " + establishmentId);
             throw new NoResultException("No establishment found with establishment id: " + establishmentId);
         }
 
-        Set<String> existingTypes = typeRepo.getFromEstablishment(establishmentId).stream()
-                .map(EstablishmentCategoryLink::getType)
-                .collect(Collectors.toSet());
+        Set<EstablishmentCategoryLink> existingLinks = new HashSet<>(estCatLinkRepo.getFromEstablishment(est.getEstablishmentId()));
 
-        List<EstablishmentCategoryLink> newTypes = typeNames.stream()
-                .filter(typeName -> !existingTypes.contains(typeName))
-                .map(typeName -> new EstablishmentCategoryLink(establishmentId, typeName))
+        List<EstablishmentCategoryLink> newCategoryLinks = categoryIds.stream()
+                .map(categoryId -> new EstablishmentCategoryLink(est, categoryRepo.findById(categoryId)))
+                .filter(link -> !existingLinks.contains(link))
                 .toList();
 
-        typeRepo.persist(newTypes);
-        return newTypes;
+        estCatLinkRepo.persist(newCategoryLinks);
+        return newCategoryLinks;
     }
 
     private List<Establishment> fuzzySearch(String query, Integer cutoff, boolean useAliases, List<Establishment> establishments) {

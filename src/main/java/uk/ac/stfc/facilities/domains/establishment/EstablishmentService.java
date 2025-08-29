@@ -18,7 +18,7 @@ public interface EstablishmentService {
 
     List<EstablishmentAlias> addEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror);
 
-    List<EstablishmentCategoryLink> addEstablishmentCategoriesFromRor(Long establishmentId, RorSchemaV21 ror);
+    List<EstablishmentCategoryLink> addEstablishmentCategoryLinksFromRor(Long establishmentId, RorSchemaV21 ror);
 
     Establishment createUnverifiedEstablishment(String name);
 
@@ -30,5 +30,5 @@ public interface EstablishmentService {
 
     List<EstablishmentAlias>  addEstablishmentAliases(Long establishmentId, List<String> aliasNames);
 
-    List<EstablishmentCategoryLink> addEstablishmentCategoryLinks(Long establishmentId, List<String> typeNames);
+    List<EstablishmentCategoryLink> addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds);
 }

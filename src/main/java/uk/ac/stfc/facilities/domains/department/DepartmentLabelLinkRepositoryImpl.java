@@ -8,7 +8,7 @@ import java.util.List;
 public class DepartmentLabelLinkRepositoryImpl implements DepartmentLabelLinkRepository {
     @Override
     public List<Label> findLabelsLinkedToDepartment(Long departmentId) {
-        return list("department.id", departmentId)
+        return list("department.departmentId", departmentId)
                 .stream()
                 .map(DepartmentLabelLink::getLabel)
                 .toList();

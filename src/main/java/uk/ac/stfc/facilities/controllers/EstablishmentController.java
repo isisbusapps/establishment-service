@@ -72,7 +72,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             EstablishmentDTO estEnrichedDTO = mapper.toDTO(estEnriched);
 
             List<EstablishmentAlias> aliases = estService.addEstablishmentAliasesFromRor(establishmentId, rorMatch);
-            List<EstablishmentCategoryLink> types = estService.addEstablishmentCategoriesFromRor(establishmentId, rorMatch);
+            List<EstablishmentCategoryLink> types = estService.addEstablishmentCategoryLinksFromRor(establishmentId, rorMatch);
 
             EnrichedEstablishmentResponse response = new EnrichedEstablishmentResponse(estEnrichedDTO, aliases, types);
 

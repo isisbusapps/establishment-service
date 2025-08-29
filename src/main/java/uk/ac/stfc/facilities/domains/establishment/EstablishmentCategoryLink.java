@@ -3,39 +3,42 @@ package uk.ac.stfc.facilities.domains.establishment;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "ESTABLISHMENT_TYPE")
+@Table(name = "ESTABLISHMENT_CATEGORY_LINK")
 public class EstablishmentCategoryLink {
 
-    @Id
-    @SequenceGenerator(name="ESTABLISHMENT_TYPE_RID_SEQ", sequenceName="ESTABLISHMENT_TYPE_RID_SEQ", allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ESTABLISHMENT_TYPE_RID_SEQ")
-    @Column(name = "EST_TYPE_ID")
-    private Long estTypeId;
+    @EmbeddedId
+    private EstablishmentCategoryLinkId id;
 
-    @Column(name = "ESTABLISHMENT_ID", nullable = false)
-    private Long establishmentId;
+    @ManyToOne
+    @MapsId("establishmentId")
+    @JoinColumn(name = "ESTABLISHMENT_ID")
+    private Establishment establishment;
 
-    @Column(name = "TYPE", nullable = false)
-    private String type;
+    @ManyToOne
+    @MapsId("categoryId")
+    @JoinColumn(name = "CATEGORY_ID")
+    private Category category;
 
-    public EstablishmentCategoryLink() {
+    public EstablishmentCategoryLink() {}
+
+    public EstablishmentCategoryLink(Establishment establishment, Category category) {
+        this.establishment = establishment;
+        this.category = category;
     }
 
-    public EstablishmentCategoryLink(Long establishmentId, String type) {
-        this.establishmentId = establishmentId;
-        this.type = type;
-    }
+    public EstablishmentCategoryLinkId getId() {return id;}
 
-    public EstablishmentCategoryLink(Long RID, Long establishmentId, String type) {
-        this.estTypeId = estTypeId;
-        this.establishmentId = establishmentId;
-        this.type = type;
-    }
+    public void setId(EstablishmentCategoryLinkId id) {this.id = id;}
 
-    public Long getRID() {return estTypeId;}
-    public void setRID(Long RID) {this.estTypeId = estTypeId;}
-    public Long getEstablishmentId() {return establishmentId;}
-    public void setEstablishmentId(Long establishmentId) {this.establishmentId = establishmentId;}
-    public String getType() {return type;}
-    public void setType(String type) {this.type = type;}
+    public Establishment getEstablishment() {return establishment;}
+
+    public void setEstablishment(Establishment establishment) {this.establishment = establishment;}
+
+    public Category getCategory() {return category;}
+
+    public void setCategory(Category category) {this.category = category;}
+
+    public Long getestablishmentId() {return id != null ? id.getEstablishmentId() : null;}
+
+    public Long getCategoryId() {return id != null ? id.getCategoryId() : null;}
 }

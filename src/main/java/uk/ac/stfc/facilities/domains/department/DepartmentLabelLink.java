@@ -30,28 +30,16 @@ public class DepartmentLabelLink {
 
     public void setId(DepartmentLabelLinkId id) {this.id = id;}
 
-    public Department getDepartment() {
-        return department;
-    }
+    public Department getDepartment() {return department;}
 
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
+    public void setDepartment(Department department) {this.department = department;}
 
-    public Label getLabel() {
-        return label;
-    }
+    public Label getLabel() {return label;}
 
-    public void setLabel(Label label) {
-        this.label = label;
-    }
+    public void setLabel(Label label) {this.label = label;}
 
-    public Long getDepartmentId() {
-        return id != null ? id.getDepartmentId() : null;
-    }
+    public Long getDepartmentId() {return id != null ? id.getDepartmentId() : null;}
 
-    public Long getLabelId() {
-        return id != null ? id.getLabelId() : null;
-    }
+    public Long getLabelId() {return id != null ? id.getLabelId() : null;}
 
 }

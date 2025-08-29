@@ -26,7 +26,7 @@ class EstablishmentServiceTest {
     private EstablishmentAliasRepository aliasRepo;
 
     @Mock
-    private EstablishmentCategoryRepository typeRepo;
+    private EstablishmentCategoryLinkRepository typeRepo;
 
     @InjectMocks
     EstablishmentServiceImpl service;
@@ -186,7 +186,7 @@ class EstablishmentServiceTest {
         Establishment est = new  Establishment(4L, "Amsterdam");
         when(repo.findById(est.getEstablishmentId())).thenReturn(est);
 
-        List<EstablishmentCategoryLink> results =  service.addEstablishmentCategoriesFromRor(est.getEstablishmentId(), ror);
+        List<EstablishmentCategoryLink> results =  service.addEstablishmentCategoryLinksFromRor(est.getEstablishmentId(), ror);
 
         List<Long> expectedEstId = List.of(est.getEstablishmentId(),est.getEstablishmentId());
         List<String> expectedCategories = List.of("education", "funder");

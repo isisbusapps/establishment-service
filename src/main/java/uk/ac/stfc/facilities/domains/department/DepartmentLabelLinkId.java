@@ -16,21 +16,13 @@ public class DepartmentLabelLinkId implements Serializable {
         this.labelId = labelId;
     }
 
-    public Long getDepartmentId() {
-        return departmentId;
-    }
+    public Long getDepartmentId() {return departmentId;}
 
-    public void setDepartmentId(Long departmentId) {
-        this.departmentId = departmentId;
-    }
+    public void setDepartmentId(Long departmentId) {this.departmentId = departmentId;}
 
-    public Long getLabelId() {
-        return labelId;
-    }
+    public Long getLabelId() {return labelId;}
 
-    public void setLabelId(Long labelId) {
-        this.labelId = labelId;
-    }
+    public void setLabelId(Long labelId) {this.labelId = labelId;}
 
     @Override
     public boolean equals(Object o) {
