@@ -39,7 +39,7 @@ class EstablishmentServiceTest {
         List<Establishment> result = service.getEstablishmentsByQuery("University of Oxford", false, false, ESTABLISHMENT_SEARCH_LIMIT);
 
         Assertions.assertEquals(1, result.size());
-        Assertions.assertEquals("University of Oxford", result.get(0).getEstablishmentName());
+        Assertions.assertEquals("University of Oxford", result.getFirst().getEstablishmentName());
     }
 
     @Test
@@ -47,14 +47,14 @@ class EstablishmentServiceTest {
         Establishment kingsCollegeLondon = new Establishment(2L, "King’s College London");
         when(repo.getAll()).thenReturn(List.of(kingsCollegeLondon));
         when(aliasRepo.getAliasesFromEstablishment(2L))
-                .thenReturn(List.of(new EstablishmentAlias(1l, 2L, "kcl")));
+                .thenReturn(List.of(new EstablishmentAlias(1L, 2L, "kcl")));
 
         List<Establishment> resultWithoutAlias = service.getEstablishmentsByQuery("kcl", false, false, ESTABLISHMENT_SEARCH_LIMIT);
         List<Establishment> resultWithAlias = service.getEstablishmentsByQuery("kcl", true, false, ESTABLISHMENT_SEARCH_LIMIT);
 
         Assertions.assertEquals(0, resultWithoutAlias.size());
         Assertions.assertEquals(1, resultWithAlias.size());
-        Assertions.assertEquals("King’s College London", resultWithAlias.get(0).getEstablishmentName());
+        Assertions.assertEquals("King’s College London", resultWithAlias.getFirst().getEstablishmentName());
     }
 
     @Test
@@ -84,7 +84,7 @@ class EstablishmentServiceTest {
 
         List<Establishment> result = service.getEstablishmentsByQuery("UNIVERSITY OF OXFORD", false, false, ESTABLISHMENT_SEARCH_LIMIT);
 
-        Assertions.assertEquals("University of Oxford", result.get(0).getEstablishmentName());
+        Assertions.assertEquals("University of Oxford", result.getFirst().getEstablishmentName());
     }
 
     @Test
@@ -94,7 +94,7 @@ class EstablishmentServiceTest {
 
         List<Establishment> results = service.getEstablishmentsByQuery("ox", false,false, ESTABLISHMENT_SEARCH_LIMIT);
 
-        Assertions.assertEquals("University of Oxford", results.get(0).getEstablishmentName());
+        Assertions.assertEquals("University of Oxford", results.getFirst().getEstablishmentName());
     }
 
     @Test
@@ -104,7 +104,7 @@ class EstablishmentServiceTest {
 
         List<Establishment> results = service.getEstablishmentsByQuery("oxfd", false, false, ESTABLISHMENT_SEARCH_LIMIT);
 
-        Assertions.assertEquals("University of Oxford", results.get(0).getEstablishmentName());
+        Assertions.assertEquals("University of Oxford", results.getFirst().getEstablishmentName());
     }
 
     @Test
@@ -131,7 +131,6 @@ class EstablishmentServiceTest {
 
         List<Establishment> allEstablishments = List.of(est1, est2, est3, est4);
         when(repo.getVerified()).thenReturn(allEstablishments);
-        int limit = ESTABLISHMENT_SEARCH_LIMIT;
 
         List<Establishment> allResults = service.getEstablishmentsByQuery("King's College London", true, true, ESTABLISHMENT_SEARCH_LIMIT);
 
