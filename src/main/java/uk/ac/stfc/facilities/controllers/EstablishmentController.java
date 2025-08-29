@@ -17,7 +17,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     @Inject
     EstablishmentMapper mapper;
     @Inject
-    EstablishmentService service;
+    EstablishmentService estService;
     @Inject
     DepartmentService depService;
 
@@ -26,7 +26,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
         if (searchQuery == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing search query");
         }
-        return service.getEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
+        return estService.getEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
                 .stream()
                 .map(mapper::toDTO)
                 .toList();
@@ -34,7 +34,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     public List<EstablishmentDTO> getUnverifiedEstablishments() {
-        return service.getUnverifiedEstablishments()
+        return estService.getUnverifiedEstablishments()
                 .stream()
                 .map(mapper::toDTO)
                 .toList();
@@ -45,7 +45,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
         if (establishmentName == null || establishmentName.isEmpty()) {
             throw new RestControllerException(ReasonCode.BadRequest, "Establishment name must not be null or empty");
         }
-        EstablishmentDTO newEstablishment = mapper.toDTO(service.createUnverifiedEstablishment(establishmentName));
+        EstablishmentDTO newEstablishment = mapper.toDTO(estService.createUnverifiedEstablishment(establishmentName));
         return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
     }
 
@@ -56,7 +56,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
         }
 
         try {
-            return  service.getRorMatches(searchQuery);
+            return  estService.getRorMatches(searchQuery);
         } catch (Exception e) {
             throw new RestControllerException(ReasonCode.BadGateway, "Failed to fetch establishments");
         }
@@ -68,11 +68,11 @@ public class EstablishmentController implements EstablishmentControllerInterface
             throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
         }
         try {
-            Establishment estEnriched = service.addRorDataToEstablishment(establishmentId, rorMatch);
+            Establishment estEnriched = estService.addRorDataToEstablishment(establishmentId, rorMatch);
             EstablishmentDTO estEnrichedDTO = mapper.toDTO(estEnriched);
 
-            List<EstablishmentAlias> aliases = service.addEstablishmentAliasesFromRor(establishmentId, rorMatch);
-            List<EstablishmentType> types = service.addEstablishmentTypesFromRor(establishmentId, rorMatch);
+            List<EstablishmentAlias> aliases = estService.addEstablishmentAliasesFromRor(establishmentId, rorMatch);
+            List<EstablishmentType> types = estService.addEstablishmentTypesFromRor(establishmentId, rorMatch);
 
             EnrichedEstablishmentResponse response = new EnrichedEstablishmentResponse(estEnrichedDTO, aliases, types);
 
@@ -93,7 +93,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
         inputEst.setVerified(true);
 
         try {
-            service.updateEstablishment(establishmentId, mapper.toEntity(inputEst));
+            estService.updateEstablishment(establishmentId, mapper.toEntity(inputEst));
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode.NoResults, e.getMessage());
         }
@@ -107,7 +107,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
         }
         try{
-            List<EstablishmentAlias> aliases = service.addEstablishmentAliases(establishmentId, aliasName);
+            List<EstablishmentAlias> aliases = estService.addEstablishmentAliases(establishmentId, aliasName);
             return Response.status(Response.Status.OK).entity(aliases).build();
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
@@ -120,7 +120,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
         }
         try{
-            List<EstablishmentType> types = service.addEstablishmentTypes(establishmentId, typeNames);
+            List<EstablishmentType> types = estService.addEstablishmentTypes(establishmentId, typeNames);
             return Response.status(Response.Status.OK).entity(types).build();
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
@@ -133,7 +133,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input establishment id");
         }
 
-        if (service.getEstablishment(establishmentId) == null) {
+        if (estService.getEstablishment(establishmentId) == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No such Establishment found");
         }
 
@@ -143,7 +143,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             depService.deleteDepartment(dep.getDepartmentId());
         }
 
-        boolean deleted = service.deleteEstablishment(establishmentId);
+        boolean deleted = estService.deleteEstablishment(establishmentId);
 
         if (!deleted) {
             throw new RestControllerException(ReasonCode.NoResults, "Failed to delete establishment");
