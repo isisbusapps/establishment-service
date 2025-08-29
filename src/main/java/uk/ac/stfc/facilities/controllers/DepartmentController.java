@@ -66,7 +66,7 @@ public class DepartmentController implements DepartmentControllerInterface {
         Long establishmentId = request.getEstablishmentId();
 
         if (name == null || establishmentId == null) {
-            throw new RestControllerException(ReasonCode.BadRequest, "Request must have a name and establishmentId");
+            throw new RestControllerException(ReasonCode.BadRequest, "Request must have a name and departmentId");
         }
 
         try{
@@ -79,5 +79,26 @@ public class DepartmentController implements DepartmentControllerInterface {
             throw new RestControllerException(ReasonCode.DuplicateResults, e.getMessage());
         }
     }
+
+    @Override
+    public Response deleteDepartmentAndLabels(Long departmentId) throws RestControllerException {
+        if (departmentId == null) {
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
+        }
+
+         boolean deleted = service.deleteDepartment(departmentId);
+
+        if (deleted) {
+            return Response.ok()
+                    .entity("{\"message\":\"DepartmentLabel removed successfully\"}")
+                    .build();
+        } else {
+            throw new RestControllerException(ReasonCode. NoResults, "No such Department found");
+        }
+    }
+
+
+
+
 }
 

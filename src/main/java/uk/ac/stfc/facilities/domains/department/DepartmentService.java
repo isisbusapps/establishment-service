@@ -14,7 +14,7 @@ public interface DepartmentService {
 
     List<Department> getDepartmentsByEstablishmentId(Long establishmentId);
 
-    Department deleteDepartment(Long depId) throws NoResultException;
+    boolean deleteDepartment(Long depId) throws NoResultException;
 
     List<DepartmentLabel> addDepartmentLabelsAutomatically(Long departmentId);
 

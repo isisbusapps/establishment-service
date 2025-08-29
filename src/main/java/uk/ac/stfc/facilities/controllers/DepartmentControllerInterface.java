@@ -34,4 +34,9 @@ public interface DepartmentControllerInterface {
     Response createDepartmentAndLabels(CreateDepartmentRequest request)
         throws RestControllerException;
 
+    @DELETE
+    @Path("/{departmentId}")
+    Response deleteDepartmentAndLabels(@PathParam("departmentId") Long departmentId)
+            throws RestControllerException;
+
 }

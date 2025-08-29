@@ -61,8 +61,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Department deleteDepartment(Long depId) throws NoResultException {
-        return null;
+    public boolean deleteDepartment(Long depId) throws NoResultException {
+        return false;
     }
 
     @Override
