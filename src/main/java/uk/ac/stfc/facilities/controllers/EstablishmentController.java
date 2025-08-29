@@ -4,6 +4,8 @@ import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import uk.ac.stfc.facilities.domains.department.Department;
+import uk.ac.stfc.facilities.domains.department.DepartmentService;
 import uk.ac.stfc.facilities.domains.establishment.*;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 import uk.ac.stfc.facilities.helpers.EnrichedEstablishmentResponse;
@@ -16,6 +18,8 @@ public class EstablishmentController implements EstablishmentControllerInterface
     EstablishmentMapper mapper;
     @Inject
     EstablishmentService service;
+    @Inject
+    DepartmentService depService;
 
     @Override
     public List<EstablishmentDTO> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) throws RestControllerException {
@@ -121,5 +125,32 @@ public class EstablishmentController implements EstablishmentControllerInterface
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());
         }
+    }
+
+    @Override
+    public Response deleteEstablishmentAndLinkedDepartments(Long establishmentId) throws RestControllerException {
+        if (establishmentId == null) {
+            throw new RestControllerException(ReasonCode.BadRequest, "Missing input establishment id");
+        }
+
+        if (service.getEstablishment(establishmentId) == null) {
+            throw new RestControllerException(ReasonCode.NoResults, "No such Establishment found");
+        }
+
+        List<Department> linkedDepartments = depService.getDepartmentsByEstablishmentId(establishmentId);
+
+        for  (Department dep : linkedDepartments) {
+            depService.deleteDepartment(dep.getDepartmentId());
+        }
+
+        boolean deleted = service.deleteEstablishment(establishmentId);
+
+        if (!deleted) {
+            throw new RestControllerException(ReasonCode.NoResults, "Failed to delete establishment");
+        }
+
+        return Response.ok()
+                .entity("{\"message\":\"Establishment and associated Departments removed successfully\"}")
+                .build();
     }
 }

@@ -8,6 +8,8 @@ public interface EstablishmentService {
 
     List<Establishment> getAllEstablishments();
 
+    Establishment getEstablishment(Long establishmentId);
+
     List<Establishment> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit);
 
     List<RorSchemaV21> getRorMatches(String establishmentName);
@@ -20,7 +22,7 @@ public interface EstablishmentService {
 
     Establishment createUnverifiedEstablishment(String name);
 
-    Establishment deleteEstablishment(Long establishmentId) throws NoResultException;
+    boolean deleteEstablishment(Long establishmentId) throws NoResultException;
 
     Establishment updateEstablishment(Long establishmentId, Establishment updateEst);
 

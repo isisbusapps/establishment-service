@@ -61,4 +61,9 @@ public interface EstablishmentControllerInterface {
                                      List<String> typeNames)
             throws RestControllerException;
 
+    @DELETE
+    @Path("/{establishmentId}")
+    Response deleteEstablishmentAndLinkedDepartments(@PathParam("establishmentId") Long establishmentId)
+            throws RestControllerException;
+
 }

@@ -49,6 +49,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
+    public Establishment getEstablishment(Long establishmentId) {
+        return repo.findById(establishmentId);
+    }
+
+    @Override
     public List<Establishment> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) {
         List<Establishment>  allEst = onlyVerified?  repo.getVerified() : repo.getAll();
 
@@ -154,8 +159,8 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public Establishment deleteEstablishment(Long estId) throws NoResultException {
-        return null;
+    public boolean deleteEstablishment(Long estId) throws NoResultException {
+        return repo.deleteById(estId);
     }
 
     @Override
