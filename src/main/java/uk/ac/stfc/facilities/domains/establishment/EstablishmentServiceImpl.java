@@ -235,7 +235,13 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .collect(Collectors.toSet());
 
         List<EstablishmentCategoryLink> newCategoryLinks = categoryIds.stream()
-                .map(categoryId -> new EstablishmentCategoryLink(est, categoryRepo.findById(categoryId)))
+                .map(categoryId -> {
+                    Category category = categoryRepo.findById(categoryId);
+                    if (category == null) {
+                        throw new NoResultException("Category not found for id: " + categoryId);
+                    }
+                    return new EstablishmentCategoryLink(est, category);
+                })
                 .filter(link -> !existingIds.contains(link.getId()))
                 .toList();
 
