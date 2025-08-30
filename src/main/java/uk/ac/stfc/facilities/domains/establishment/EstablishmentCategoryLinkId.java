@@ -1,7 +1,9 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
+import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 
+@Embeddable
 public class EstablishmentCategoryLinkId implements Serializable {
     private Long establishmentId;
     private Long categoryId;
