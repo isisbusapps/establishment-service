@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -182,7 +181,7 @@ class EstablishmentServiceTest {
         Assertions.assertEquals(expectedEstId, results.stream().map(EstablishmentAlias::getEstablishmentId).toList(), "unexpected establishment id");
         Assertions.assertEquals(expectedAliases, results.stream().map(EstablishmentAlias::getAlias).toList(), "unexpected aliases");
     }
-    
+
     @Test
     void test_createUnverifiedEstablishment_InputEstablishmentName_ReturnsEstablishment() {
         String name = "Test University";
