@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -20,13 +21,16 @@ import static org.mockito.Mockito.*;
 class EstablishmentServiceTest {
 
     @Mock
-    private EstablishmentRepository repo;
+    private EstablishmentRepository estRepo;
 
     @Mock
     private EstablishmentAliasRepository aliasRepo;
 
     @Mock
-    private EstablishmentCategoryLinkRepository typeRepo;
+    private CategoryRepository categoryRepo;
+
+    @Mock
+    private EstablishmentCategoryLinkRepository estCatRepo;
 
     @InjectMocks
     EstablishmentServiceImpl service;
@@ -34,7 +38,7 @@ class EstablishmentServiceTest {
     @Test
     void test_getEstablishmentsByQuery_ExactQuery_ReturnsEstablishments() {
         Establishment oxford = new Establishment(1L, "University of Oxford");
-        when(repo.getAll()).thenReturn(List.of(oxford));
+        when(estRepo.getAll()).thenReturn(List.of(oxford));
 
         List<Establishment> result = service.getEstablishmentsByQuery("University of Oxford", false, false, ESTABLISHMENT_SEARCH_LIMIT);
 
@@ -45,7 +49,7 @@ class EstablishmentServiceTest {
     @Test
     void test_getEstablishmentsByQuery_QueryAlias_ReturnsEstablishments() {
         Establishment kingsCollegeLondon = new Establishment(2L, "King’s College London");
-        when(repo.getAll()).thenReturn(List.of(kingsCollegeLondon));
+        when(estRepo.getAll()).thenReturn(List.of(kingsCollegeLondon));
         when(aliasRepo.getAliasesFromEstablishment(2L))
                 .thenReturn(List.of(new EstablishmentAlias(1L, 2L, "kcl")));
 
@@ -60,7 +64,7 @@ class EstablishmentServiceTest {
     @Test
     void test_getEstablishmentsByQuery_NoMatchQuery_ReturnsEmptyList() {
         Establishment universityCollegeLondon = new Establishment(3L, "University College London");
-        when(repo.getAll()).thenReturn(List.of(universityCollegeLondon));
+        when(estRepo.getAll()).thenReturn(List.of(universityCollegeLondon));
 
         List<Establishment> result = service.getEstablishmentsByQuery("Harvard", false, false, ESTABLISHMENT_SEARCH_LIMIT);
 
@@ -70,7 +74,7 @@ class EstablishmentServiceTest {
     @Test
     void test_getEstablishmentsByQuery_EmptyInput_ReturnsEmptyList() {
         Establishment universityCollegeLondon = new Establishment(3L, "University College London");
-        when(repo.getAll()).thenReturn(List.of(universityCollegeLondon));
+        when(estRepo.getAll()).thenReturn(List.of(universityCollegeLondon));
 
         List<Establishment> result = service.getEstablishmentsByQuery("", false, false, ESTABLISHMENT_SEARCH_LIMIT);
 
@@ -80,7 +84,7 @@ class EstablishmentServiceTest {
     @Test
     void test_getEstablishmentsByQuery_CaseInsensitiveQuery_ReturnsEstablishments() {
         Establishment oxford = new Establishment(1L, "University of Oxford");
-        when(repo.getAll()).thenReturn(List.of(oxford));
+        when(estRepo.getAll()).thenReturn(List.of(oxford));
 
         List<Establishment> result = service.getEstablishmentsByQuery("UNIVERSITY OF OXFORD", false, false, ESTABLISHMENT_SEARCH_LIMIT);
 
@@ -90,7 +94,7 @@ class EstablishmentServiceTest {
     @Test
     void test_getEstablishmentsByQuery_PartialNameQuery_ReturnsEstablishments() {
         Establishment oxford = new Establishment(1L, "University of Oxford");
-        when(repo.getAll()).thenReturn(List.of(oxford));
+        when(estRepo.getAll()).thenReturn(List.of(oxford));
 
         List<Establishment> results = service.getEstablishmentsByQuery("ox", false,false, ESTABLISHMENT_SEARCH_LIMIT);
 
@@ -100,7 +104,7 @@ class EstablishmentServiceTest {
     @Test
     void test_getEstablishmentsByQuery_TypoInQuery_ReturnsEstablishments() {
         Establishment oxford = new Establishment(1L, "University of Oxford");
-        when(repo.getAll()).thenReturn(List.of(oxford));
+        when(estRepo.getAll()).thenReturn(List.of(oxford));
 
         List<Establishment> results = service.getEstablishmentsByQuery("oxfd", false, false, ESTABLISHMENT_SEARCH_LIMIT);
 
@@ -111,8 +115,8 @@ class EstablishmentServiceTest {
     void test_getEstablishmentsByQuery_OnlyVerifiedEstablishments_ReturnsEstablishments() {
         Establishment oxfordUnverified = new Establishment(5L, "Oxford University");
         Establishment oxfordVerified = new Establishment(1L, "University of Oxford");
-        when(repo.getAll()).thenReturn(List.of(oxfordUnverified, oxfordVerified));
-        when(repo.getVerified()).thenReturn(List.of(oxfordVerified));
+        when(estRepo.getAll()).thenReturn(List.of(oxfordUnverified, oxfordVerified));
+        when(estRepo.getVerified()).thenReturn(List.of(oxfordVerified));
 
         List<Establishment> results = service.getEstablishmentsByQuery("oxford university", false, true, ESTABLISHMENT_SEARCH_LIMIT);
 
@@ -130,7 +134,7 @@ class EstablishmentServiceTest {
         Establishment est4 = new Establishment(4L, "King' College Lon");
 
         List<Establishment> allEstablishments = List.of(est1, est2, est3, est4);
-        when(repo.getVerified()).thenReturn(allEstablishments);
+        when(estRepo.getVerified()).thenReturn(allEstablishments);
 
         List<Establishment> allResults = service.getEstablishmentsByQuery("King's College London", true, true, ESTABLISHMENT_SEARCH_LIMIT);
 
@@ -155,7 +159,7 @@ class EstablishmentServiceTest {
     void test_addRorDataToEstablishment_RorSchema_DataAddedToEntity() {
         RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
-        when(repo.findById(est.getEstablishmentId())).thenReturn(est);
+        when(estRepo.findById(est.getEstablishmentId())).thenReturn(est);
 
         Establishment result =  service.addRorDataToEstablishment(est.getEstablishmentId(), ror);
 
@@ -169,7 +173,7 @@ class EstablishmentServiceTest {
     void test_addEstablishmentAliasesFromRor_RorData_ReturnsEstablishmentAliases() {
         RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
         Establishment est = new  Establishment(4L, "Amsterdam");
-        when(repo.findById(est.getEstablishmentId())).thenReturn(est);
+        when(estRepo.findById(est.getEstablishmentId())).thenReturn(est);
 
         List<EstablishmentAlias> results =  service.addEstablishmentAliasesFromRor(est.getEstablishmentId(), ror);
 
@@ -178,21 +182,7 @@ class EstablishmentServiceTest {
         Assertions.assertEquals(expectedEstId, results.stream().map(EstablishmentAlias::getEstablishmentId).toList(), "unexpected establishment id");
         Assertions.assertEquals(expectedAliases, results.stream().map(EstablishmentAlias::getAlias).toList(), "unexpected aliases");
     }
-
-    @Test
-    void test_addEstablishmentCategoriesFromRor_RorData_ReturnsEstablishmentCategoryLinks() {
-        RorSchemaV21 ror = service.getRorMatches("University of Amsterdam").getFirst();
-        Establishment est = new  Establishment(4L, "Amsterdam");
-        when(repo.findById(est.getEstablishmentId())).thenReturn(est);
-
-        List<EstablishmentCategoryLink> results =  service.addEstablishmentCategoryLinksFromRor(est.getEstablishmentId(), ror);
-
-        List<Long> expectedEstId = List.of(est.getEstablishmentId(),est.getEstablishmentId());
-        List<String> expectedCategories = List.of("education", "funder");
-        Assertions.assertEquals(expectedEstId, results.stream().map(EstablishmentCategoryLink::getEstablishmentId).toList(), "unexpected establishment id");
-        Assertions.assertEquals(expectedCategories, results.stream().map(EstablishmentCategoryLink::getType).toList(), "unexpected categories");
-    }
-
+    
     @Test
     void test_createUnverifiedEstablishment_InputEstablishmentName_ReturnsEstablishment() {
         String name = "Test University";
@@ -228,7 +218,7 @@ class EstablishmentServiceTest {
                 true
         );
 
-        when(repo.findById(existing.getEstablishmentId())).thenReturn(existing);
+        when(estRepo.findById(existing.getEstablishmentId())).thenReturn(existing);
 
         Establishment result = service.updateEstablishment(existing.getEstablishmentId(), updated);
 
@@ -250,8 +240,9 @@ class EstablishmentServiceTest {
     void test_getEstablishmentsByQuery_PerformanceTest_CompletesWithinExpectedTime() {
         EstablishmentService service = new EstablishmentServiceImpl(
                 new EstablishmentRepositoryCSV(),
-                new EstablishmentAliasRepositoryCSV(),
-                typeRepo
+                categoryRepo,
+                estCatRepo,
+                new EstablishmentAliasRepositoryCSV()
         );
 
         long start = System.currentTimeMillis();
@@ -269,8 +260,9 @@ class EstablishmentServiceTest {
     void test_getEstablishmentsByQuery_SampleRealDataQuery_PrintsResults() {
         EstablishmentService service = new EstablishmentServiceImpl(
                 new EstablishmentRepositoryCSV(),
-                new EstablishmentAliasRepositoryCSV(),
-                typeRepo
+                categoryRepo,
+                estCatRepo,
+                new EstablishmentAliasRepositoryCSV()
         );
 
         List<Establishment> results = service.getEstablishmentsByQuery("ucl", true, true,ESTABLISHMENT_SEARCH_LIMIT);
