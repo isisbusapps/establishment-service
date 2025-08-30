@@ -56,7 +56,7 @@ public interface EstablishmentControllerInterface {
             throws RestControllerException;
 
     @PUT
-    @Path("/{establishmentId}/types")
+    @Path("/{establishmentId}/categories")
     Response addEstablishmentCategoryLinks(@PathParam("establishmentId") Long establishmentId,
                                            List<Long> categoryIds)
             throws RestControllerException;
