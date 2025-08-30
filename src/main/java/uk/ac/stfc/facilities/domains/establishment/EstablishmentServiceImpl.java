@@ -229,11 +229,14 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             throw new NoResultException("No establishment found with establishment id: " + establishmentId);
         }
 
-        Set<EstablishmentCategoryLink> existingLinks = new HashSet<>(estCatLinkRepo.getFromEstablishment(est.getEstablishmentId()));
+        Set<EstablishmentCategoryLinkId> existingIds = estCatLinkRepo.getFromEstablishment(est.getEstablishmentId())
+                .stream()
+                .map(EstablishmentCategoryLink::getId)
+                .collect(Collectors.toSet());
 
         List<EstablishmentCategoryLink> newCategoryLinks = categoryIds.stream()
                 .map(categoryId -> new EstablishmentCategoryLink(est, categoryRepo.findById(categoryId)))
-                .filter(link -> !existingLinks.contains(link))
+                .filter(link -> !existingIds.contains(link.getId()))
                 .toList();
 
         estCatLinkRepo.persist(newCategoryLinks);
