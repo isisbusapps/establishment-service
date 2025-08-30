@@ -9,14 +9,14 @@ import java.util.List;
 public class EnrichedEstablishmentResponse {
     private EstablishmentDTO establishment;
     private List<EstablishmentAlias> aliases;
-    private List<EstablishmentCategoryLink> types;
+    private List<EstablishmentCategoryLink> categories;
 
     public EnrichedEstablishmentResponse() {}
 
-    public EnrichedEstablishmentResponse(EstablishmentDTO establishment, List<EstablishmentAlias> aliases, List<EstablishmentCategoryLink> types) {
+    public EnrichedEstablishmentResponse(EstablishmentDTO establishment, List<EstablishmentAlias> aliases, List<EstablishmentCategoryLink> categories) {
         this.establishment = establishment;
         this.aliases = aliases;
-        this.types = types;
+        this.categories = categories;
     }
 
     public EstablishmentDTO getEstablishment() {
@@ -35,11 +35,11 @@ public class EnrichedEstablishmentResponse {
         this.aliases = aliases;
     }
 
-    public List<EstablishmentCategoryLink> getTypes() {
-        return types;
+    public List<EstablishmentCategoryLink> getCategories() {
+        return categories;
     }
 
-    public void setTypes(List<EstablishmentCategoryLink> types) {
-        this.types = types;
+    public void setCategories(List<EstablishmentCategoryLink> categories) {
+        this.categories = categories;
     }
 }
