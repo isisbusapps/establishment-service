@@ -1,6 +1,7 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
 import jakarta.persistence.*;
+import uk.ac.stfc.facilities.domains.department.DepartmentLabelLinkId;
 
 @Entity
 @Table(name = "ESTABLISHMENT_CATEGORY_LINK")
@@ -24,6 +25,7 @@ public class EstablishmentCategoryLink {
     public EstablishmentCategoryLink(Establishment establishment, Category category) {
         this.establishment = establishment;
         this.category = category;
+        this.id = new EstablishmentCategoryLinkId(establishment.getEstablishmentId(), category.getCategoryId());
     }
 
     public EstablishmentCategoryLinkId getId() {return id;}
