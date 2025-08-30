@@ -38,7 +38,7 @@ public class EstablishmentCategoryLink {
 
     public void setCategory(Category category) {this.category = category;}
 
-    public Long getestablishmentId() {return id != null ? id.getEstablishmentId() : null;}
+    public Long getEstablishmentId() {return id != null ? id.getEstablishmentId() : null;}
 
     public Long getCategoryId() {return id != null ? id.getCategoryId() : null;}
 }
