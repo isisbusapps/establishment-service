@@ -24,15 +24,29 @@ public class EstablishmentControllerTest extends RestTest {
 
     /* ----------------- Search / Query Endpoints ----------------- */
 
+
+
     @Test
-    public void test_getEstablishmentsByQuery_EstablishmentExists_ReturnsEstablishmentList() {
+    public void test_getEstablishmentsByQuery_OnlyVerifiedFalse_ReturnsUnverifiedEstablishment() {
         given()
-                .queryParam("searchQuery", VERIFIED_EST_NAME)
+                .queryParam("searchQuery", UNVERIFIED_EST_NAME)
+                .queryParam("onlyVerified", false)
                 .when()
                 .get(getBaseURI() + "/establishment/search")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("establishmentName", hasItem(VERIFIED_EST_NAME));
+                .body("establishmentName", hasItem(UNVERIFIED_EST_NAME));
+    }
+
+    @Test
+    public void test_getEstablishmentsByQuery_OnlyVerifiedTrue_DoesNotReturnUnverifiedEstablishment() {
+        given()
+                .queryParam("searchQuery",  UNVERIFIED_EST_NAME)
+                .when()
+                .get(getBaseURI() + "/establishment/search")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("establishmentName", not(hasItem(UNVERIFIED_EST_NAME)));
     }
 
     @Test
@@ -56,7 +70,7 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
     @Test
-    public void test_getUnverifiedEstablishments() {
+    public void test_getUnverifiedEstablishments_ReturnsUnverifiedEstablishmentList() {
         given()
                 .when()
                 .get(getBaseURI() + "/establishment/unverified")
@@ -67,5 +81,5 @@ public class EstablishmentControllerTest extends RestTest {
 
 
 
-
+    
 }
