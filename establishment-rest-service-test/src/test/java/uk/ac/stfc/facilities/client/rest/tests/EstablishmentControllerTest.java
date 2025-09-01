@@ -19,12 +19,11 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Override
     protected void cleanupData() throws Exception {
+        deleteTestData("ESTABLISHMENT_ALIAS", "ALIAS_ID");
         deleteTestData("ESTABLISHMENT_NEW", "ID");
     }
 
     /* ----------------- Search / Query Endpoints ----------------- */
-
-
 
     @Test
     public void test_getEstablishmentsByQuery_OnlyVerifiedFalse_ReturnsUnverifiedEstablishment() {
@@ -70,6 +69,30 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
     @Test
+    public void test_getEstablishmentsByQuery_WithAliasEnabled_ReturnsEstablishment() {
+        given()
+                .queryParam("searchQuery", VERIFIED_EST_ALIAS)
+                .queryParam("useAlias", true)
+                .when()
+                .get(getBaseURI() + "/establishment/search")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("establishmentName", hasItem(VERIFIED_EST_NAME));
+    }
+
+    @Test
+    public void test_getEstablishmentsByQuery_WithAliasDisabled_DoesNotReturnEstablishment() {
+        given()
+                .queryParam("searchQuery", VERIFIED_EST_ALIAS)
+                .queryParam("useAlias", false)
+                .when()
+                .get(getBaseURI() + "/establishment/search")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("establishmentName", not(hasItem(VERIFIED_EST_NAME)));
+    }
+
+    @Test
     public void test_getUnverifiedEstablishments_ReturnsUnverifiedEstablishmentList() {
         given()
                 .when()
@@ -80,6 +103,9 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
 
-
     
+
+
+
+
 }

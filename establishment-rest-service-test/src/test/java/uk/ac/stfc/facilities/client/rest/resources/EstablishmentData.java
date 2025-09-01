@@ -10,8 +10,13 @@ public class EstablishmentData {
     public static Operation data = sequenceOf(
             insertInto("ESTABLISHMENT_NEW")
                     .columns("ID",      "ESTABLISHMENT_NAME", "ROR_ID",       "COUNTRY_NAME",   "ESTABLISHMENT_URL",  "FROM_DATE",   "THRU_DATE",  "VERIFIED")
-                    .values(-600009,    VERIFIED_EST_NAME,        "rorstring1",   "UK",              "aaa",                null,         null,         1)
-                    .values(-600008,    UNVERIFIED_EST_NAME,       "rorstring2",   "UK",              "bbb",                null,         null,         0 )
+                    .values(-600000,    VERIFIED_EST_NAME,        "rorstring1",   "UK",              "aaa",                null,         null,         1)
+                    .values(-600001,    UNVERIFIED_EST_NAME,       "rorstring2",   "UK",              "bbb",                null,         null,         0 )
+                    .build(),
+
+            insertInto("ESTABLISHMENT_ALIAS")
+                    .columns("ALIAS_ID", "ESTABLISHMENT_ID",  "ALIAS")
+                    .values(-700000,     -600000,   VERIFIED_EST_ALIAS)
                     .build()
     );
 }
