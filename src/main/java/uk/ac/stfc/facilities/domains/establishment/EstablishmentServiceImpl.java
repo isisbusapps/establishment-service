@@ -19,7 +19,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -175,7 +174,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public void deleteEstablishment(Long estId) throws NoResultException {
         aliasRepo.delete("establishmentId", estId);
-        categoryRepo.delete("establishmentId", estId);
+        estCatLinkRepo.delete("establishment.establishmentId", estId);
         estRepo.deleteById(estId);
     }
 
