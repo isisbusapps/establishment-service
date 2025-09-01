@@ -152,8 +152,13 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 .toList();
 
         List<Long> categoryIds = categoryNames.stream()
-                .map(name -> categoryRepo.getByName(name))
-                .map(Category::getCategoryId)
+                .map(name -> {
+                    Category category = categoryRepo.getByName(name);
+                    if (category == null) {
+                        throw new NoResultException("No establishment category not found with name: " + name);
+                    }
+                    return category.getCategoryId();
+                })
                 .toList();
 
         return addEstablishmentCategoryLinks(establishmentId, categoryIds);
