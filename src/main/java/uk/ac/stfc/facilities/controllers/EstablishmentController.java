@@ -102,12 +102,12 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
-    public Response addEstablishmentAliases(Long establishmentId, List<String> aliasName) throws RestControllerException {
-        if (establishmentId == null || aliasName == null || aliasName.isEmpty()) {
+    public Response addEstablishmentAliases(Long establishmentId, List<String> aliasNames) throws RestControllerException {
+        if (establishmentId == null || aliasNames == null || aliasNames.isEmpty()) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing required input data");
         }
         try{
-            List<EstablishmentAlias> aliases = estService.addEstablishmentAliases(establishmentId, aliasName);
+            List<EstablishmentAlias> aliases = estService.addEstablishmentAliases(establishmentId, aliasNames);
             return Response.status(Response.Status.OK).entity(aliases).build();
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode. NoResults, e.getMessage());

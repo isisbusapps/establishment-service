@@ -191,7 +191,7 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
     @Test
-    public void test_rorVerifyAndEnrichData_EstablishmentNonExistent_ReturnsBadRequest() {
+    public void test_rorVerifyAndEnrichData_EstablishmentNonExistent_ReturnsNotFound() {
         String RorTestPayLoad = RorPayloadBuilder.buildTestRorPayload();
 
         given()
@@ -239,6 +239,51 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
+
+    /* -----------------  addEstablishmentAliases ----------------- */
+
+    @Test
+    public void test_addEstablishmentAliases_ValidInput_ReturnsUpdatedAliases() {
+        given()
+                .contentType("application/json")
+                .body(Json.createArrayBuilder()
+                        .add(NEW_ALIAS_NAME_1)
+                        .add(NEW_ALIAS_NAME_2)
+                        .build()
+                        .toString())
+                .when()
+                .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/aliases")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("alias", hasItems(NEW_ALIAS_NAME_1, NEW_ALIAS_NAME_2))
+                .body("establishmentId", everyItem(equalTo(VERIFIED_EST_ID)));;
+    }
+
+    @Test
+    public void test_addEstablishmentAliases_EstablishmentNonExistent_ReturnsNotFound() {
+        given()
+                .contentType("application/json")
+                .body(Json.createArrayBuilder()
+                        .add(NEW_ALIAS_NAME_1)
+                        .add(NEW_ALIAS_NAME_2)
+                        .build()
+                        .toString())
+                .when()
+                .put(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID + "/aliases")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void test_addEstablishmentAliases_MissingInput_ReturnsBadRequest() {
+        given()
+                .contentType("application/json")
+                .when()
+                .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/aliases")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
 
 
 
