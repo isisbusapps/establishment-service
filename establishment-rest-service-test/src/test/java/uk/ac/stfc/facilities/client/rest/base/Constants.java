@@ -31,6 +31,9 @@ public class Constants {
     public static final int TEST_LABEL_ID = 1;
     public static final int NEW_LABEL_ID_1 = 2;
     public static final int NEW_LABEL_ID_2 = 3;
+
     public static final String TEST_DEPARTMENT_NAME = "TEST_DEPARTMENT_PHYSICS_CHEMISTRY_MATHEMATICS";
+    public static final String NEW_DEPARTMENT_NAME = "TEST_NEW_DEPARTMENT_CHEMISTRY_MATHEMATICS";
+
 
 }

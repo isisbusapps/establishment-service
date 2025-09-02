@@ -68,6 +68,15 @@ public abstract class RestTestDatabaseClient {
         sql("DELETE FROM " + table + " WHERE " + field + " = '" + value + "'").execute(connection, null);
     }
 
+    public void deleteDepartmentLabelsByDepartmentName(String departmentName) throws SQLException {
+        sql(
+                "DELETE FROM DEPARTMENT_LABEL_LINK " +
+                        "WHERE DEPARTMENT_ID = (" +
+                        "    SELECT ID FROM DEPARTMENT WHERE DEPARTMENT_NAME = '" + departmentName + "'" +
+                        ")"
+        ).execute(connection, null);
+    }
+
     public int getQueryRowCount(String query) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet standardRS = statement.executeQuery(query);

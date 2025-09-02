@@ -23,6 +23,9 @@ public class DepartmentControllerTest extends RestTest {
     protected void cleanupData() throws Exception {
         deleteTestData("DEPARTMENT_LABEL_LINK", "DEPARTMENT_ID");
         deleteTestData("DEPARTMENT", "ID");
+        deleteDepartmentLabelsByDepartmentName(NEW_DEPARTMENT_NAME);
+        deleteTestData("DEPARTMENT", "DEPARTMENT_NAME", NEW_DEPARTMENT_NAME);
+
 
         deleteTestData("ESTABLISHMENT_ALIAS", "ESTABLISHMENT_ID");
         deleteTestData("ESTABLISHMENT_CATEGORY_LINK", "ESTABLISHMENT_ID");
@@ -132,6 +135,58 @@ public class DepartmentControllerTest extends RestTest {
         given()
                 .when()
                 .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/labels/" + NON_EXISTENT_LABEL_ID)
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    /* ----------------- createDepartmentAndDepLabelLinks ----------------- */
+
+    @Test
+    public void test_createDepartmentAndDepLabelLinks_ValidInput_ReturnsDepartmentAndLinks() {
+        String payload = Json.createObjectBuilder()
+                .add("name", NEW_DEPARTMENT_NAME)
+                .add("establishmentId", VERIFIED_EST_ID)
+                .build().toString();
+
+        given()
+                .contentType("application/json")
+                .body(payload)
+                .when()
+                .post(getBaseURI() + "/department")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("department.departmentName", equalTo(NEW_DEPARTMENT_NAME))
+                .body("department.establishmentId", equalTo(VERIFIED_EST_ID))
+                .body("departmentLabels.labelId", hasItems(NEW_LABEL_ID_1, NEW_LABEL_ID_2));
+    }
+
+    @Test
+    public void test_createDepartmentAndDepLabelLinks_MissingInput_ReturnsBadRequest() {
+        String payload = Json.createObjectBuilder()
+                .add("name", NEW_DEPARTMENT_NAME)
+                .build().toString();
+
+        given()
+                .contentType("application/json")
+                .body(payload)
+                .when()
+                .post(getBaseURI() + "/department")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void test_createDepartmentAndDepLabelLinks_NonExistentEstablishment_ReturnsNotFound() {
+        String payload = Json.createObjectBuilder()
+                .add("name", NEW_DEPARTMENT_NAME)
+                .add("establishmentId", NON_EXISTENT_EST_ID)
+                .build().toString();
+
+        given()
+                .contentType("application/json")
+                .body(payload)
+                .when()
+                .post(getBaseURI() + "/department")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
