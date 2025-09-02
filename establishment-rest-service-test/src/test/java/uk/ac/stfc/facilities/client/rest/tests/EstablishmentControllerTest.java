@@ -21,9 +21,11 @@ public class EstablishmentControllerTest extends RestTest {
     protected void cleanupData() throws Exception {
         deleteTestData("ESTABLISHMENT_ALIAS", "ALIAS_ID");
         deleteTestData("ESTABLISHMENT_NEW", "ID");
+        deleteTestData("ESTABLISHMENT_NEW", "ESTABLISHMENT_NAME", NEW_EST_NAME);
+
     }
 
-    /* ----------------- Search / Query Endpoints ----------------- */
+    /* ----------------- getEstablishmentsByQuery ----------------- */
 
     @Test
     public void test_getEstablishmentsByQuery_OnlyVerifiedFalse_ReturnsUnverifiedEstablishment() {
@@ -92,6 +94,8 @@ public class EstablishmentControllerTest extends RestTest {
                 .body("establishmentName", not(hasItem(VERIFIED_EST_NAME)));
     }
 
+    /* -----------------  getUnverifiedEstablishments ----------------- */
+
     @Test
     public void test_getUnverifiedEstablishments_ReturnsUnverifiedEstablishmentList() {
         given()
@@ -103,7 +107,32 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
 
-    
+    /* -----------------  createUnverifiedEstablishment ----------------- */
+
+    @Test
+    public void test_createUnverifiedEstablishment_ValidInput_ReturnsCreatedEstablishment() {
+        given()
+                .contentType("application/json")
+                .body( NEW_EST_NAME)
+                .when()
+                .post(getBaseURI() + "/establishment")
+                .then()
+                .statusCode(Response.Status.CREATED.getStatusCode())
+                .body("establishmentName", equalTo(NEW_EST_NAME))
+                .body("verified", equalTo(false));
+    }
+
+    @Test
+    public void test_createUnverifiedEstablishment_EmptyName_ReturnsBadRequest() {
+        given()
+                .contentType("application/json")
+                .body("")
+                .when()
+                .post(getBaseURI() + "/establishment")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
 
 
 
