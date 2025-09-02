@@ -88,6 +88,19 @@ public class DepartmentControllerTest extends RestTest {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    @Test
+    public void test_addDepartmentLabelLinksManually_LabelNonExistent_ReturnsNotFound() {
+        given()
+                .contentType("application/json")
+                .body(Json.createArrayBuilder()
+                        .add(NON_EXISTENT_LABEL_ID)
+                        .build().toString())
+                .when()
+                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/add-label-manual")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
     /* ----------------- addDepartmentLabelLinksAutomatically ----------------- */
 
     @Test
