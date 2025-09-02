@@ -4,6 +4,7 @@ import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 import uk.ac.stfc.facilities.client.rest.base.RestTest;
 import uk.ac.stfc.facilities.client.rest.resources.EstablishmentData;
+import uk.ac.stfc.facilities.client.rest.resources.RorPayloadBuilder;
 
 
 import static io.restassured.RestAssured.given;
@@ -19,7 +20,8 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Override
     protected void cleanupData() throws Exception {
-        deleteTestData("ESTABLISHMENT_ALIAS", "ALIAS_ID");
+        deleteTestData("ESTABLISHMENT_ALIAS", "ESTABLISHMENT_ID");
+        deleteTestData("ESTABLISHMENT_CATEGORY_LINK", "ESTABLISHMENT_ID");
         deleteTestData("ESTABLISHMENT_NEW", "ID");
         deleteTestData("ESTABLISHMENT_NEW", "ESTABLISHMENT_NAME", NEW_EST_NAME);
 
@@ -156,7 +158,38 @@ public class EstablishmentControllerTest extends RestTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
- 
+    /* -----------------  rorVerifyAndEnrichData ----------------- */
+
+
+    @Test
+    public void test_rorVerifyAndEnrichData_ValidInput_ReturnsUpdatedEstablishment() {
+        String RorTestPayLoad = RorPayloadBuilder.buildTestRorPayload();
+
+        given()
+                .contentType("application/json")
+                .body(RorTestPayLoad)
+                .when()
+                .put(getBaseURI() + "/establishment/-600001/ror-enrich-verify")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                // Validate establishment object
+                .body("establishment.rorId", equalTo(ROR_PAYLOAD_ROR_ID))
+                .body("establishment.establishmentName", equalTo(ROR_PAYLOAD_NAME))
+                .body("establishment.countryName", equalTo(ROR_PAYLOAD_COUNTRY))
+                .body("establishment.establishmentUrl", equalTo(ROR_PAYLOAD_URL))
+                .body("establishment.verified", equalTo(true))
+                // Validate aliases
+                .body("aliases[0].alias", equalTo(ROR_PAYLOAD_LABEL))
+                .body("aliases[1].alias", equalTo(ROR_PAYLOAD_ACRONYM))
+                .body("aliases[2].alias", equalTo(ROR_PAYLOAD_ALIAS))
+                // Validate categories
+                .body("categories[0].category.categoryName", equalTo(ROR_PAYLOAD_TYPE_1))
+                .body("categories[1].category.categoryName", equalTo(ROR_PAYLOAD_TYPE_2))
+                .body("categories[0].establishment.establishmentId", equalTo(-600001))
+                .body("categories[1].establishment.establishmentId", equalTo(-600001));
+    }
+
+
 
 
 
