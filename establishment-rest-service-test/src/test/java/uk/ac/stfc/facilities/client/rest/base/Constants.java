@@ -7,7 +7,6 @@ public class Constants {
     public static final int ALIAS_ID = -700000;
     public static final int VERIFIED_EST_CATEGORY_ID = 1;
 
-
     public static final String UNVERIFIED_EST_NAME = "TEST_UNVERIFIED_EST";
     public static final String VERIFIED_EST_NAME = "TEST_VERIFIED_EST";
     public static final String VERIFIED_EST_ALIAS = "TEST_ALIAS";
@@ -25,4 +24,10 @@ public class Constants {
     public static final String ROR_PAYLOAD_LABEL = "TEST_ROR_label";
     public static final String ROR_PAYLOAD_TYPE_1 = "education";
     public static final String ROR_PAYLOAD_TYPE_2 = "funder";
+
+    public static final int TEST_DEPARTMENT_ID = -800000;
+    public static final int TEST_LABEL_ID = 1;
+
+    public static final String TEST_DEPARTMENT_NAME = "TEST_DEPARTMENT_PHYSICS_CHEMISTRY_BIOLOGY";
+
 }
