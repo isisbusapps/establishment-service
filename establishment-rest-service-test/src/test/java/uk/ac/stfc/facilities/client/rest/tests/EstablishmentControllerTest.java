@@ -173,6 +173,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 // Validate establishment
+                .body("establishment.establishmentId", equalTo(-600001))
                 .body("establishment.rorId", equalTo(ROR_PAYLOAD_ROR_ID))
                 .body("establishment.establishmentName", equalTo(ROR_PAYLOAD_NAME))
                 .body("establishment.countryName", equalTo(ROR_PAYLOAD_COUNTRY))
