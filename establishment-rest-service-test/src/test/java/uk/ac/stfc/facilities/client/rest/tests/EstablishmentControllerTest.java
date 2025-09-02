@@ -133,7 +133,30 @@ public class EstablishmentControllerTest extends RestTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
+    /* -----------------  getRorMatches ----------------- */
 
+    @Test
+    public void test_getRorMatches_ValidQuery_ReturnsMatches() {
+        given()
+                .queryParam("searchQuery", ROR_QUERY)
+                .when()
+                .get(getBaseURI() + "/establishment/ror-search")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("[0].names.find { it.types.contains('ror_display') }.value",
+                        equalTo("King's College London"));
+    }
+
+    @Test
+    public void test_getRorMatches_MissingQuery_ReturnsBadRequest() {
+        given()
+                .when()
+                .get(getBaseURI() + "/establishment/ror-search")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+ 
 
 
 
