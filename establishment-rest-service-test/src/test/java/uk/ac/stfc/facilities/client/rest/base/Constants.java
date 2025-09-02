@@ -26,8 +26,10 @@ public class Constants {
     public static final String ROR_PAYLOAD_TYPE_2 = "funder";
 
     public static final int TEST_DEPARTMENT_ID = -800000;
+    public static final int NON_EXISTENT_DEPARTMENT_ID = -1600000;
     public static final int TEST_LABEL_ID = 1;
-
-    public static final String TEST_DEPARTMENT_NAME = "TEST_DEPARTMENT_PHYSICS_CHEMISTRY_BIOLOGY";
+    public static final int NEW_LABEL_ID_1 = 2;
+    public static final int NEW_LABEL_ID_2 = 3;
+    public static final String TEST_DEPARTMENT_NAME = "TEST_DEPARTMENT_PHYSICS_CHEMISTRY_MATHEMATICS";
 
 }
