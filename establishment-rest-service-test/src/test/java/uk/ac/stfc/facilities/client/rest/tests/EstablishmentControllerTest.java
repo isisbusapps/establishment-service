@@ -4,6 +4,7 @@ import jakarta.json.Json;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 import uk.ac.stfc.facilities.client.rest.base.RestTest;
+import uk.ac.stfc.facilities.client.rest.resources.DepartmentData;
 import uk.ac.stfc.facilities.client.rest.resources.EstablishmentData;
 import uk.ac.stfc.facilities.client.rest.resources.RorPayloadBuilder;
 
@@ -18,15 +19,18 @@ public class EstablishmentControllerTest extends RestTest {
     @Override
     protected void injectData() throws Exception {
         injectData(EstablishmentData.data);
+        injectData(DepartmentData.data);
     }
 
     @Override
     protected void cleanupData() throws Exception {
+        deleteTestData("DEPARTMENT_LABEL_LINK", "DEPARTMENT_ID");
+        deleteTestData("DEPARTMENT", "ID");
+
         deleteTestData("ESTABLISHMENT_ALIAS", "ESTABLISHMENT_ID");
         deleteTestData("ESTABLISHMENT_CATEGORY_LINK", "ESTABLISHMENT_ID");
         deleteTestData("ESTABLISHMENT_NEW", "ID");
         deleteTestData("ESTABLISHMENT_NEW", "ESTABLISHMENT_NAME", NEW_EST_NAME);
-
     }
 
     /* ----------------- getEstablishmentsByQuery ----------------- */
