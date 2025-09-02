@@ -262,6 +262,21 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
     @Test
+    public void test_addEstablishmentAliases_AliasAlreadyExists_AliasNotAdded() {
+        given()
+                .contentType("application/json")
+                .body(Json.createArrayBuilder()
+                        .add(VERIFIED_EST_ALIAS)
+                        .build()
+                        .toString())
+                .when()
+                .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/aliases")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("alias", not(hasItems(VERIFIED_EST_ALIAS)));
+    }
+
+    @Test
     public void test_addEstablishmentAliases_EstablishmentNonExistent_ReturnsNotFound() {
         given()
                 .contentType("application/json")
@@ -333,6 +348,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
-    
+
+
 
 }
