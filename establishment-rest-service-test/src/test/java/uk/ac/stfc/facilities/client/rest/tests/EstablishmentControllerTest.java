@@ -6,7 +6,6 @@ import uk.ac.stfc.facilities.client.rest.base.RestTest;
 import uk.ac.stfc.facilities.client.rest.resources.EstablishmentData;
 import uk.ac.stfc.facilities.client.rest.resources.RorPayloadBuilder;
 
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static uk.ac.stfc.facilities.client.rest.base.Constants.*;
@@ -173,7 +172,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 // Validate establishment
-                .body("establishment.establishmentId", equalTo(-600001))
+                .body("establishment.establishmentId", equalTo(UNVERIFIED_EST_ID))
                 .body("establishment.rorId", equalTo(ROR_PAYLOAD_ROR_ID))
                 .body("establishment.establishmentName", equalTo(ROR_PAYLOAD_NAME))
                 .body("establishment.countryName", equalTo(ROR_PAYLOAD_COUNTRY))
@@ -186,8 +185,8 @@ public class EstablishmentControllerTest extends RestTest {
                 // Validate categories
                 .body("categories[0].category.categoryName", equalTo(ROR_PAYLOAD_TYPE_1))
                 .body("categories[1].category.categoryName", equalTo(ROR_PAYLOAD_TYPE_2))
-                .body("categories[0].establishment.establishmentId", equalTo(-600001))
-                .body("categories[1].establishment.establishmentId", equalTo(-600001));
+                .body("categories[0].establishment.establishmentId", equalTo(UNVERIFIED_EST_ID))
+                .body("categories[1].establishment.establishmentId", equalTo(UNVERIFIED_EST_ID));
     }
 
     @Test

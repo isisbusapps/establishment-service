@@ -1,8 +1,13 @@
 package uk.ac.stfc.facilities.client.rest.base;
 
 public class Constants {
-    public static final String VERIFIED_EST_NAME = "TEST_VERIFIED_EST";
+    public static final int VERIFIED_EST_ID = -600000;
+    public static final int UNVERIFIED_EST_ID = -600001;
+    public static final int ALIAS_ID = -700000;
+
+
     public static final String UNVERIFIED_EST_NAME = "TEST_UNVERIFIED_EST";
+    public static final String VERIFIED_EST_NAME = "TEST_VERIFIED_EST";
     public static final String VERIFIED_EST_ALIAS = "TEST_ALIAS";
     public static final String NEW_EST_NAME = "TEST_NEW_EST";
 
