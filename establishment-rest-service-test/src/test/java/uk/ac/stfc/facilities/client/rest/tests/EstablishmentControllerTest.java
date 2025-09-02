@@ -349,6 +349,23 @@ public class EstablishmentControllerTest extends RestTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
+    /* -----------------  deleteEstablishmentAndLinkedDepartments ----------------- */
 
+    @Test
+    public void test_deleteEstablishmentAndLinkedDepartments_ValidId_ReturnsSuccessMessage() {
+        given()
+                .when()
+                .delete(getBaseURI() + "/establishment/" + VERIFIED_EST_ID)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
 
+    @Test
+    public void test_deleteEstablishmentAndLinkedDepartments_EstablishmentNonExistent_ReturnsNotFound() {
+        given()
+                .when()
+                .delete(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID)
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
 }
