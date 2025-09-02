@@ -230,6 +230,16 @@ public class EstablishmentControllerTest extends RestTest {
                 .body("verified", equalTo(true));
     }
 
+    @Test
+    public void test_manualVerifyAndEnrichData_MissingInput_ReturnsBadRequest() {
+        given()
+                .contentType("application/json")
+                .when()
+                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID + "/manual-enrich-verify")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
 
 
 
