@@ -191,7 +191,25 @@ public class DepartmentControllerTest extends RestTest {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    /* ----------------- deleteDepartmentAndDepLabelLinks ----------------- */
 
+    @Test
+    public void test_deleteDepartmentAndDepLabelLinks_ValidInput_ReturnsSuccessMessage() {
+        given()
+                .when()
+                .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void test_deleteDepartmentAndDepLabelLinks_DepartmentNonExistent_ReturnsNotFound() {
+        given()
+                .when()
+                .delete(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID)
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
 
 }
 
