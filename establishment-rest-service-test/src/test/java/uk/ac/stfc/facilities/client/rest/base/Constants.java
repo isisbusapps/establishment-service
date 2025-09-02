@@ -3,6 +3,7 @@ package uk.ac.stfc.facilities.client.rest.base;
 public class Constants {
     public static final int VERIFIED_EST_ID = -600000;
     public static final int UNVERIFIED_EST_ID = -600001;
+    public static final int NON_EXISTENT_EST_ID = -1200000;
     public static final int ALIAS_ID = -700000;
 
 

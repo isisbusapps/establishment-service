@@ -1,5 +1,6 @@
 package uk.ac.stfc.facilities.client.rest.tests;
 
+import jakarta.json.Json;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 import uk.ac.stfc.facilities.client.rest.base.RestTest;
@@ -168,13 +169,13 @@ public class EstablishmentControllerTest extends RestTest {
                 .contentType("application/json")
                 .body(RorTestPayLoad)
                 .when()
-                .put(getBaseURI() + "/establishment/-600001/ror-enrich-verify")
+                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID + "/ror-enrich-verify")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 // Validate establishment
                 .body("establishment.establishmentId", equalTo(UNVERIFIED_EST_ID))
-                .body("establishment.rorId", equalTo(ROR_PAYLOAD_ROR_ID))
                 .body("establishment.establishmentName", equalTo(ROR_PAYLOAD_NAME))
+                .body("establishment.rorId", equalTo(ROR_PAYLOAD_ROR_ID))
                 .body("establishment.countryName", equalTo(ROR_PAYLOAD_COUNTRY))
                 .body("establishment.establishmentUrl", equalTo(ROR_PAYLOAD_URL))
                 .body("establishment.verified", equalTo(true))
@@ -197,12 +198,37 @@ public class EstablishmentControllerTest extends RestTest {
                 .contentType("application/json")
                 .body(RorTestPayLoad)
                 .when()
-                .put(getBaseURI() + "/establishment/-1200000/ror-enrich-verify")
+                .put(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID + "/ror-enrich-verify")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    /* -----------------  manualVerifyAndEnrichData ----------------- */
 
+    @Test
+    public void test_manualVerifyAndEnrichData_ValidInput_ReturnsUpdatedEstablishment() {
+        String payload = Json.createObjectBuilder()
+                .add("establishmentName", ROR_PAYLOAD_NAME)
+                .add("rorId", ROR_PAYLOAD_ROR_ID)
+                .add("countryName", ROR_PAYLOAD_COUNTRY)
+                .add("establishmentUrl", ROR_PAYLOAD_URL)
+                .build()
+                .toString();
+
+        given()
+                .contentType("application/json")
+                .body(payload)
+                .when()
+                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID+ "/manual-enrich-verify")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("establishmentId", equalTo(UNVERIFIED_EST_ID))
+                .body("establishmentName", equalTo(ROR_PAYLOAD_NAME))
+                .body("rorId", equalTo(ROR_PAYLOAD_ROR_ID))
+                .body("countryName", equalTo(ROR_PAYLOAD_COUNTRY))
+                .body("establishmentUrl", equalTo(ROR_PAYLOAD_URL))
+                .body("verified", equalTo(true));
+    }
 
 
 
