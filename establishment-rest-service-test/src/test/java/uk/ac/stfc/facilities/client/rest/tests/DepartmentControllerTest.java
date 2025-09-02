@@ -85,6 +85,37 @@ public class DepartmentControllerTest extends RestTest {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    /* ----------------- addDepartmentLabelLinksAutomatically ----------------- */
+
+    @Test
+    public void test_addDepartmentLabelLinksAutomatically_ValidInput_ReturnsLinks() {
+        given()
+                .when()
+                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/add-label-auto")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("label.labelId", hasItems(NEW_LABEL_ID_1, NEW_LABEL_ID_2));
+    }
+
+    @Test
+    public void test_addDepartmentLabelLinksAutomatically_LinkAlreadyExists_LinkNotAdded() {
+        given()
+                .when()
+                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/add-label-auto")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("label.labelId", not(hasItems(TEST_LABEL_ID)));
+    }
+
+    @Test
+    public void test_addDepartmentLabelLinksAutomatically_DepartmentNonExistent_ReturnsNotFound() {
+        given()
+                .when()
+                .put(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID + "/add-label-auto")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
 
 }
 
