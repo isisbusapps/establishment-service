@@ -172,7 +172,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .put(getBaseURI() + "/establishment/-600001/ror-enrich-verify")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                // Validate establishment object
+                // Validate establishment
                 .body("establishment.rorId", equalTo(ROR_PAYLOAD_ROR_ID))
                 .body("establishment.establishmentName", equalTo(ROR_PAYLOAD_NAME))
                 .body("establishment.countryName", equalTo(ROR_PAYLOAD_COUNTRY))
@@ -188,6 +188,20 @@ public class EstablishmentControllerTest extends RestTest {
                 .body("categories[0].establishment.establishmentId", equalTo(-600001))
                 .body("categories[1].establishment.establishmentId", equalTo(-600001));
     }
+
+    @Test
+    public void test_rorVerifyAndEnrichData_EstablishmentNonExistent_ReturnsBadRequest() {
+        String RorTestPayLoad = RorPayloadBuilder.buildTestRorPayload();
+
+        given()
+                .contentType("application/json")
+                .body(RorTestPayLoad)
+                .when()
+                .put(getBaseURI() + "/establishment/-1200000/ror-enrich-verify")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
 
 
 
