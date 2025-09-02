@@ -5,6 +5,7 @@ public class Constants {
     public static final int UNVERIFIED_EST_ID = -600001;
     public static final int NON_EXISTENT_EST_ID = -1200000;
     public static final int ALIAS_ID = -700000;
+    public static final int VERIFIED_EST_CATEGORY_ID = 1;
 
 
     public static final String UNVERIFIED_EST_NAME = "TEST_UNVERIFIED_EST";

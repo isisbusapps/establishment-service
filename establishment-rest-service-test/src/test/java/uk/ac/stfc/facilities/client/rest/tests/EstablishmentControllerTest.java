@@ -7,6 +7,8 @@ import uk.ac.stfc.facilities.client.rest.base.RestTest;
 import uk.ac.stfc.facilities.client.rest.resources.EstablishmentData;
 import uk.ac.stfc.facilities.client.rest.resources.RorPayloadBuilder;
 
+import java.util.Collections;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static uk.ac.stfc.facilities.client.rest.base.Constants.*;
@@ -256,7 +258,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("alias", hasItems(NEW_ALIAS_NAME_1, NEW_ALIAS_NAME_2))
-                .body("establishmentId", everyItem(equalTo(VERIFIED_EST_ID)));;
+                .body("establishmentId", everyItem(equalTo(VERIFIED_EST_ID)));
     }
 
     @Test
@@ -284,8 +286,53 @@ public class EstablishmentControllerTest extends RestTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
+    /* -----------------  addEstablishmentCategoryLinks ----------------- */
 
+    @Test
+    public void test_addEstablishmentCategoryLinks_ValidInput_ReturnsUpdatedCategories() {
+        given()
+                .contentType("application/json")
+                .body("[2, 7]")
+                .when()
+                .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/categories")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("categoryId", hasItems(2, 7))
+                .body("establishmentId", everyItem(equalTo(VERIFIED_EST_ID)));
+    }
 
+    @Test
+    public void test_addEstablishmentCategoryLinks_CategoryAlreadyExists_CategoryNotAdded() {
+        given()
+                .contentType("application/json")
+                .body(Collections.singletonList(VERIFIED_EST_CATEGORY_ID))
+                .when()
+                .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/categories")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("categoryId", not(hasItems(VERIFIED_EST_CATEGORY_ID)));
+    }
 
+    @Test
+    public void test_addEstablishmentCategoryLinks_EstablishmentNonExistent_ReturnsNotFound() {
+        given()
+                .contentType("application/json")
+                .body("[1,2, 7]")
+                .when()
+                .put(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID + "/categories")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void test_addEstablishmentCategoryLinks_MissingInput_ReturnsBadRequest() {
+        given()
+                .contentType("application/json")
+                .when()
+                .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/categories")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+    
 
 }

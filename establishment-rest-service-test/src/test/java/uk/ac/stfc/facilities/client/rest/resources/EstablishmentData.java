@@ -17,6 +17,11 @@ public class EstablishmentData {
             insertInto("ESTABLISHMENT_ALIAS")
                     .columns("ALIAS_ID", "ESTABLISHMENT_ID",  "ALIAS")
                     .values(ALIAS_ID,     VERIFIED_EST_ID,   VERIFIED_EST_ALIAS)
+                    .build(),
+
+            insertInto("ESTABLISHMENT_CATEGORY_LINK")
+                    .columns("ESTABLISHMENT_ID", "CATEGORY_ID")
+                    .values(VERIFIED_EST_ID,     VERIFIED_EST_CATEGORY_ID)
                     .build()
     );
 }
