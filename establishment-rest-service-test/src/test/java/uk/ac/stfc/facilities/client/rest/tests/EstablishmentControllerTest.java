@@ -210,10 +210,8 @@ public class EstablishmentControllerTest extends RestTest {
                 .body("aliases[1].alias", equalTo(ROR_PAYLOAD_ACRONYM))
                 .body("aliases[2].alias", equalTo(ROR_PAYLOAD_ALIAS))
                 // Validate categories
-                .body("categories[0].category.categoryName", equalTo(ROR_PAYLOAD_TYPE_1))
-                .body("categories[1].category.categoryName", equalTo(ROR_PAYLOAD_TYPE_2))
-                .body("categories[0].establishment.establishmentId", equalTo(UNVERIFIED_EST_ID))
-                .body("categories[1].establishment.establishmentId", equalTo(UNVERIFIED_EST_ID));
+                .body("categories[0].categoryName", equalTo(ROR_PAYLOAD_TYPE_1))
+                .body("categories[1].categoryName", equalTo(ROR_PAYLOAD_TYPE_2));
     }
 
     @Test
