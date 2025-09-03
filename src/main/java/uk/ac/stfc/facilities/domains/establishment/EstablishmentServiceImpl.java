@@ -53,7 +53,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public Establishment getEstablishment(Long establishmentId) {
-        return estRepo.findById(establishmentId);
+        Establishment est = estRepo.findById(establishmentId);
+        if (est == null) {
+            LOGGER.warn("No establishment found with establishment id: " + establishmentId);
+            throw new NoResultException("No establishment found with establishment id: " + establishmentId);
+        }
+        return est;
     }
 
     @Override

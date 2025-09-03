@@ -1,6 +1,10 @@
 package uk.ac.stfc.facilities.controllers;
 
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -15,6 +19,11 @@ import static uk.ac.stfc.facilities.helpers.Constants.DEFAULT_ESTABLISHMENT_SEAR
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface EstablishmentControllerInterface {
+
+    @GET
+    @Path("/{establishmentId}")
+    EstablishmentDTO getEstablishment(@PathParam("establishmentId") Long establishmentId)
+            throws RestControllerException;
 
     @GET
     @Path("/search")

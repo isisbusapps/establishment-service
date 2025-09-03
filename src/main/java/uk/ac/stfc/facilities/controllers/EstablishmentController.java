@@ -22,6 +22,16 @@ public class EstablishmentController implements EstablishmentControllerInterface
     DepartmentService depService;
 
     @Override
+    public EstablishmentDTO getEstablishment(Long establishmentId) throws RestControllerException {
+        try {
+            Establishment establishment = estService.getEstablishment(establishmentId);
+            return mapper.toDTO(establishment);
+        } catch (NoResultException e) {
+            throw new RestControllerException(ReasonCode.NoResults, "No establishment found with id " + establishmentId);
+        }
+    }
+
+    @Override
     public List<EstablishmentDTO> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) throws RestControllerException {
         if (searchQuery == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing search query");
