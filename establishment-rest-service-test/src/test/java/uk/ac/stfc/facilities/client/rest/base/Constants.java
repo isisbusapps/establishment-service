@@ -10,6 +10,7 @@ public class Constants {
     public static final String UNVERIFIED_EST_NAME = "TEST_UNVERIFIED_EST";
     public static final String VERIFIED_EST_NAME = "TEST_VERIFIED_EST";
     public static final String VERIFIED_EST_ALIAS = "TEST_ALIAS";
+    public static final String VERIFIED_EST_CATEGORY_NAME = "education";
     public static final String NEW_EST_NAME = "TEST_NEW_EST";
     public static final String NEW_ALIAS_NAME_1 = "TEST_NEW_ALIAS_1";
     public static final String NEW_ALIAS_NAME_2 = "TEST_NEW_ALIAS_2";
@@ -21,7 +22,7 @@ public class Constants {
     public static final String ROR_PAYLOAD_URL = "TEST_ROR_URL";
     public static final String ROR_PAYLOAD_ACRONYM = "TEST_ROR_ACRONYM";
     public static final String ROR_PAYLOAD_ALIAS = "TEST_ROR_ALIAS";
-    public static final String ROR_PAYLOAD_LABEL = "TEST_ROR_label";
+    public static final String ROR_PAYLOAD_LABEL = "TEST_ROR_LABEL";
     public static final String ROR_PAYLOAD_TYPE_1 = "education";
     public static final String ROR_PAYLOAD_TYPE_2 = "funder";
 

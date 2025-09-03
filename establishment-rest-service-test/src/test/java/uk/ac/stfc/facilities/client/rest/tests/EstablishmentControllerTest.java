@@ -34,6 +34,7 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
     /* ----------------- getEstablishment ----------------- */
+    
     @Test
     public void test_getEstablishment_ValidId_ReturnsEstablishment() {
         given()
@@ -41,6 +42,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .get(getBaseURI() + "/establishment/" + VERIFIED_EST_ID)
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
+                .body("establishmentId", equalTo(VERIFIED_EST_ID))
                 .body("establishmentName", equalTo(VERIFIED_EST_NAME));
     }
 
@@ -52,7 +54,34 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
-    
+
+    /* ----------------- getEstablishmentDetails ----------------- */
+
+    @Test
+    public void test_getEstablishmentDetails_ValidId_ReturnsEstablishment() {
+        given()
+                .when()
+                .get(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/details")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                // Validate establishment
+                .body("establishment.establishmentId", equalTo(VERIFIED_EST_ID))
+                .body("establishment.establishmentName", equalTo(VERIFIED_EST_NAME))
+                // Validate aliases
+                .body("aliases[0].alias", equalTo(VERIFIED_EST_ALIAS))
+                // Validate categories
+                .body("categories[0].categoryName", equalTo(VERIFIED_EST_CATEGORY_NAME));
+    }
+
+    @Test
+    public void test_getEstablishmentDetails_InvalidId_ReturnsNotFound() {
+        given()
+                .when()
+                .get(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID + "/details")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
     /* ----------------- getEstablishmentsByQuery ----------------- */
 
     @Test
