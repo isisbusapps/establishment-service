@@ -33,6 +33,26 @@ public class EstablishmentControllerTest extends RestTest {
         deleteTestData("ESTABLISHMENT_NEW", "ESTABLISHMENT_NAME", NEW_EST_NAME);
     }
 
+    /* ----------------- getEstablishment ----------------- */
+    @Test
+    public void test_getEstablishment_ValidId_ReturnsEstablishment() {
+        given()
+                .when()
+                .get(getBaseURI() + "/establishment/" + VERIFIED_EST_ID)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("establishmentName", equalTo(VERIFIED_EST_NAME));
+    }
+
+    @Test
+    public void test_getEstablishment_InvalidId_ReturnsNotFound() {
+        given()
+                .when()
+                .get(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID)
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+    
     /* ----------------- getEstablishmentsByQuery ----------------- */
 
     @Test
