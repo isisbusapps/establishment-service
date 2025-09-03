@@ -8,7 +8,6 @@ import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.hibernate.sql.Alias;
 import org.jboss.logging.Logger;
 import uk.ac.stfc.facilities.exceptions.RorQueryException;
 
