@@ -1,19 +1,15 @@
-package uk.ac.stfc.facilities.helpers;
-
-import uk.ac.stfc.facilities.domains.establishment.EstablishmentAlias;
-import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
-import uk.ac.stfc.facilities.domains.establishment.EstablishmentCategoryLink;
+package uk.ac.stfc.facilities.domains.establishment;
 
 import java.util.List;
 
-public class EnrichedEstablishmentResponse {
+public class EstablishmentDetailsDTO {
     private EstablishmentDTO establishment;
     private List<EstablishmentAlias> aliases;
     private List<EstablishmentCategoryLink> categories;
 
-    public EnrichedEstablishmentResponse() {}
+    public EstablishmentDetailsDTO() {}
 
-    public EnrichedEstablishmentResponse(EstablishmentDTO establishment, List<EstablishmentAlias> aliases, List<EstablishmentCategoryLink> categories) {
+    public EstablishmentDetailsDTO(EstablishmentDTO establishment, List<EstablishmentAlias> aliases, List<EstablishmentCategoryLink> categories) {
         this.establishment = establishment;
         this.aliases = aliases;
         this.categories = categories;

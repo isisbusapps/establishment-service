@@ -1,18 +1,15 @@
-package uk.ac.stfc.facilities.helpers;
-
-import uk.ac.stfc.facilities.domains.department.Department;
-import uk.ac.stfc.facilities.domains.department.DepartmentLabelLink;
+package uk.ac.stfc.facilities.domains.department;
 
 import java.util.List;
 
-public class CreateDepartmentResponse {
+public class DepartmentDetailsDTO {
     private Department department;
     private List<DepartmentLabelLink> departmentLabelLinks;
 
 
-    public CreateDepartmentResponse() {}
+    public DepartmentDetailsDTO() {}
 
-    public CreateDepartmentResponse(Department department, List<DepartmentLabelLink> departmentLabelLinks) {
+    public DepartmentDetailsDTO(Department department, List<DepartmentLabelLink> departmentLabelLinks) {
         this.department = department;
         this.departmentLabelLinks = departmentLabelLinks;
     }

@@ -8,7 +8,7 @@ import uk.ac.stfc.facilities.domains.department.Department;
 import uk.ac.stfc.facilities.domains.department.DepartmentService;
 import uk.ac.stfc.facilities.domains.establishment.*;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
-import uk.ac.stfc.facilities.helpers.EnrichedEstablishmentResponse;
+import uk.ac.stfc.facilities.domains.establishment.EstablishmentDetailsDTO;
 import uk.ac.stfc.facilities.helpers.ReasonCode;
 import java.util.List;
 
@@ -83,7 +83,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             List<EstablishmentAlias> aliases = estService.addEstablishmentAliasesFromRor(establishmentId, rorMatch);
             List<EstablishmentCategoryLink> estCatLinks = estService.addEstablishmentCategoryLinksFromRor(establishmentId, rorMatch);
 
-            EnrichedEstablishmentResponse response = new EnrichedEstablishmentResponse(estEnrichedDTO, aliases, estCatLinks);
+            EstablishmentDetailsDTO response = new EstablishmentDetailsDTO(estEnrichedDTO, aliases, estCatLinks);
 
             return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {

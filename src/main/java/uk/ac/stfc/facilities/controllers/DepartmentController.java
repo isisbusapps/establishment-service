@@ -8,7 +8,7 @@ import uk.ac.stfc.facilities.domains.department.*;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentService;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 import uk.ac.stfc.facilities.helpers.CreateDepartmentRequest;
-import uk.ac.stfc.facilities.helpers.CreateDepartmentResponse;
+import uk.ac.stfc.facilities.domains.department.DepartmentDetailsDTO;
 import uk.ac.stfc.facilities.helpers.ReasonCode;
 
 import java.util.List;
@@ -96,7 +96,7 @@ public class DepartmentController implements DepartmentControllerInterface {
         try{
             Department department = depService.createDepartment(name, establishmentId);
             List<DepartmentLabelLink> departmentLabelLinks = depService.addDepartmentLabelLinksAutomatically(department.getDepartmentId());
-            CreateDepartmentResponse response = new CreateDepartmentResponse(department, departmentLabelLinks);
+            DepartmentDetailsDTO response = new DepartmentDetailsDTO(department, departmentLabelLinks);
 
             return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {
