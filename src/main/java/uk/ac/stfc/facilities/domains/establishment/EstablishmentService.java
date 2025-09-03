@@ -1,6 +1,7 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
 import jakarta.persistence.NoResultException;
+import org.hibernate.sql.Alias;
 
 import java.util.List;
 
@@ -31,4 +32,8 @@ public interface EstablishmentService {
     List<EstablishmentAlias>  addEstablishmentAliases(Long establishmentId, List<String> aliasNames);
 
     List<EstablishmentCategoryLink> addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds);
+
+    List<Category> getCategoriesForEstablishment(Long establishmentId);
+
+    List<EstablishmentAlias> getAliasesForEstablishment(Long establishmentId);
 }

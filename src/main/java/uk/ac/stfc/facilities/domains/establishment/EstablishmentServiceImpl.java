@@ -8,6 +8,7 @@ import jakarta.persistence.NoResultException;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.hibernate.sql.Alias;
 import org.jboss.logging.Logger;
 import uk.ac.stfc.facilities.exceptions.RorQueryException;
 
@@ -34,6 +35,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private CategoryRepository categoryRepo;
     private EstablishmentCategoryLinkRepository estCatLinkRepo;
     private EstablishmentAliasRepository aliasRepo;
+
     public EstablishmentServiceImpl() {}
 
     @Inject
@@ -249,6 +251,16 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
         estCatLinkRepo.persist(newCategoryLinks);
         return newCategoryLinks;
+    }
+
+    @Override
+    public List<Category> getCategoriesForEstablishment(Long establishmentId) {
+        return  estCatLinkRepo.findCategoriesLinkedToEstablishment(establishmentId);
+    }
+
+    @Override
+    public List<EstablishmentAlias> getAliasesForEstablishment(Long establishmentId) {
+        return aliasRepo.getAliasesFromEstablishment(establishmentId);
     }
 
     private List<Establishment> fuzzySearch(String query, Integer cutoff, boolean useAliases, List<Establishment> establishments) {
