@@ -33,6 +33,26 @@ public class DepartmentControllerTest extends RestTest {
         deleteTestData("ESTABLISHMENT_NEW", "ESTABLISHMENT_NAME", NEW_EST_NAME);
     }
 
+    /* ----------------- getDepartment ----------------- */
+    @Test
+    public void test_getDepartment_ValidId_ReturnsDepartment() {
+        given()
+                .when()
+                .get(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("departmentName", equalTo(TEST_DEPARTMENT_NAME));
+    }
+
+    @Test
+    public void test_getDepartment_InvalidId_ReturnsNotFound() {
+        given()
+                .when()
+                .get(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID)
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
     /* ----------------- addDepartmentLabelLinksManually ----------------- */
 
     @Test
