@@ -158,7 +158,7 @@ public class DepartmentControllerTest extends RestTest {
     public void test_removeDepartmentLabelLink_ValidInput_RemovesLink() {
         given()
                 .when()
-                .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/labels/" + TEST_LABEL_ID)
+                .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label/" + TEST_LABEL_ID)
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
     }
@@ -167,7 +167,7 @@ public class DepartmentControllerTest extends RestTest {
     public void test_removeDepartmentLabelLink_NonExistent_ReturnsNotFound() {
         given()
                 .when()
-                .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/labels/" + NON_EXISTENT_LABEL_ID)
+                .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label/" + NON_EXISTENT_LABEL_ID)
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }

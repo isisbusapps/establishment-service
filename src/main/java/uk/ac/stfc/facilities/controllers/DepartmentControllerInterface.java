@@ -32,7 +32,7 @@ public interface DepartmentControllerInterface {
             throws RestControllerException;
 
     @DELETE
-    @Path("/{departmentId}/labels/{labelId}")
+    @Path("/{departmentId}/label/{labelId}")
     Response removeDepartmentLabelLink(@PathParam("departmentId") Long departmentId, @PathParam("labelId") Long labelId)
             throws RestControllerException;
 
