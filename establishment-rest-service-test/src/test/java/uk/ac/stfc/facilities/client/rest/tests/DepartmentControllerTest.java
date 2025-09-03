@@ -190,7 +190,7 @@ public class DepartmentControllerTest extends RestTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("department.departmentName", equalTo(NEW_DEPARTMENT_NAME))
                 .body("department.establishmentId", equalTo(VERIFIED_EST_ID))
-                .body("departmentLabels.labelId", hasItems(NEW_LABEL_ID_1, NEW_LABEL_ID_2));
+                .body("labels.labelId", hasItems(NEW_LABEL_ID_1, NEW_LABEL_ID_2));
     }
 
     @Test
