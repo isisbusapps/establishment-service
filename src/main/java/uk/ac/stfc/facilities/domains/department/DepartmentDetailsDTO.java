@@ -4,29 +4,21 @@ import java.util.List;
 
 public class DepartmentDetailsDTO {
     private Department department;
-    private List<DepartmentLabelLink> departmentLabelLinks;
+    private List<Label> labels;
 
 
     public DepartmentDetailsDTO() {}
 
-    public DepartmentDetailsDTO(Department department, List<DepartmentLabelLink> departmentLabelLinks) {
+    public DepartmentDetailsDTO(Department department, List<Label> labels) {
         this.department = department;
-        this.departmentLabelLinks = departmentLabelLinks;
+        this.labels = labels;
     }
 
-    public Department getDepartment() {
-        return department;
-    }
+    public Department getDepartment() {return department;}
 
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
+    public void setDepartment(Department department) {this.department = department;}
 
-    public List<DepartmentLabelLink> getDepartmentLabels() {
-        return departmentLabelLinks;
-    }
+    public List<Label> getLabels() {return labels;}
 
-    public void setDepartmentLabels(List<DepartmentLabelLink> departmentLabelLinks) {
-        this.departmentLabelLinks = departmentLabelLinks;
-    }
+    public void setLabels(List<Label> labels) {this.labels = labels;}
 }

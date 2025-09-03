@@ -32,6 +32,16 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
+    public DepartmentDetailsDTO getDepartmentDetails(Long departmentId) throws RestControllerException {
+        Department department = depService.getDepartment(departmentId);
+        if (department == null) {
+            throw new RestControllerException(ReasonCode.NoResults, "No department found with id " + departmentId);
+        }
+        List<Label> labels = depService.getLabelsForDepartment(departmentId);
+        return new DepartmentDetailsDTO(department, labels);
+    }
+
+    @Override
     public Response addDepartmentLabelLinksManually(Long departmentId, List<Long> labelIds) throws RestControllerException {
         if (departmentId == null || labelIds == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing input department id");
@@ -95,8 +105,10 @@ public class DepartmentController implements DepartmentControllerInterface {
 
         try{
             Department department = depService.createDepartment(name, establishmentId);
-            List<DepartmentLabelLink> departmentLabelLinks = depService.addDepartmentLabelLinksAutomatically(department.getDepartmentId());
-            DepartmentDetailsDTO response = new DepartmentDetailsDTO(department, departmentLabelLinks);
+            depService.addDepartmentLabelLinksAutomatically(department.getDepartmentId());
+            List<Label> labels = depService.getLabelsForDepartment(department.getDepartmentId());
+
+            DepartmentDetailsDTO response = new DepartmentDetailsDTO(department, labels);
 
             return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {

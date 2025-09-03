@@ -4,6 +4,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import uk.ac.stfc.facilities.domains.department.DepartmentDTO;
+import uk.ac.stfc.facilities.domains.department.DepartmentDetailsDTO;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 import uk.ac.stfc.facilities.helpers.CreateDepartmentRequest;
 
@@ -19,6 +20,11 @@ public interface DepartmentControllerInterface {
     @GET
     @Path("/{departmentId}")
     DepartmentDTO getDepartment(@PathParam("departmentId") Long departmentId)
+            throws RestControllerException;
+
+    @GET
+    @Path("/{departmentId}/details")
+    DepartmentDetailsDTO getDepartmentDetails(@PathParam("departmentId") Long departmentId)
             throws RestControllerException;
 
     @PUT
