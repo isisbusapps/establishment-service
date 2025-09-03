@@ -1,10 +1,6 @@
 package uk.ac.stfc.facilities.controllers;
 
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
