@@ -4,10 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
-import uk.ac.stfc.facilities.domains.department.Department;
-import uk.ac.stfc.facilities.domains.department.DepartmentLabelLink;
-import uk.ac.stfc.facilities.domains.department.DepartmentLabelLinkId;
-import uk.ac.stfc.facilities.domains.department.DepartmentService;
+import uk.ac.stfc.facilities.domains.department.*;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentService;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 import uk.ac.stfc.facilities.helpers.CreateDepartmentRequest;
@@ -18,11 +15,21 @@ import java.util.List;
 
 @Transactional
 public class DepartmentController implements DepartmentControllerInterface {
-
+    @Inject
+    DepartmentMapper mapper;
     @Inject
     DepartmentService depService;
     @Inject
     EstablishmentService estService;
+
+    @Override
+    public DepartmentDTO getDepartment(Long departmentId) throws RestControllerException {
+        try {
+            Department department = depService.getDepartment(departmentId);
+            return mapper.toDTO(department);
+        } catch (NoResultException e) {
+            throw new RestControllerException(ReasonCode.NoResults, "No department found with id " + departmentId);
+        }    }
 
     @Override
     public Response addDepartmentLabelLinksManually(Long departmentId, List<Long> labelIds) throws RestControllerException {

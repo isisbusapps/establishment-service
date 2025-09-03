@@ -3,6 +3,7 @@ package uk.ac.stfc.facilities.controllers;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import uk.ac.stfc.facilities.domains.department.DepartmentDTO;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 import uk.ac.stfc.facilities.helpers.CreateDepartmentRequest;
 
@@ -14,6 +15,11 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 
 public interface DepartmentControllerInterface {
+
+    @GET
+    @Path("/{departmentId}")
+    DepartmentDTO getDepartment(@PathParam("departmentId") Long departmentId)
+            throws RestControllerException;
 
     @PUT
     @Path("/{departmentId}/add-label-manual")
