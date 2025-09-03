@@ -26,4 +26,6 @@ public interface DepartmentService {
 
     DepartmentLabelLink getDepartmentLabelLink(DepartmentLabelLinkId id);
 
+    List<Label> getLabelsForDepartment(Long departmentId);
+
 }

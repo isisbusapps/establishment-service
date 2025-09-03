@@ -161,6 +161,11 @@ public class DepartmentServiceImpl implements DepartmentService {
         return addDepartmentLabelLinks(departmentId, matchedLabels.isEmpty() ? List.of(otherId) : matchedLabelIds);
     }
 
+    @Override
+    public List<Label> getLabelsForDepartment(Long departmentId) {
+        return depLabelLinkRepo.findLabelsLinkedToDepartment(departmentId);
+    }
+
     private List<Label> fuzzySearch(String departmentName, Integer cutoff, List<Label> labels) {
         List<Label> matchedLabels = new ArrayList<>();
 
