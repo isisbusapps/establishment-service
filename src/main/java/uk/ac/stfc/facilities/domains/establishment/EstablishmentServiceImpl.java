@@ -48,9 +48,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<Establishment> getAllEstablishments() {
-        return List.of();
-    }
+    public List<Establishment> getAllEstablishments() {return estRepo.listAll();}
 
     @Override
     public Establishment getEstablishment(Long establishmentId) {return estRepo.findById(establishmentId);}
