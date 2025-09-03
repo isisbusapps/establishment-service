@@ -3,23 +3,23 @@ package uk.ac.stfc.facilities.domains.establishment;
 import java.util.List;
 
 public class EstablishmentDetailsDTO {
-    private EstablishmentDTO establishment;
+    private Establishment establishment;
     private List<EstablishmentAlias> aliases;
-    private List<EstablishmentCategoryLink> categories;
+    private List<Category> categories;
 
     public EstablishmentDetailsDTO() {}
 
-    public EstablishmentDetailsDTO(EstablishmentDTO establishment, List<EstablishmentAlias> aliases, List<EstablishmentCategoryLink> categories) {
+    public EstablishmentDetailsDTO(Establishment establishment, List<EstablishmentAlias> aliases, List<Category> categories) {
         this.establishment = establishment;
         this.aliases = aliases;
         this.categories = categories;
     }
 
-    public EstablishmentDTO getEstablishment() {
+    public Establishment getEstablishment() {
         return establishment;
     }
 
-    public void setEstablishment(EstablishmentDTO establishment) {
+    public void setEstablishment(Establishment establishment) {
         this.establishment = establishment;
     }
 
@@ -31,11 +31,11 @@ public class EstablishmentDetailsDTO {
         this.aliases = aliases;
     }
 
-    public List<EstablishmentCategoryLink> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<EstablishmentCategoryLink> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 }

@@ -31,6 +31,18 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
+    public EstablishmentDetailsDTO getEstablishmentDetails(Long establishmentId) throws RestControllerException {
+        Establishment establishment = estService.getEstablishment(establishmentId);
+        if (establishment == null) {
+            throw new RestControllerException(ReasonCode.NoResults, "No establishment found with id " + establishmentId);
+        }
+        List<EstablishmentAlias> aliases = estService.getAliasesForEstablishment(establishmentId);
+        List<Category> categories = estService.getCategoriesForEstablishment(establishmentId);
+
+        return new EstablishmentDetailsDTO(establishment, aliases, categories);
+    }
+
+    @Override
     public List<EstablishmentDTO> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) throws RestControllerException {
         if (searchQuery == null) {
             throw new RestControllerException(ReasonCode.BadRequest, "Missing search query");
@@ -78,12 +90,12 @@ public class EstablishmentController implements EstablishmentControllerInterface
         }
         try {
             Establishment estEnriched = estService.addRorDataToEstablishment(establishmentId, rorMatch);
-            EstablishmentDTO estEnrichedDTO = mapper.toDTO(estEnriched);
 
             List<EstablishmentAlias> aliases = estService.addEstablishmentAliasesFromRor(establishmentId, rorMatch);
-            List<EstablishmentCategoryLink> estCatLinks = estService.addEstablishmentCategoryLinksFromRor(establishmentId, rorMatch);
+            estService.addEstablishmentCategoryLinksFromRor(establishmentId, rorMatch);
+            List<Category> categories = estService.getCategoriesForEstablishment(establishmentId);
 
-            EstablishmentDetailsDTO response = new EstablishmentDetailsDTO(estEnrichedDTO, aliases, estCatLinks);
+            EstablishmentDetailsDTO response = new EstablishmentDetailsDTO(estEnriched, aliases, categories);
 
             return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {

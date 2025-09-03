@@ -4,6 +4,7 @@ import jakarta.ws.rs.core.Response;
 import uk.ac.stfc.facilities.domains.establishment.EstablishmentDTO;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import uk.ac.stfc.facilities.domains.establishment.EstablishmentDetailsDTO;
 import uk.ac.stfc.facilities.domains.establishment.RorSchemaV21;
 import uk.ac.stfc.facilities.exceptions.RestControllerException;
 
@@ -19,6 +20,11 @@ public interface EstablishmentControllerInterface {
     @GET
     @Path("/{establishmentId}")
     EstablishmentDTO getEstablishment(@PathParam("establishmentId") Long establishmentId)
+            throws RestControllerException;
+
+    @GET
+    @Path("/{establishmentId}/details")
+    EstablishmentDetailsDTO getEstablishmentDetails(@PathParam("establishmentId") Long establishmentId)
             throws RestControllerException;
 
     @GET
