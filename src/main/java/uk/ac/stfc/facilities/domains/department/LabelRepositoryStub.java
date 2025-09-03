@@ -61,7 +61,7 @@ public class LabelRepositoryStub implements LabelRepository {
     @Override
     public Label getByName(String name) {
         return labels.stream()
-                .filter(label -> label.getName().equals(name))
+                .filter(label -> label.getLabelName().equals(name))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Label not found: " + name));
     }

@@ -35,6 +35,7 @@ public class Constants {
 
     public static final String TEST_DEPARTMENT_NAME = "TEST_DEPARTMENT_PHYSICS_CHEMISTRY_MATHEMATICS";
     public static final String NEW_DEPARTMENT_NAME = "TEST_NEW_DEPARTMENT_CHEMISTRY_MATHEMATICS";
+    public static final String TEST_LABEL_NAME = "Physics";
 
 
 }

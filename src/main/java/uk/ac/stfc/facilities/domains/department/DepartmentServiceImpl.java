@@ -170,7 +170,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         List<Label> matchedLabels = new ArrayList<>();
 
         for (Label label : labels) {
-            int matchScore = FuzzySearch.partialRatio(departmentName, label.getName(),String::toLowerCase);
+            int matchScore = FuzzySearch.partialRatio(departmentName, label.getLabelName(),String::toLowerCase);
 
             if (matchScore >= cutoff) {
                 matchedLabels.add(label);

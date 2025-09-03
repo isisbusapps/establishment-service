@@ -34,6 +34,7 @@ public class DepartmentControllerTest extends RestTest {
     }
 
     /* ----------------- getDepartment ----------------- */
+
     @Test
     public void test_getDepartment_ValidId_ReturnsDepartment() {
         given()
@@ -49,6 +50,31 @@ public class DepartmentControllerTest extends RestTest {
         given()
                 .when()
                 .get(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID)
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    /* ----------------- getDepartmentDetails ----------------- */
+
+    @Test
+    public void test_getDepartmentDetails_ValidId_ReturnsEstablishment() {
+        given()
+                .when()
+                .get(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/details")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                // Validate department
+                .body("department.departmentId", equalTo(TEST_DEPARTMENT_ID))
+                .body("department.departmentName", equalTo(TEST_DEPARTMENT_NAME))
+                // Validate labels
+                .body("labels[0].labelName", equalTo(TEST_LABEL_NAME));
+    }
+
+    @Test
+    public void test_getDepartmentDetails_InvalidId_ReturnsNotFound() {
+        given()
+                .when()
+                .get(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID + "/details")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }

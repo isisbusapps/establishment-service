@@ -26,7 +26,7 @@ public class Label {
 
     public void setLabelId(Long labelId) {this.labelId = labelId;}
 
-    public String getName() {return labelName;}
+    public String getLabelName() {return labelName;}
 
-    public void setName(String labelName) {this.labelName = labelName;}
+    public void setLabelName(String labelName) {this.labelName = labelName;}
 }

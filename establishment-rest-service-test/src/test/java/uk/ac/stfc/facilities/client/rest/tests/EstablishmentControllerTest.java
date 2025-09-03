@@ -34,7 +34,7 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
     /* ----------------- getEstablishment ----------------- */
-    
+
     @Test
     public void test_getEstablishment_ValidId_ReturnsEstablishment() {
         given()
