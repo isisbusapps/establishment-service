@@ -24,12 +24,12 @@ public class DepartmentController implements DepartmentControllerInterface {
 
     @Override
     public DepartmentDTO getDepartment(Long departmentId) throws RestControllerException {
-        try {
-            Department department = depService.getDepartment(departmentId);
-            return mapper.toDTO(department);
-        } catch (NoResultException e) {
+        Department department = depService.getDepartment(departmentId);
+        if (department == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No department found with id " + departmentId);
-        }    }
+        }
+        return mapper.toDTO(department);
+    }
 
     @Override
     public Response addDepartmentLabelLinksManually(Long departmentId, List<Long> labelIds) throws RestControllerException {

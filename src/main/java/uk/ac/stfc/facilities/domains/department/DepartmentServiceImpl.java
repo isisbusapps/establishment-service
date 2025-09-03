@@ -51,14 +51,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Department getDepartment(Long departmentId) {
-        Department department = depRepo.findById(departmentId);
-        if (department == null) {
-            LOGGER.warn("No department found with department id: " + departmentId);
-            throw new NoResultException("No department found with department id: " + departmentId);
-        }
-        return department;
-    }
+    public Department getDepartment(Long departmentId) {return depRepo.findById(departmentId);}
 
     @Override
     public List<Department> getDepartmentsByEstablishmentId(Long establishmentId) {

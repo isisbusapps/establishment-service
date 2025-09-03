@@ -23,12 +23,11 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     public EstablishmentDTO getEstablishment(Long establishmentId) throws RestControllerException {
-        try {
-            Establishment establishment = estService.getEstablishment(establishmentId);
-            return mapper.toDTO(establishment);
-        } catch (NoResultException e) {
+        Establishment establishment = estService.getEstablishment(establishmentId);
+        if (establishment == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No establishment found with id " + establishmentId);
         }
+        return mapper.toDTO(establishment);
     }
 
     @Override
