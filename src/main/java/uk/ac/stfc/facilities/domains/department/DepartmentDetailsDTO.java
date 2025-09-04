@@ -5,22 +5,21 @@ import uk.ac.stfc.facilities.BaseClasses.Dto;
 import java.util.List;
 
 public class DepartmentDetailsDTO implements Dto {
-    private Department department;
-    private List<Label> labels;
-
+    private DepartmentDTO departmentDto;
+    private List<LabelDTO> labelDtos;
 
     public DepartmentDetailsDTO() {}
 
-    public DepartmentDetailsDTO(Department department, List<Label> labels) {
-        this.department = department;
-        this.labels = labels;
+    public DepartmentDetailsDTO(DepartmentDTO departmentDto, List<LabelDTO> labelDtos) {
+        this.departmentDto = departmentDto;
+        this.labelDtos = labelDtos;
     }
 
-    public Department getDepartment() {return department;}
+    public DepartmentDTO getDepartmentDto() {return departmentDto;}
 
-    public void setDepartment(Department department) {this.department = department;}
+    public void setDepartmentDto(DepartmentDTO departmentDto) {this.departmentDto = departmentDto;}
 
-    public List<Label> getLabels() {return labels;}
+    public List<LabelDTO> getLabelDtos() {return labelDtos;}
 
-    public void setLabels(List<Label> labels) {this.labels = labels;}
+    public void setLabelDtos(List<LabelDTO> labelDtos) {this.labelDtos = labelDtos;}
 }

@@ -16,7 +16,9 @@ import java.util.List;
 @Transactional
 public class DepartmentController implements DepartmentControllerInterface {
     @Inject
-    DepartmentMapper mapper;
+    DepartmentMapper departmentMapper;
+    @Inject
+    LabelMapper labelMapper;
     @Inject
     DepartmentService depService;
     @Inject
@@ -28,7 +30,7 @@ public class DepartmentController implements DepartmentControllerInterface {
         if (department == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No department found with id " + departmentId);
         }
-        return mapper.toDTO(department);
+        return departmentMapper.toDTO(department);
     }
 
     @Override
@@ -37,8 +39,8 @@ public class DepartmentController implements DepartmentControllerInterface {
         if (department == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No department found with id " + departmentId);
         }
-        List<Label> labels = depService.getLabelsForDepartment(departmentId);
-        return new DepartmentDetailsDTO(department, labels);
+        List<LabelDTO> labelsDtos = depService.getLabelsForDepartment(departmentId).stream().map(labelMapper::toDTO).toList();
+        return new DepartmentDetailsDTO(departmentMapper.toDTO(department), labelsDtos);
     }
 
     @Override
@@ -106,9 +108,10 @@ public class DepartmentController implements DepartmentControllerInterface {
         try{
             Department department = depService.createDepartment(name, establishmentId);
             depService.addDepartmentLabelLinksAutomatically(department.getDepartmentId());
-            List<Label> labels = depService.getLabelsForDepartment(department.getDepartmentId());
+            List<LabelDTO> labelDtos = depService.getLabelsForDepartment(department.getDepartmentId())
+                    .stream().map(labelMapper::toDTO).toList();
 
-            DepartmentDetailsDTO response = new DepartmentDetailsDTO(department, labels);
+            DepartmentDetailsDTO response = new DepartmentDetailsDTO(departmentMapper.toDTO(department), labelDtos);
 
             return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {

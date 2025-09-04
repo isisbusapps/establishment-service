@@ -64,10 +64,10 @@ public class DepartmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 // Validate department
-                .body("department.departmentId", equalTo(TEST_DEPARTMENT_ID))
-                .body("department.departmentName", equalTo(TEST_DEPARTMENT_NAME))
+                .body("departmentDto.departmentId", equalTo(TEST_DEPARTMENT_ID))
+                .body("departmentDto.departmentName", equalTo(TEST_DEPARTMENT_NAME))
                 // Validate labels
-                .body("labels[0].labelName", equalTo(TEST_LABEL_NAME));
+                .body("labelDtos[0].labelName", equalTo(TEST_LABEL_NAME));
     }
 
     @Test
@@ -214,9 +214,9 @@ public class DepartmentControllerTest extends RestTest {
                 .post(getBaseURI() + "/department")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("department.departmentName", equalTo(NEW_DEPARTMENT_NAME))
-                .body("department.establishmentId", equalTo(VERIFIED_EST_ID))
-                .body("labels.labelId", hasItems(NEW_LABEL_ID_1, NEW_LABEL_ID_2));
+                .body("departmentDto.departmentName", equalTo(NEW_DEPARTMENT_NAME))
+                .body("departmentDto.establishmentId", equalTo(VERIFIED_EST_ID))
+                .body("labelDtos.labelId", hasItems(NEW_LABEL_ID_1, NEW_LABEL_ID_2));
     }
 
     @Test
