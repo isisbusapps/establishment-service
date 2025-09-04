@@ -1,8 +1,10 @@
 package uk.ac.stfc.facilities.domains.establishment;
 
+import uk.ac.stfc.facilities.BaseClasses.Dto;
+
 import java.util.List;
 
-public class EstablishmentDetailsDTO {
+public class EstablishmentDetailsDTO implements Dto {
     private Establishment establishment;
     private List<EstablishmentAlias> aliases;
     private List<Category> categories;

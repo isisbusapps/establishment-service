@@ -1,8 +1,10 @@
 package uk.ac.stfc.facilities.domains.department;
 
+import uk.ac.stfc.facilities.BaseClasses.Dto;
+
 import java.util.List;
 
-public class DepartmentDetailsDTO {
+public class DepartmentDetailsDTO implements Dto {
     private Department department;
     private List<Label> labels;
 
