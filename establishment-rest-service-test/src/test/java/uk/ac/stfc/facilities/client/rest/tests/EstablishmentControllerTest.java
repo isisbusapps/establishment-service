@@ -65,12 +65,12 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 // Validate establishment
-                .body("establishment.establishmentId", equalTo(VERIFIED_EST_ID))
-                .body("establishment.establishmentName", equalTo(VERIFIED_EST_NAME))
+                .body("establishmentDto.establishmentId", equalTo(VERIFIED_EST_ID))
+                .body("establishmentDto.establishmentName", equalTo(VERIFIED_EST_NAME))
                 // Validate aliases
-                .body("aliases[0].alias", equalTo(VERIFIED_EST_ALIAS))
+                .body("aliasDtos[0].alias", equalTo(VERIFIED_EST_ALIAS))
                 // Validate categories
-                .body("categories[0].categoryName", equalTo(VERIFIED_EST_CATEGORY_NAME));
+                .body("categoryDtos[0].categoryName", equalTo(VERIFIED_EST_CATEGORY_NAME));
     }
 
     @Test
@@ -228,19 +228,19 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 // Validate establishment
-                .body("establishment.establishmentId", equalTo(UNVERIFIED_EST_ID))
-                .body("establishment.establishmentName", equalTo(ROR_PAYLOAD_NAME))
-                .body("establishment.rorId", equalTo(ROR_PAYLOAD_ROR_ID))
-                .body("establishment.countryName", equalTo(ROR_PAYLOAD_COUNTRY))
-                .body("establishment.establishmentUrl", equalTo(ROR_PAYLOAD_URL))
-                .body("establishment.verified", equalTo(true))
+                .body("establishmentDto.establishmentId", equalTo(UNVERIFIED_EST_ID))
+                .body("establishmentDto.establishmentName", equalTo(ROR_PAYLOAD_NAME))
+                .body("establishmentDto.rorId", equalTo(ROR_PAYLOAD_ROR_ID))
+                .body("establishmentDto.countryName", equalTo(ROR_PAYLOAD_COUNTRY))
+                .body("establishmentDto.establishmentUrl", equalTo(ROR_PAYLOAD_URL))
+                .body("establishmentDto.verified", equalTo(true))
                 // Validate aliases
-                .body("aliases[0].alias", equalTo(ROR_PAYLOAD_LABEL))
-                .body("aliases[1].alias", equalTo(ROR_PAYLOAD_ACRONYM))
-                .body("aliases[2].alias", equalTo(ROR_PAYLOAD_ALIAS))
+                .body("aliasDtos[0].alias", equalTo(ROR_PAYLOAD_LABEL))
+                .body("aliasDtos[1].alias", equalTo(ROR_PAYLOAD_ACRONYM))
+                .body("aliasDtos[2].alias", equalTo(ROR_PAYLOAD_ALIAS))
                 // Validate categories
-                .body("categories[0].categoryName", equalTo(ROR_PAYLOAD_TYPE_1))
-                .body("categories[1].categoryName", equalTo(ROR_PAYLOAD_TYPE_2));
+                .body("categoryDtos[0].categoryName", equalTo(ROR_PAYLOAD_TYPE_1))
+                .body("categoryDtos[1].categoryName", equalTo(ROR_PAYLOAD_TYPE_2));
     }
 
     @Test
