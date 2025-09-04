@@ -5,39 +5,27 @@ import uk.ac.stfc.facilities.BaseClasses.Dto;
 import java.util.List;
 
 public class EstablishmentDetailsDTO implements Dto {
-    private Establishment establishment;
-    private List<EstablishmentAlias> aliases;
-    private List<Category> categories;
+    private EstablishmentDTO establishmentDto;
+    private List<EstablishmentAliasDTO> aliasDtos;
+    private List<CategoryDTO> categoryDtos;
 
     public EstablishmentDetailsDTO() {}
 
-    public EstablishmentDetailsDTO(Establishment establishment, List<EstablishmentAlias> aliases, List<Category> categories) {
-        this.establishment = establishment;
-        this.aliases = aliases;
-        this.categories = categories;
+    public EstablishmentDetailsDTO(EstablishmentDTO establishmentDto, List<EstablishmentAliasDTO> aliasDtos, List<CategoryDTO> categoryDtos) {
+        this.establishmentDto = establishmentDto;
+        this.aliasDtos = aliasDtos;
+        this.categoryDtos = categoryDtos;
     }
 
-    public Establishment getEstablishment() {
-        return establishment;
-    }
+    public EstablishmentDTO getEstablishmentDto() {return establishmentDto;}
 
-    public void setEstablishment(Establishment establishment) {
-        this.establishment = establishment;
-    }
+    public void setEstablishmentDto(EstablishmentDTO establishmentDto) {this.establishmentDto = establishmentDto;}
 
-    public List<EstablishmentAlias> getAliases() {
-        return aliases;
-    }
+    public List<EstablishmentAliasDTO> getAliasDtos() {return aliasDtos;}
 
-    public void setAliases(List<EstablishmentAlias> aliases) {
-        this.aliases = aliases;
-    }
+    public void setAliasDtos(List<EstablishmentAliasDTO> aliasDtos) {this.aliasDtos = aliasDtos;}
 
-    public List<Category> getCategories() {
-        return categories;
-    }
+    public List<CategoryDTO> getCategoryDtos() {return categoryDtos;}
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
+    public void setCategoryDtos(List<CategoryDTO> categoryDtos) {this.categoryDtos = categoryDtos;}
 }

@@ -15,7 +15,11 @@ import java.util.List;
 @Transactional
 public class EstablishmentController implements EstablishmentControllerInterface {
     @Inject
-    EstablishmentMapper mapper;
+    EstablishmentMapper estMapper;
+    @Inject
+    EstablishmentAliasMapper estAliasMapper;
+    @Inject
+    CategoryMapper categoryMapper;
     @Inject
     EstablishmentService estService;
     @Inject
@@ -27,7 +31,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
         if (establishment == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No establishment found with id " + establishmentId);
         }
-        return mapper.toDTO(establishment);
+        return estMapper.toDTO(establishment);
     }
 
     @Override
@@ -36,10 +40,12 @@ public class EstablishmentController implements EstablishmentControllerInterface
         if (establishment == null) {
             throw new RestControllerException(ReasonCode.NoResults, "No establishment found with id " + establishmentId);
         }
-        List<EstablishmentAlias> aliases = estService.getAliasesForEstablishment(establishmentId);
-        List<Category> categories = estService.getCategoriesForEstablishment(establishmentId);
+        List<EstablishmentAliasDTO> aliasDtos = estService.getAliasesForEstablishment(establishmentId)
+                .stream().map(estAliasMapper::toDTO).toList();
+        List<CategoryDTO> categoryDtos = estService.getCategoriesForEstablishment(establishmentId)
+                .stream().map(categoryMapper::toDTO).toList();
 
-        return new EstablishmentDetailsDTO(establishment, aliases, categories);
+        return new EstablishmentDetailsDTO(estMapper.toDTO(establishment), aliasDtos, categoryDtos);
     }
 
     @Override
@@ -49,7 +55,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
         }
         return estService.getEstablishmentsByQuery(searchQuery, useAliases, onlyVerified, limit)
                 .stream()
-                .map(mapper::toDTO)
+                .map(estMapper::toDTO)
                 .toList();
     }
 
@@ -57,7 +63,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     public List<EstablishmentDTO> getUnverifiedEstablishments() {
         return estService.getUnverifiedEstablishments()
                 .stream()
-                .map(mapper::toDTO)
+                .map(estMapper::toDTO)
                 .toList();
     }
 
@@ -66,7 +72,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
         if (establishmentName == null || establishmentName.isEmpty()) {
             throw new RestControllerException(ReasonCode.BadRequest, "Establishment name must not be null or empty");
         }
-        EstablishmentDTO newEstablishment = mapper.toDTO(estService.createUnverifiedEstablishment(establishmentName));
+        EstablishmentDTO newEstablishment = estMapper.toDTO(estService.createUnverifiedEstablishment(establishmentName));
         return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
     }
 
@@ -92,10 +98,15 @@ public class EstablishmentController implements EstablishmentControllerInterface
             Establishment estEnriched = estService.addRorDataToEstablishment(establishmentId, rorMatch);
 
             List<EstablishmentAlias> aliases = estService.addEstablishmentAliasesFromRor(establishmentId, rorMatch);
-            estService.addEstablishmentCategoryLinksFromRor(establishmentId, rorMatch);
-            List<Category> categories = estService.getCategoriesForEstablishment(establishmentId);
 
-            EstablishmentDetailsDTO response = new EstablishmentDetailsDTO(estEnriched, aliases, categories);
+            List<EstablishmentAliasDTO> aliasDtos = aliases.stream().map(estAliasMapper::toDTO).toList();
+
+            estService.addEstablishmentCategoryLinksFromRor(establishmentId, rorMatch);
+
+            List<CategoryDTO> categoryDtos = estService.getCategoriesForEstablishment(establishmentId)
+                    .stream().map(categoryMapper::toDTO).toList();
+
+            EstablishmentDetailsDTO response = new EstablishmentDetailsDTO(estMapper.toDTO(estEnriched), aliasDtos, categoryDtos);
 
             return Response.status(Response.Status.OK).entity(response).build();
         } catch (IllegalArgumentException e) {
@@ -114,7 +125,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
         inputEst.setVerified(true);
 
         try {
-            estService.updateEstablishment(establishmentId, mapper.toEntity(inputEst));
+            estService.updateEstablishment(establishmentId, estMapper.toEntity(inputEst));
         } catch (NoResultException e) {
             throw new RestControllerException(ReasonCode.NoResults, e.getMessage());
         }
