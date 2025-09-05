@@ -28,11 +28,9 @@ public class EstablishmentCategoryLinkId implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof EstablishmentCategoryLinkId)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         EstablishmentCategoryLinkId that = (EstablishmentCategoryLinkId) o;
-        return Objects.equals(establishmentId, that.establishmentId) &&
-                Objects.equals(categoryId, that.categoryId);
+        return Objects.equals(establishmentId, that.establishmentId) && Objects.equals(categoryId, that.categoryId);
     }
 
     @Override
