@@ -14,16 +14,16 @@ public interface DepartmentService {
 
     void deleteDepartment(Long depId);
 
-    List<String> addDepartmentLabelLinksAutomatically(Long departmentId);
+    DepartmentModel addDepartmentLabelLinksAutomatically(Long departmentId);
 
-    List<String> addDepartmentLabelLinks(Long departmentId, List<Long> LabelIds);
+    DepartmentModel addDepartmentLabelLinks(Long departmentId, List<Long> LabelIds);
 
-    void deleteDepartmentLabelLink(Long departmentId, Long labelId);
+    DepartmentModel deleteDepartmentLabel(Long departmentId, Long labelId);
 
-    boolean addFallbackLabelIfNeeded(Long departmentId);
+    DepartmentModel deleteDepartmentLabel(Long departmentId);
 
-    String getDepartmentLabelLink(Long departmentId, Long labelId);
+    DepartmentModel addFallbackLabelIfNeeded(Long departmentId);
 
-    List<String> getLabelsForDepartment(Long departmentId);
+    List<LabelModel> getLabelsForDepartment(Long departmentId);
 
 }

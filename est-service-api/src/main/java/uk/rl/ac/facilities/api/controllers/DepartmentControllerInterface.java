@@ -1,11 +1,9 @@
 package uk.rl.ac.facilities.api.controllers;
 
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import uk.rl.ac.facilities.api.dto.CreateDepartmentDTO;
 import uk.rl.ac.facilities.api.dto.DepartmentDTO;
-import uk.rl.ac.facilities.api.dto.DepartmentDetailsDTO;
 
 import java.util.List;
 
@@ -20,27 +18,23 @@ public interface DepartmentControllerInterface {
     @Path("/{departmentId}")
     DepartmentDTO getDepartment(@PathParam("departmentId") Long departmentId);
 
-    @GET
-    @Path("/{departmentId}/details")
-    DepartmentDetailsDTO getDepartmentDetails(@PathParam("departmentId") Long departmentId);
-
     @PUT
-    @Path("/{departmentId}/add-label-manual")
-    Response addDepartmentLabelLinksManually(@PathParam("departmentId") Long departmentId, List<Long> LabelIds);
-
-    @PUT
-    @Path("/{departmentId}/add-label-auto")
-    Response addDepartmentLabelLinksAutomatically(@PathParam("departmentId") Long departmentId);
+    @Path("/{departmentId}/label")
+    DepartmentDTO addDepartmentLabelLinks(@PathParam("departmentId") Long departmentId, List<Long> LabelIds);
 
     @DELETE
     @Path("/{departmentId}/label/{labelId}")
-    Response removeDepartmentLabelLink(@PathParam("departmentId") Long departmentId, @PathParam("labelId") Long labelId);
+    DepartmentDTO removeDepartmentLabelLink(@PathParam("departmentId") Long departmentId, @PathParam("labelId") Long labelId);
+
+    @DELETE
+    @Path("/{departmentId}/label/")
+    DepartmentDTO removeDepartmentLabelLink(@PathParam("departmentId") Long departmentId);
 
     @POST
-    Response createDepartmentAndDepLabelLinks(CreateDepartmentDTO request);
+    DepartmentDTO createDepartment(CreateDepartmentDTO request);
 
     @DELETE
     @Path("/{departmentId}")
-    Response deleteDepartmentAndDepLabelLinks(@PathParam("departmentId") Long departmentId);
+    void deleteDepartment(@PathParam("departmentId") Long departmentId);
 
 }

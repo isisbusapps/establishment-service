@@ -4,6 +4,7 @@ import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 public class EstablishmentDTO {
     @Schema(
@@ -12,7 +13,7 @@ public class EstablishmentDTO {
             required = true,
             readOnly = true
     )
-    private Long establishmentId;
+    private Long id;
 
     @Schema(
             description = "The name of the establishment",
@@ -20,14 +21,14 @@ public class EstablishmentDTO {
             required = true,
             nullable = true
     )
-    private String establishmentName;
+    private String name;
 
     @Schema(
             description = "The Research Organization Registry (ROR) identifier of the establishment",
             example = "https://ror.org/057g20z61",
             nullable = true
     )
-    private String rorId;
+    private String rorID;
 
     @Schema(
             description = "The country where the establishment is located",
@@ -35,14 +36,14 @@ public class EstablishmentDTO {
             required = true,
             nullable = true
     )
-    private String countryName;
+    private String country;
 
     @Schema(
             description = "The official website URL of the establishment",
             example = "https://www.ukri.org/councils/stfc/",
             nullable = true
     )
-    private String establishmentUrl;
+    private String url;
 
     @Schema(
             description = "The date the establishment record became active",
@@ -73,44 +74,48 @@ public class EstablishmentDTO {
     )
     private Boolean verified;
 
-    public Long getEstablishmentId() {
-        return establishmentId;
+    private List<String> categories;
+
+    private List<String> aliases;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setEstablishmentId(Long establishmentId) {
-        this.establishmentId = establishmentId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getEstablishmentName() {
-        return establishmentName;
+    public String getName() {
+        return name;
     }
 
-    public void setEstablishmentName(String establishmentName) {
-        this.establishmentName = establishmentName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getRorId() {
-        return rorId;
+    public String getRorID() {
+        return rorID;
     }
 
-    public void setRorId(String rorId) {
-        this.rorId = rorId;
+    public void setRorID(String rorID) {
+        this.rorID = rorID;
     }
 
-    public String getCountryName() {
-        return countryName;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getEstablishmentUrl() {
-        return establishmentUrl;
+    public String getUrl() {
+        return url;
     }
 
-    public void setEstablishmentUrl(String establishmentUrl) {
-        this.establishmentUrl = establishmentUrl;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public ZonedDateTime getFromDate() {
@@ -135,5 +140,21 @@ public class EstablishmentDTO {
 
     public void setVerified(Boolean verified) {
         this.verified = verified;
+    }
+
+    public List<String> getAliases() {
+        return aliases;
+    }
+
+    public void setAliases(List<String> alises) {
+        this.aliases = alises;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
     }
 }

@@ -1,5 +1,6 @@
 package uk.ac.stfc.facilities.client.rest.tests;
 
+import io.restassured.filter.log.LogDetail;
 import jakarta.json.Json;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,8 @@ public class DepartmentControllerTest extends RestTest {
     @Override
     protected void cleanupData() throws Exception {
         deleteTestData("DEPARTMENT_LABEL_LINK", "DEPARTMENT_ID");
+        deleteTestData("DEPARTMENT_LABEL_LINK", "LABEL_ID");
+        deleteTestData("LABEL", "ID");
         deleteTestData("DEPARTMENT", "ID");
         deleteDepartmentLabelsByDepartmentName(NEW_DEPARTMENT_NAME);
         deleteTestData("DEPARTMENT", "DEPARTMENT_NAME", NEW_DEPARTMENT_NAME);
@@ -29,6 +32,7 @@ public class DepartmentControllerTest extends RestTest {
 
         deleteTestData("ESTABLISHMENT_ALIAS", "ESTABLISHMENT_ID");
         deleteTestData("ESTABLISHMENT_CATEGORY_LINK", "ESTABLISHMENT_ID");
+        deleteTestData("CATEGORY", "ID");
         deleteTestData("ESTABLISHMENT_NEW", "ID");
         deleteTestData("ESTABLISHMENT_NEW", "ESTABLISHMENT_NAME", NEW_EST_NAME);
     }
@@ -41,8 +45,11 @@ public class DepartmentControllerTest extends RestTest {
                 .when()
                 .get(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID)
                 .then()
+                .log().ifValidationFails(LogDetail.BODY)
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("departmentName", equalTo(TEST_DEPARTMENT_NAME));
+                .body("id", equalTo(TEST_DEPARTMENT_ID))
+                .body("name", equalTo(TEST_DEPARTMENT_NAME))
+                .body("labels[0]", equalTo(TEST_LABEL_NAME));
     }
 
     @Test
@@ -50,31 +57,6 @@ public class DepartmentControllerTest extends RestTest {
         given()
                 .when()
                 .get(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID)
-                .then()
-                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
-    }
-
-    /* ----------------- getDepartmentDetails ----------------- */
-
-    @Test
-    public void test_getDepartmentDetails_ValidId_ReturnsEstablishment() {
-        given()
-                .when()
-                .get(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/details")
-                .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                // Validate department
-                .body("departmentDto.departmentId", equalTo(TEST_DEPARTMENT_ID))
-                .body("departmentDto.departmentName", equalTo(TEST_DEPARTMENT_NAME))
-                // Validate labels
-                .body("labelDtos[0].labelName", equalTo(TEST_LABEL_NAME));
-    }
-
-    @Test
-    public void test_getDepartmentDetails_InvalidId_ReturnsNotFound() {
-        given()
-                .when()
-                .get(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID + "/details")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
@@ -90,11 +72,12 @@ public class DepartmentControllerTest extends RestTest {
                         .add(NEW_LABEL_ID_2)
                         .build().toString())
                 .when()
-                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/add-label-manual")
+                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label")
                 .then()
+                .log().ifValidationFails(LogDetail.BODY)
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("department.departmentId", everyItem(equalTo(TEST_DEPARTMENT_ID)))
-                .body("label.labelId", hasItems(NEW_LABEL_ID_1, NEW_LABEL_ID_2));
+                .body("id", equalTo(TEST_DEPARTMENT_ID))
+                .body("labels", hasItems(NEW_LABEL_NAME_1, NEW_LABEL_NAME_2));
     }
 
     @Test
@@ -105,20 +88,11 @@ public class DepartmentControllerTest extends RestTest {
                         .add(TEST_LABEL_ID)
                         .build().toString())
                 .when()
-                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/add-label-manual")
+                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label")
                 .then()
+                .log().ifValidationFails(LogDetail.BODY)
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("label.labelId", not(hasItems(TEST_LABEL_ID)));
-    }
-
-    @Test
-    public void test_addDepartmentLabelLinksManually_MissingInput_ReturnsBadRequest() {
-        given()
-                .contentType("application/json")
-                .when()
-                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/add-label-manual")
-                .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+                .body("labels", not(hasItems(TEST_LABEL_ID)));
     }
 
     @Test
@@ -129,7 +103,7 @@ public class DepartmentControllerTest extends RestTest {
                         .add(TEST_LABEL_ID)
                         .build().toString())
                 .when()
-                .put(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID + "/add-label-manual")
+                .put(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID + "/label")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
@@ -142,7 +116,7 @@ public class DepartmentControllerTest extends RestTest {
                         .add(NON_EXISTENT_LABEL_ID)
                         .build().toString())
                 .when()
-                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/add-label-manual")
+                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
@@ -153,27 +127,17 @@ public class DepartmentControllerTest extends RestTest {
     public void test_addDepartmentLabelLinksAutomatically_ValidInput_ReturnsLinks() {
         given()
                 .when()
-                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/add-label-auto")
+                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("label.labelId", hasItems(NEW_LABEL_ID_1, NEW_LABEL_ID_2));
-    }
-
-    @Test
-    public void test_addDepartmentLabelLinksAutomatically_LinkAlreadyExists_LinkNotAdded() {
-        given()
-                .when()
-                .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/add-label-auto")
-                .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body("label.labelId", not(hasItems(TEST_LABEL_ID)));
+                .body("labels", hasItems(NEW_LABEL_NAME_1, NEW_LABEL_NAME_2));
     }
 
     @Test
     public void test_addDepartmentLabelLinksAutomatically_DepartmentNonExistent_ReturnsNotFound() {
         given()
                 .when()
-                .put(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID + "/add-label-auto")
+                .put(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID + "/label")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
@@ -186,7 +150,8 @@ public class DepartmentControllerTest extends RestTest {
                 .when()
                 .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label/" + TEST_LABEL_ID)
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("labels", not(hasItems(TEST_LABEL_NAME)));
     }
 
     @Test
@@ -213,10 +178,11 @@ public class DepartmentControllerTest extends RestTest {
                 .when()
                 .post(getBaseURI() + "/department")
                 .then()
+                .log().ifValidationFails(LogDetail.BODY)
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("departmentDto.departmentName", equalTo(NEW_DEPARTMENT_NAME))
-                .body("departmentDto.establishmentId", equalTo(VERIFIED_EST_ID))
-                .body("labelDtos.labelId", hasItems(NEW_LABEL_ID_1, NEW_LABEL_ID_2));
+                .body("name", equalTo(NEW_DEPARTMENT_NAME))
+                .body("estId", equalTo(VERIFIED_EST_ID))
+                .body("labels", hasItems(NEW_LABEL_NAME_1, NEW_LABEL_NAME_2));
     }
 
     @Test
@@ -258,7 +224,7 @@ public class DepartmentControllerTest extends RestTest {
                 .when()
                 .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID)
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test

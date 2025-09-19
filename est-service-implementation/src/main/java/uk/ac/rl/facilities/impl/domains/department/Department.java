@@ -2,6 +2,9 @@ package uk.ac.rl.facilities.impl.domains.department;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "DEPARTMENT")
 public class Department {
@@ -20,6 +23,9 @@ public class Department {
 
     @Column(name = "ESTABLISHMENT_ID")
     private Long establishmentId;
+
+    @OneToMany(mappedBy = "department", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<DepartmentLabelLink> departmentLabelLinks = new HashSet<>();
 
     public Department() {}
 
@@ -57,4 +63,12 @@ public class Department {
     public Long getEstablishmentId() {return establishmentId;}
 
     public void setEstablishmentId(Long establishmentId) {this.establishmentId = establishmentId;}
+
+    public Set<DepartmentLabelLink> getDepartmentLabelLinks() {
+        return departmentLabelLinks;
+    }
+
+    public void setDepartmentLabelLinks(Set<DepartmentLabelLink> departmentLabelLinks) {
+        this.departmentLabelLinks = departmentLabelLinks;
+    }
 }

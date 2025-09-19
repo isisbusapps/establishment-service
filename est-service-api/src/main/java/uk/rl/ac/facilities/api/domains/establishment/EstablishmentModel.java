@@ -2,6 +2,7 @@ package uk.rl.ac.facilities.api.domains.establishment;
 
 import java.net.URL;
 import java.time.Instant;
+import java.util.List;
 
 public class EstablishmentModel {
 
@@ -34,6 +35,10 @@ public class EstablishmentModel {
     private Instant thruDate;
 
     private Boolean verified;
+
+    private List<CategoryModel> categories;
+
+    private List<AliasModel> aliases;
 
     public Long getId() {
         return id;
@@ -97,5 +102,21 @@ public class EstablishmentModel {
 
     public void setVerified(Boolean verified) {
         this.verified = verified;
+    }
+
+    public List<CategoryModel> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<CategoryModel> categories) {
+        this.categories = categories;
+    }
+
+    public List<AliasModel> getAliases() {
+        return aliases;
+    }
+
+    public void setAliases(List<AliasModel> aliases) {
+        this.aliases = aliases;
     }
 }

@@ -2,6 +2,9 @@ package uk.ac.rl.facilities.impl.domains.establishment;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "CATEGORY")
 public class Category {
@@ -14,6 +17,9 @@ public class Category {
 
     @Column(name = "CATEGORY_NAME")
     private String categoryName;
+
+    @OneToMany(mappedBy = "category", cascade =  {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<EstablishmentCategoryLink>  categoryLinks = new HashSet<>();
 
     public Category() {}
 
@@ -29,4 +35,12 @@ public class Category {
     public String getCategoryName() {return categoryName;}
 
     public void setCategoryName(String categoryName) {this.categoryName = categoryName;}
+
+    public Set<EstablishmentCategoryLink> getCategoryLinks() {
+        return categoryLinks;
+    }
+
+    public void setCategoryLinks(Set<EstablishmentCategoryLink> categoryLinks) {
+        this.categoryLinks = categoryLinks;
+    }
 }

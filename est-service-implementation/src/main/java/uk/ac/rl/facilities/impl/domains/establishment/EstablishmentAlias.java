@@ -12,8 +12,9 @@ public class EstablishmentAlias {
     @Column(name = "ALIAS_ID")
     private Long aliasId;
 
-    @Column(name = "ESTABLISHMENT_ID", nullable = false)
-    private Long establishmentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ESTABLISHMENT_ID", nullable = false)
+    private Establishment establishment;
 
     @Column(name = "ALIAS", nullable = false)
     private String alias;
@@ -21,21 +22,38 @@ public class EstablishmentAlias {
     public EstablishmentAlias() {
     }
 
-    public EstablishmentAlias(Long establishmentId, String alias) {
-        this.establishmentId = establishmentId;
+    public EstablishmentAlias(Establishment establishment, String alias) {
+        this.establishment = establishment;
         this.alias = alias;
     }
 
-    public EstablishmentAlias(Long aliasId, Long establishmentId, String alias) {
+    public EstablishmentAlias(Long aliasId, Establishment establishment, String alias) {
         this.aliasId = this.aliasId;
-        this.establishmentId = establishmentId;
+        this.establishment = establishment;
         this.alias = alias;
     }
 
-    public Long getAliasId() {return aliasId;}
-    public void setAliasId(Long aliasId) {this.aliasId = aliasId;}
-    public Long getEstablishmentId() {return establishmentId;}
-    public void setEstablishmentId(Long establishmentId) {this.establishmentId = establishmentId;}
-    public String getAlias() {return alias;}
-    public void setAlias(String alias) {this.alias = alias;}
+    public Long getAliasId() {
+        return aliasId;
+    }
+
+    public void setAliasId(Long aliasId) {
+        this.aliasId = aliasId;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public Establishment getEstablishment() {
+        return establishment;
+    }
+
+    public void setEstablishment(Establishment establishment) {
+        this.establishment = establishment;
+    }
 }

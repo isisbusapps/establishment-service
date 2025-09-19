@@ -3,6 +3,10 @@ package uk.ac.rl.facilities.impl.domains.establishment;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "ESTABLISHMENT_NEW")
@@ -35,6 +39,12 @@ public class Establishment {
     @Column(name = "VERIFIED", nullable = false, columnDefinition = "NUMBER(1) DEFAULT 0")
     private Boolean verified;
 
+    @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<EstablishmentAlias> aliases = new ArrayList<>();
+
+    @OneToMany(mappedBy = "establishment", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
+    private Set<EstablishmentCategoryLink> categoryLinks = new HashSet<>();
+
     public Establishment() {
     }
 
@@ -61,29 +71,80 @@ public class Establishment {
     public Long getEstablishmentId() {
         return establishmentId;
     }
+
     public void setEstablishmentId(Long establishmentId) {
         this.establishmentId = establishmentId;
     }
-    public String getEstablishmentName() {return establishmentName; }
-    public void setEstablishmentName(String establishmentName) {this.establishmentName = establishmentName; }
-    public String getRorId() {return rorId; }
-    public void setRorId(String rorId) {this.rorId = rorId; }
-    public String getCountryName() { return countryName; }
-    public void setCountryName(String countryName) { this.countryName = countryName; }
-    public String getEstablishmentUrl() { return establishmentUrl; }
-    public void setEstablishmentUrl(String establishmentUrl) {this.establishmentUrl = establishmentUrl; }
+
+    public String getEstablishmentName() {
+        return establishmentName;
+    }
+
+    public void setEstablishmentName(String establishmentName) {
+        this.establishmentName = establishmentName;
+    }
+
+    public String getRorId() {
+        return rorId;
+    }
+
+    public void setRorId(String rorId) {
+        this.rorId = rorId;
+    }
+
+    public String getCountryName() {
+        return countryName;
+    }
+
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
+    }
+
+    public String getEstablishmentUrl() {
+        return establishmentUrl;
+    }
+
+    public void setEstablishmentUrl(String establishmentUrl) {
+        this.establishmentUrl = establishmentUrl;
+    }
+
     public Instant getFromDate() {
         return fromDate;
     }
+
     public void setFromDate(Instant fromDate) {
         this.fromDate = fromDate;
     }
+
     public Instant getThruDate() {
         return thruDate;
     }
+
     public void setThruDate(Instant thruDate) {
         this.thruDate = thruDate;
     }
-    public Boolean getVerified() {return verified; }
-    public void setVerified(Boolean verified) {this.verified = verified; }
+
+    public Boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
+    }
+
+    public List<EstablishmentAlias> getAliases() {
+        return aliases;
+    }
+
+    public void setAliases(List<EstablishmentAlias> aliases) {
+        this.aliases = aliases;
+    }
+
+    public Set<EstablishmentCategoryLink> getCategoryLinks() {
+        return categoryLinks;
+    }
+
+    public void setCategoryLinks(Set<EstablishmentCategoryLink> categoryLinks) {
+        this.categoryLinks = categoryLinks;
+    }
 }

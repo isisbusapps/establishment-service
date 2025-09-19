@@ -3,12 +3,16 @@ package uk.ac.rl.facilities.impl.domains.department;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
+import jakarta.transaction.Transactional;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.rl.facilities.impl.mappers.DepartmentMapper;
+import uk.ac.rl.facilities.impl.mappers.LabelMapper;
 import uk.rl.ac.facilities.api.domains.department.DepartmentModel;
 import uk.rl.ac.facilities.api.domains.department.DepartmentService;
+import uk.rl.ac.facilities.api.domains.department.LabelModel;
+import uk.rl.ac.facilities.api.exceptions.EntityNotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,18 +35,25 @@ public class DepartmentServiceImpl implements DepartmentService {
     private LabelRepository labelRepo;
     private DepartmentLabelLinkRepository depLabelLinkRepo;
     private DepartmentMapper deptMapper;
+    private LabelMapper labelMapper;
 
     public DepartmentServiceImpl() {}
 
     @Inject
-    public DepartmentServiceImpl(DepartmentRepository depRepo, LabelRepository labelRepo, DepartmentLabelLinkRepository depLabelLinkRepo, DepartmentMapper deptMapper) {
+    public DepartmentServiceImpl(DepartmentRepository depRepo,
+                                 LabelRepository labelRepo,
+                                 DepartmentLabelLinkRepository depLabelLinkRepo,
+                                 DepartmentMapper deptMapper,
+                                 LabelMapper labelMapper) {
         this.depRepo = depRepo;
         this.labelRepo = labelRepo;
         this.depLabelLinkRepo = depLabelLinkRepo;
         this.deptMapper = deptMapper;
+        this.labelMapper = labelMapper;
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public DepartmentModel createDepartment(String name, Long establishmentId) {
 
         Department existingDep = depRepo.findByNameAndEstablishmentId(name, establishmentId);
@@ -64,7 +75,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentModel getDepartment(Long departmentId) {
-        return deptMapper.toModel(depRepo.findById(departmentId));
+        return deptMapper.toModel(depRepo.findByIdOptional(departmentId).orElseThrow(() -> new EntityNotFoundException("Department", departmentId)));
     }
 
     @Override
@@ -73,62 +84,58 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void deleteDepartment(Long depId) throws NoResultException {
-        depLabelLinkRepo.delete("id.departmentId", depId);
         depRepo.deleteById(depId);
+        depRepo.flush();
     }
 
     @Override
-    public String getDepartmentLabelLink(Long departmentId, Long labelId) {
-        DepartmentLabelLinkId id = new DepartmentLabelLinkId(departmentId, labelId);
-        return depLabelLinkRepo.findById(id).getLabel().getLabelName();
+    public DepartmentModel deleteDepartmentLabel(Long departmentId, Long labelId) {
+        DepartmentLabelLinkId departmentLabelLinkId  = new DepartmentLabelLinkId(departmentId, labelId);
+        DepartmentLabelLink link = depLabelLinkRepo.findByIdOptional(departmentLabelLinkId).orElseThrow(() -> new EntityNotFoundException("Label", labelId));
+        depLabelLinkRepo.delete(link);
+        depLabelLinkRepo.flush();
+        return deptMapper.toModel(depRepo.findById(departmentId));
     }
 
     @Override
-    public void deleteDepartmentLabelLink(Long departmentId, Long labelId) {
-        DepartmentLabelLinkId id = new DepartmentLabelLinkId(departmentId, labelId);
-        depLabelLinkRepo.deleteById(id);
+    public DepartmentModel deleteDepartmentLabel(Long departmentId) {
+        Department department = depRepo.findByIdOptional(departmentId).orElseThrow(() -> new RuntimeException("No department found with id " + departmentId));
+        department.getDepartmentLabelLinks().forEach(depLabelLink -> {
+            depLabelLinkRepo.deleteById(depLabelLink.getId());
+        });
+        return deptMapper.toModel(depRepo.findById(departmentId));
     }
 
     @Override
-    public boolean addFallbackLabelIfNeeded(Long departmentId) {
+    public DepartmentModel addFallbackLabelIfNeeded(Long departmentId) {
         Department department = depRepo.findById(departmentId);
 
         if (department == null) {
             LOGGER.warn("No fallback added since no department exists with id: {}", departmentId);
-            return false;
+            throw new RuntimeException("No fallback added since no department exists");
         }
 
         long labelCount = depLabelLinkRepo.count("id.departmentId", departmentId);
         if (labelCount > 0) {
             LOGGER.warn("No fallback added since department already has labels");
-            return false;
+            throw new RuntimeException("No fallback added since department already has labels");
         }
 
         Label fallback = labelRepo.getByName(FALLBACK_LABEL_NAME);
         LOGGER.info("No labels attached to department; adding fallback label '{}'", FALLBACK_LABEL_NAME);
         depLabelLinkRepo.persist(new DepartmentLabelLink(department, fallback));
-        return true;
+        return deptMapper.toModel(department);
     }
 
 
     @Override
-    public List<String> addDepartmentLabelLinks(Long departmentId, List<Long> LabelIds) {
-        Department department = depRepo.findById(departmentId);
-
-        if (department == null) {
-            LOGGER.warn("No department found with department id: " + departmentId);
-            throw new NoResultException("No department found with department id: " + departmentId);
-        }
+    public DepartmentModel addDepartmentLabelLinks(Long departmentId, List<Long> LabelIds) {
+        Department department = depRepo.findByIdOptional(departmentId).orElseThrow(() -> new  EntityNotFoundException("No department found with department id: " + departmentId));
 
         Set<Label> labelsToAdd = LabelIds.stream()
-                .map(id -> {
-                    Label label = labelRepo.findById(id);
-                    if (label == null) {
-                        throw new NoResultException("Label not found for id: " + id);
-                    }
-                    return label;
-                })
+                .map(id -> labelRepo.findByIdOptional(id).orElseThrow(() -> new EntityNotFoundException("Label not found for id: " + id)))
                 .collect(Collectors.toSet());
 
         Set<Label> existingLabels = new HashSet<>(depLabelLinkRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
@@ -142,30 +149,24 @@ public class DepartmentServiceImpl implements DepartmentService {
             labelsToAdd.remove(other);
         }
 
-        List<DepartmentLabelLink> depLabelLinksToAdd = labelsToAdd.stream()
-                .map(label -> new DepartmentLabelLink(department, label))
-                .toList();
+        Set<DepartmentLabelLink> depLabelLinksToAdd = labelsToAdd.stream()
+                .map(label -> new DepartmentLabelLink(department, label)).collect(Collectors.toSet());
 
         if (!depLabelLinksToAdd.isEmpty()) {
             depLabelLinkRepo.persist(depLabelLinksToAdd);
+            depLabelLinkRepo.flush();
         }
 
         if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
             LOGGER.info("Cannot have fallback label with other labels; removing '{}'", FALLBACK_LABEL_NAME);
-            this.deleteDepartmentLabelLink(department.getDepartmentId(), other.getLabelId());
+            this.deleteDepartmentLabel(department.getDepartmentId(), other.getLabelId());
         }
-
-        return depLabelLinksToAdd.stream().map(DepartmentLabelLink::getLabel).map(Label::getLabelName).toList();
+        return deptMapper.toModel(department);
     }
 
     @Override
-    public List<String> addDepartmentLabelLinksAutomatically(Long departmentId) {
-        Department department = depRepo.findById(departmentId);
-
-        if (department == null) {
-            LOGGER.warn("No department found with department id: " + departmentId);
-            throw new NoResultException("No department found with department id: " + departmentId);
-        }
+    public DepartmentModel addDepartmentLabelLinksAutomatically(Long departmentId) {
+        Department department = depRepo.findByIdOptional(departmentId).orElseThrow(() -> new  EntityNotFoundException("No department found with department id: " + departmentId));
 
         String cleanDepartmentName = cleanName(department.getDepartmentName());
         List<Label> allLabels = labelRepo.getAll();
@@ -178,8 +179,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public List<String> getLabelsForDepartment(Long departmentId) {
-        return depLabelLinkRepo.findLabelsLinkedToDepartment(departmentId).stream().map(Label::getLabelName).toList();
+    public List<LabelModel> getLabelsForDepartment(Long departmentId) {
+        return labelMapper.toModel(depLabelLinkRepo.findLabelsLinkedToDepartment(departmentId).stream().toList());
     }
 
     private List<Label> fuzzySearch(String departmentName, Integer cutoff, List<Label> labels) {

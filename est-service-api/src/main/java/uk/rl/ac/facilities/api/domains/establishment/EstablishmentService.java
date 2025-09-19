@@ -16,9 +16,9 @@ public interface EstablishmentService {
 
     EstablishmentModel addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror);
 
-    List<String> addEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror);
+    List<AliasModel> addEstablishmentAliasesFromRor(Long establishmentId, RorSchemaV21 ror);
 
-    void addEstablishmentCategoryLinksFromRor(Long establishmentId, RorSchemaV21 ror);
+    List<CategoryModel> addEstablishmentCategoryLinksFromRor(Long establishmentId, RorSchemaV21 ror);
 
     EstablishmentModel createUnverifiedEstablishment(String name);
 
@@ -28,11 +28,11 @@ public interface EstablishmentService {
 
     List<EstablishmentModel> getUnverifiedEstablishments();
 
-    void  addEstablishmentAliases(Long establishmentId, List<String> aliasNames);
+    List<AliasModel> addEstablishmentAliases(Long establishmentId, List<String> aliasNames);
 
-    void addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds);
+    List<CategoryModel> addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds);
 
-    List<String> getCategoriesForEstablishment(Long establishmentId);
+    List<CategoryModel> getCategoriesForEstablishment(Long establishmentId);
 
-    List<String> getAliasesForEstablishment(Long establishmentId);
+    List<AliasModel> getAliasesForEstablishment(Long establishmentId);
 }

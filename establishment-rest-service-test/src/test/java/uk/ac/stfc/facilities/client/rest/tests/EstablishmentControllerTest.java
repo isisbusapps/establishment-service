@@ -1,5 +1,6 @@
 package uk.ac.stfc.facilities.client.rest.tests;
 
+import io.restassured.filter.log.LogDetail;
 import jakarta.json.Json;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
@@ -25,10 +26,13 @@ public class EstablishmentControllerTest extends RestTest {
     @Override
     protected void cleanupData() throws Exception {
         deleteTestData("DEPARTMENT_LABEL_LINK", "DEPARTMENT_ID");
+        deleteTestData("LABEL", "ID");
+        deleteTestData("ESTABLISHMENT_ALIAS", "ALIAS_ID");
         deleteTestData("DEPARTMENT", "ID");
 
         deleteTestData("ESTABLISHMENT_ALIAS", "ESTABLISHMENT_ID");
         deleteTestData("ESTABLISHMENT_CATEGORY_LINK", "ESTABLISHMENT_ID");
+        deleteTestData("CATEGORY", "ID");
         deleteTestData("ESTABLISHMENT_NEW", "ID");
         deleteTestData("ESTABLISHMENT_NEW", "ESTABLISHMENT_NAME", NEW_EST_NAME);
     }
@@ -41,9 +45,13 @@ public class EstablishmentControllerTest extends RestTest {
                 .when()
                 .get(getBaseURI() + "/establishment/" + VERIFIED_EST_ID)
                 .then()
+                .log().ifValidationFails(LogDetail.BODY)
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("establishmentId", equalTo(VERIFIED_EST_ID))
-                .body("establishmentName", equalTo(VERIFIED_EST_NAME));
+                .body("id", equalTo(VERIFIED_EST_ID))
+                .body("name", equalTo(VERIFIED_EST_NAME))
+                .body("aliases[0]", equalTo(VERIFIED_EST_ALIAS))
+                // Validate categories
+                .body("categories[0]", equalTo(CATEGORY_NAME));;
     }
 
     @Test
@@ -55,100 +63,87 @@ public class EstablishmentControllerTest extends RestTest {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
-    /* ----------------- getEstablishmentDetails ----------------- */
-
-    @Test
-    public void test_getEstablishmentDetails_ValidId_ReturnsEstablishment() {
-        given()
-                .when()
-                .get(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/details")
-                .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                // Validate establishment
-                .body("establishmentDto.establishmentId", equalTo(VERIFIED_EST_ID))
-                .body("establishmentDto.establishmentName", equalTo(VERIFIED_EST_NAME))
-                // Validate aliases
-                .body("aliasDtos[0].alias", equalTo(VERIFIED_EST_ALIAS))
-                // Validate categories
-                .body("categoryDtos[0].categoryName", equalTo(VERIFIED_EST_CATEGORY_NAME));
-    }
-
-    @Test
-    public void test_getEstablishmentDetails_InvalidId_ReturnsNotFound() {
-        given()
-                .when()
-                .get(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID + "/details")
-                .then()
-                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
-    }
-
     /* ----------------- getEstablishmentsByQuery ----------------- */
 
     @Test
     public void test_getEstablishmentsByQuery_OnlyVerifiedFalse_ReturnsUnverifiedEstablishment() {
-        given()
-                .queryParam("searchQuery", UNVERIFIED_EST_NAME)
+        given().contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("name", UNVERIFIED_EST_NAME)
+                        .build().toString())
                 .queryParam("onlyVerified", false)
                 .when()
-                .get(getBaseURI() + "/establishment/search")
+                .post(getBaseURI() + "/establishment/search")
                 .then()
+                .log().ifValidationFails(LogDetail.BODY)
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("establishmentName", hasItem(UNVERIFIED_EST_NAME));
+                .body("name", hasItem(UNVERIFIED_EST_NAME));
     }
 
     @Test
     public void test_getEstablishmentsByQuery_OnlyVerifiedTrue_DoesNotReturnUnverifiedEstablishment() {
-        given()
-                .queryParam("searchQuery",  UNVERIFIED_EST_NAME)
+        given().contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("name", UNVERIFIED_EST_NAME)
+                        .build().toString())
                 .when()
-                .get(getBaseURI() + "/establishment/search")
+                .post(getBaseURI() + "/establishment/search")
                 .then()
+                .log().ifValidationFails(LogDetail.BODY)
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("establishmentName", not(hasItem(UNVERIFIED_EST_NAME)));
+                .body("name", not(hasItem(UNVERIFIED_EST_NAME)));
     }
 
     @Test
     public void test_getEstablishmentsByQuery_EstablishmentNonExistent_ReturnsEmptyList() {
-        given()
-                .queryParam("searchQuery", "NON_EXISTENT")
+        given().contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("name", UNVERIFIED_EST_NAME)
+                        .build().toString())
                 .when()
-                .get(getBaseURI() + "/establishment/search")
+                .post(getBaseURI() + "/establishment/search")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("establishmentName", not(hasItem("NON_EXISTENT")));
+                .body("name", not(hasItem("NON_EXISTENT")));
     }
 
     @Test
     public void test_getEstablishmentsByQuery_MissingQueryParam_ReturnsBadRequest() {
-        given()
+        given().contentType("application/json")
                 .when()
-                .get(getBaseURI() + "/establishment/search")
+                .post(getBaseURI() + "/establishment/search")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
     @Test
     public void test_getEstablishmentsByQuery_WithAliasEnabled_ReturnsEstablishment() {
-        given()
-                .queryParam("searchQuery", VERIFIED_EST_ALIAS)
+        given().contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("name", VERIFIED_EST_ALIAS)
+                        .build().toString())
+                .when()
                 .queryParam("useAlias", true)
                 .when()
-                .get(getBaseURI() + "/establishment/search")
+                .post(getBaseURI() + "/establishment/search")
                 .then()
+                .log().ifValidationFails(LogDetail.BODY)
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("establishmentName", hasItem(VERIFIED_EST_NAME));
+                .body("name", hasItem(VERIFIED_EST_NAME));
     }
 
     @Test
     public void test_getEstablishmentsByQuery_WithAliasDisabled_DoesNotReturnEstablishment() {
-        given()
-                .queryParam("searchQuery", VERIFIED_EST_ALIAS)
+        given().contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("name", VERIFIED_EST_ALIAS)
+                        .build().toString())
                 .queryParam("useAlias", false)
                 .when()
-                .get(getBaseURI() + "/establishment/search")
+                .post(getBaseURI() + "/establishment/search")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("establishmentName", not(hasItem(VERIFIED_EST_NAME)));
+                .body("name", not(hasItem(VERIFIED_EST_NAME)));
     }
 
     /* -----------------  getUnverifiedEstablishments ----------------- */
@@ -160,7 +155,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .get(getBaseURI() + "/establishment/unverified")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("establishmentName", hasItem(UNVERIFIED_EST_NAME));
+                .body("name", hasItem(UNVERIFIED_EST_NAME));
     }
 
 
@@ -170,20 +165,25 @@ public class EstablishmentControllerTest extends RestTest {
     public void test_createUnverifiedEstablishment_ValidInput_ReturnsCreatedEstablishment() {
         given()
                 .contentType("application/json")
-                .body( NEW_EST_NAME)
+                .body(Json.createObjectBuilder()
+                        .add("estName", NEW_EST_NAME)
+                        .add("country", "TEST_COUNTRY")
+                        .build().toString())
                 .when()
                 .post(getBaseURI() + "/establishment")
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
-                .body("establishmentName", equalTo(NEW_EST_NAME))
+                .body("name", equalTo(NEW_EST_NAME))
                 .body("verified", equalTo(false));
     }
 
     @Test
     public void test_createUnverifiedEstablishment_EmptyName_ReturnsBadRequest() {
-        given()
-                .contentType("application/json")
-                .body("")
+        given().contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("estName", "")
+                        .add("country", "TEST_COUNTRY")
+                        .build().toString())
                 .when()
                 .post(getBaseURI() + "/establishment")
                 .then()
@@ -224,23 +224,21 @@ public class EstablishmentControllerTest extends RestTest {
                 .contentType("application/json")
                 .body(RorTestPayLoad)
                 .when()
-                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID + "/ror-enrich-verify")
+                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID + "/enrich-verify/ror")
                 .then()
+                .log().ifValidationFails(LogDetail.BODY)
                 .statusCode(Response.Status.OK.getStatusCode())
                 // Validate establishment
-                .body("establishmentDto.establishmentId", equalTo(UNVERIFIED_EST_ID))
-                .body("establishmentDto.establishmentName", equalTo(ROR_PAYLOAD_NAME))
-                .body("establishmentDto.rorId", equalTo(ROR_PAYLOAD_ROR_ID))
-                .body("establishmentDto.countryName", equalTo(ROR_PAYLOAD_COUNTRY))
-                .body("establishmentDto.establishmentUrl", equalTo(ROR_PAYLOAD_URL))
-                .body("establishmentDto.verified", equalTo(true))
+                .body("id", equalTo(UNVERIFIED_EST_ID))
+                .body("name", equalTo(ROR_PAYLOAD_NAME))
+                .body("rorID", equalTo(ROR_PAYLOAD_ROR_ID))
+                .body("country", equalTo(ROR_PAYLOAD_COUNTRY))
+                .body("url", equalTo(ROR_PAYLOAD_URL))
+                .body("verified", equalTo(true))
                 // Validate aliases
-                .body("aliasDtos[0].alias", equalTo(ROR_PAYLOAD_LABEL))
-                .body("aliasDtos[1].alias", equalTo(ROR_PAYLOAD_ACRONYM))
-                .body("aliasDtos[2].alias", equalTo(ROR_PAYLOAD_ALIAS))
+                .body("aliases", hasItems(ROR_PAYLOAD_LABEL, ROR_PAYLOAD_ACRONYM, ROR_PAYLOAD_ALIAS))
                 // Validate categories
-                .body("categoryDtos[0].categoryName", equalTo(ROR_PAYLOAD_TYPE_1))
-                .body("categoryDtos[1].categoryName", equalTo(ROR_PAYLOAD_TYPE_2));
+                .body("categories", hasItems(ROR_PAYLOAD_TYPE_1,ROR_PAYLOAD_TYPE_2));
     }
 
     @Test
@@ -251,7 +249,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .contentType("application/json")
                 .body(RorTestPayLoad)
                 .when()
-                .put(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID + "/ror-enrich-verify")
+                .put(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID + "/enrich-verify/ror")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
@@ -261,10 +259,10 @@ public class EstablishmentControllerTest extends RestTest {
     @Test
     public void test_manualVerifyAndEnrichData_ValidInput_ReturnsUpdatedEstablishment() {
         String payload = Json.createObjectBuilder()
-                .add("establishmentName", ROR_PAYLOAD_NAME)
-                .add("rorId", ROR_PAYLOAD_ROR_ID)
-                .add("countryName", ROR_PAYLOAD_COUNTRY)
-                .add("establishmentUrl", ROR_PAYLOAD_URL)
+                .add("name", ROR_PAYLOAD_NAME)
+                .add("rorID", ROR_PAYLOAD_ROR_ID)
+                .add("country", ROR_PAYLOAD_COUNTRY)
+                .add("url", ROR_PAYLOAD_URL)
                 .build()
                 .toString();
 
@@ -272,14 +270,14 @@ public class EstablishmentControllerTest extends RestTest {
                 .contentType("application/json")
                 .body(payload)
                 .when()
-                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID+ "/manual-enrich-verify")
+                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID+ "/enrich-verify")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("establishmentId", equalTo(UNVERIFIED_EST_ID))
-                .body("establishmentName", equalTo(ROR_PAYLOAD_NAME))
-                .body("rorId", equalTo(ROR_PAYLOAD_ROR_ID))
-                .body("countryName", equalTo(ROR_PAYLOAD_COUNTRY))
-                .body("establishmentUrl", equalTo(ROR_PAYLOAD_URL))
+                .body("id", equalTo(UNVERIFIED_EST_ID))
+                .body("name", equalTo(ROR_PAYLOAD_NAME))
+                .body("rorID", equalTo(ROR_PAYLOAD_ROR_ID))
+                .body("country", equalTo(ROR_PAYLOAD_COUNTRY))
+                .body("url", equalTo(ROR_PAYLOAD_URL))
                 .body("verified", equalTo(true));
     }
 
@@ -288,7 +286,7 @@ public class EstablishmentControllerTest extends RestTest {
         given()
                 .contentType("application/json")
                 .when()
-                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID + "/manual-enrich-verify")
+                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID + "/enrich-verify")
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
@@ -308,8 +306,8 @@ public class EstablishmentControllerTest extends RestTest {
                 .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/aliases")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("alias", hasItems(NEW_ALIAS_NAME_1, NEW_ALIAS_NAME_2))
-                .body("establishmentId", everyItem(equalTo(VERIFIED_EST_ID)));
+                .body("aliases", hasItems(NEW_ALIAS_NAME_1, NEW_ALIAS_NAME_2))
+                .body("id", equalTo(VERIFIED_EST_ID));
     }
 
     @Test
@@ -323,8 +321,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .when()
                 .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/aliases")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body("alias", not(hasItems(VERIFIED_EST_ALIAS)));
+                .statusCode(Response.Status.OK.getStatusCode());
     }
 
     @Test
@@ -358,25 +355,24 @@ public class EstablishmentControllerTest extends RestTest {
     public void test_addEstablishmentCategoryLinks_ValidInput_ReturnsUpdatedCategories() {
         given()
                 .contentType("application/json")
-                .body("[2, 7]")
+                .body("[-400, -500]")
                 .when()
                 .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/categories")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("categoryId", hasItems(2, 7))
-                .body("establishmentId", everyItem(equalTo(VERIFIED_EST_ID)));
+                .body("categories", hasItems(CATEGORY_NAME_2, CATEGORY_NAME_3))
+                .body("id", equalTo(VERIFIED_EST_ID));
     }
 
     @Test
     public void test_addEstablishmentCategoryLinks_CategoryAlreadyExists_CategoryNotAdded() {
         given()
                 .contentType("application/json")
-                .body(Collections.singletonList(VERIFIED_EST_CATEGORY_ID))
+                .body(Collections.singletonList(CATEGORY_ID))
                 .when()
                 .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/categories")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body("categoryId", not(hasItems(VERIFIED_EST_CATEGORY_ID)));
+                .statusCode(Response.Status.OK.getStatusCode());
     }
 
     @Test
@@ -408,7 +404,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .when()
                 .delete(getBaseURI() + "/establishment/" + VERIFIED_EST_ID)
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test

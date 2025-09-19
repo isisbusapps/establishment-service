@@ -3,8 +3,9 @@ package uk.rl.ac.facilities.api.controllers;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import uk.rl.ac.facilities.api.dto.CreateEstDTO;
+import uk.rl.ac.facilities.api.dto.EstSearchQueryDTO;
 import uk.rl.ac.facilities.api.dto.EstablishmentDTO;
-import uk.rl.ac.facilities.api.dto.EstablishmentDetailsDTO;
 import uk.rl.ac.facilities.facilities.api.generated.ror.RorSchemaV21;
 
 import java.util.List;
@@ -18,17 +19,13 @@ public interface EstablishmentControllerInterface {
     @Path("/{establishmentId}")
     EstablishmentDTO getEstablishment(@PathParam("establishmentId") Long establishmentId);
 
-    @GET
-    @Path("/{establishmentId}/details")
-    EstablishmentDetailsDTO getEstablishmentDetails(@PathParam("establishmentId") Long establishmentId);
-
-    @GET
+    @POST
     @Path("/search")
     List<EstablishmentDTO>  getEstablishmentsByQuery(
-            @QueryParam("searchQuery") String searchQuery,
-            @QueryParam("useAlias") boolean useAlias,
-            @QueryParam("onlyVerified") boolean onlyVerified,
-            @QueryParam("limit") int limit
+            EstSearchQueryDTO name,
+            @QueryParam("useAlias") @DefaultValue("true") Boolean useAlias,
+            @QueryParam("onlyVerified") @DefaultValue("true") Boolean onlyVerified,
+            @QueryParam("limit") @DefaultValue("100") int limit
     );
 
     @GET
@@ -36,7 +33,7 @@ public interface EstablishmentControllerInterface {
     List<EstablishmentDTO> getUnverifiedEstablishments();
 
     @POST
-    Response createUnverifiedEstablishment(String establishmentName);
+    Response createUnverifiedEstablishment(CreateEstDTO establishmentName);
 
     @GET
     @Path("/ror-search")
@@ -45,27 +42,35 @@ public interface EstablishmentControllerInterface {
     );
 
     @PUT
-    @Path("/{establishmentId}/ror-enrich-verify")
-    Response rorVerifyAndEnrichData(@PathParam("establishmentId") Long establishmentId,
+    @Path("/{establishmentId}/enrich-verify/ror")
+    EstablishmentDTO rorVerifyAndEnrichData(@PathParam("establishmentId") Long establishmentId,
                                     RorSchemaV21 rorMatch);
 
     @PUT
-    @Path("/{establishmentId}/manual-enrich-verify")
+    @Path("/{establishmentId}/enrich-verify")
     Response manualVerifyAndEnrichData(@PathParam("establishmentId") Long establishmentId,
                                     EstablishmentDTO inputEst);
 
     @PUT
     @Path("/{establishmentId}/aliases")
-    Response addEstablishmentAliases(@PathParam("establishmentId") Long establishmentId,
+    EstablishmentDTO addEstablishmentAliases(@PathParam("establishmentId") Long establishmentId,
                                      List<String> aliasName);
 
     @PUT
     @Path("/{establishmentId}/categories")
-    Response addEstablishmentCategoryLinks(@PathParam("establishmentId") Long establishmentId,
+    EstablishmentDTO addEstablishmentCategoryLinks(@PathParam("establishmentId") Long establishmentId,
                                            List<Long> categoryIds);
 
     @DELETE
+    @Path("/{establishmentId}/aliases")
+    Response deleteEstablishmentAliases(@PathParam("establishmentId") Long establishmentId);
+
+    @DELETE
+    @Path("/{establishmentId}/categories")
+    Response deleteEstablishmentCategoryLinks(@PathParam("establishmentId") Long establishmentId);
+
+    @DELETE
     @Path("/{establishmentId}")
-    Response deleteEstablishmentAndLinkedDepartments(@PathParam("establishmentId") Long establishmentId);
+    void deleteEstablishmentAndLinkedDepartments(@PathParam("establishmentId") Long establishmentId);
 
 }
