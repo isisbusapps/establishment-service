@@ -53,7 +53,6 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public DepartmentModel createDepartment(String name, Long establishmentId) {
 
         Department existingDep = depRepo.findByNameAndEstablishmentId(name, establishmentId);
@@ -155,6 +154,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         if (!depLabelLinksToAdd.isEmpty()) {
             depLabelLinkRepo.persist(depLabelLinksToAdd);
             depLabelLinkRepo.flush();
+            depRepo.getEntityManager().refresh(department);
         }
 
         if (existingLabels.contains(other) && (existingLabels.size() > 1 || !labelsToAdd.isEmpty())) {
