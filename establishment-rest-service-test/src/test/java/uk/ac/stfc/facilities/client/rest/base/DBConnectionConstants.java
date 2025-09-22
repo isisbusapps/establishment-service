@@ -1,16 +1,15 @@
 package uk.ac.stfc.facilities.client.rest.base;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 public class DBConnectionConstants {
     private static DBConnectionConstants instance;
-    private String databaseUrl, userDBUsername, userDBPassword;
+    private final String databaseUrl;
+    private final String userDBUsername;
+    private final String userDBPassword;
 
     private DBConnectionConstants() {
-        Dotenv dotenv = Dotenv.load();
-        this.databaseUrl = dotenv.get("DB_URL");
-        this.userDBUsername = dotenv.get("DB_USERNAME");
-        this.userDBPassword = dotenv.get("DB_PASSWORD");
+        this.databaseUrl = System.getProperty("db.url");
+        this.userDBUsername = System.getProperty("db.username");
+        this.userDBPassword = System.getProperty("db.password");
     }
 
     public String getDatabaseUrl() {
