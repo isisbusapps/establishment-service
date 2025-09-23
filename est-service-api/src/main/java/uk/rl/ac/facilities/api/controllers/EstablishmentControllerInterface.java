@@ -3,6 +3,9 @@ package uk.rl.ac.facilities.api.controllers;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import uk.rl.ac.facilities.api.dto.CreateEstDTO;
 import uk.rl.ac.facilities.api.dto.EstSearchQueryDTO;
 import uk.rl.ac.facilities.api.dto.EstablishmentDTO;
@@ -23,8 +26,20 @@ public interface EstablishmentControllerInterface {
     @Path("/search")
     List<EstablishmentDTO>  getEstablishmentsByQuery(
             EstSearchQueryDTO name,
+            @Parameter(
+                    description = "Whether to use alias",
+                    schema = @Schema(type = SchemaType.BOOLEAN, defaultValue = "true")
+            )
             @QueryParam("useAlias") @DefaultValue("true") Boolean useAlias,
+            @Parameter(
+                    description = "Return only verified establishments",
+                    schema = @Schema(type = SchemaType.BOOLEAN, defaultValue = "true")
+            )
             @QueryParam("onlyVerified") @DefaultValue("true") Boolean onlyVerified,
+            @Parameter(
+                    description = "Maximum number of results to return",
+                    schema = @Schema(type = SchemaType.INTEGER, defaultValue = "100", minimum = "1")
+            )
             @QueryParam("limit") @DefaultValue("100") int limit
     );
 
