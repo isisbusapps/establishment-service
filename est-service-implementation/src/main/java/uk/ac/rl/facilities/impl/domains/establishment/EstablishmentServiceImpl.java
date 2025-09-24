@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.jboss.logging.Logger;
 import uk.ac.rl.facilities.impl.exceptions.RorQueryException;
 import uk.ac.rl.facilities.impl.mappers.CategoryMapper;
+import uk.ac.rl.facilities.impl.mappers.CountryMapper;
 import uk.ac.rl.facilities.impl.mappers.EstablishmentAliasMapper;
 import uk.ac.rl.facilities.impl.mappers.EstablishmentMapper;
 import uk.rl.ac.facilities.api.domains.establishment.*;
@@ -46,6 +47,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private EstablishmentMapper estMapper;
     private EstablishmentAliasMapper aliasMapper;
     private CategoryMapper categoryMapper;
+    private CountryMapper countryMapper;
 
 
     public EstablishmentServiceImpl() {}
@@ -55,16 +57,20 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                                     CategoryRepository categoryRepo,
                                     EstablishmentCategoryLinkRepository establishmentCategoryLinkRepo,
                                     EstablishmentAliasRepository aliasRepo,
+                                    CountryRepository countryRepo,
                                     EstablishmentMapper mapper,
                                     EstablishmentAliasMapper aliasMapper,
-                                    CategoryMapper categoryMapper) {
+                                    CategoryMapper categoryMapper,
+                                    CountryMapper countryMapper) {
         this.estRepo = estRepo;
         this.categoryRepo = categoryRepo;
         this.estCatLinkRepo = establishmentCategoryLinkRepo;
         this.aliasRepo = aliasRepo;
+        this.countryRepo = countryRepo;
         this.estMapper = mapper;
         this.aliasMapper = aliasMapper;
         this.categoryMapper = categoryMapper;
+        this.countryMapper = countryMapper;
     }
 
     @Override

@@ -15,6 +15,7 @@ public abstract class CountryMapper {
     @Mapping(source = "countryName", target = "name")
     public abstract CountryModel toModel(Country entity);
     public abstract List<CountryModel> toModel(List<Country> entity);
+
     public abstract Country toEntity(CountryModel model);
     public abstract List<Country> toEntity(List<CountryModel> model);
 
