@@ -288,7 +288,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public List<Country> getAllCountries() {
+    public List<CountryModel> getAllCountries() {
         return countryRepo.listAll().stream().map(countryMapper::toModel).toList();
     }
 

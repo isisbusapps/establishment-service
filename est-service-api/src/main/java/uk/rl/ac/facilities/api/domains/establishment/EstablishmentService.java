@@ -36,6 +36,6 @@ public interface EstablishmentService {
 
     List<AliasModel> getAliasesForEstablishment(Long establishmentId);
 
-    List<Country> getAllCountries();
+    List<CountryModel> getAllCountries();
 
 }
