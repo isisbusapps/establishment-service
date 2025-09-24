@@ -42,9 +42,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     private CategoryRepository categoryRepo;
     private EstablishmentCategoryLinkRepository estCatLinkRepo;
     private EstablishmentAliasRepository aliasRepo;
+    private CountryRepository countryRepo;
     private EstablishmentMapper estMapper;
     private EstablishmentAliasMapper aliasMapper;
     private CategoryMapper categoryMapper;
+
 
     public EstablishmentServiceImpl() {}
 
@@ -283,6 +285,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public List<AliasModel> getAliasesForEstablishment(Long establishmentId) {
         return aliasRepo.getAliasesFromEstablishment(establishmentId).stream().map(aliasMapper::toModel).toList();
+    }
+
+    @Override
+    public List<Country> getAllCountries() {
+        return countryRepo.listAll().stream().map(countryMapper::toModel).toList();
     }
 
     private List<Establishment> fuzzySearch(String query, Integer cutoff, boolean useAliases, List<Establishment> establishments) {
