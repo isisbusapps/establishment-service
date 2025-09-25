@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import uk.ac.stfc.facilities.client.rest.base.RestTest;
 import uk.ac.stfc.facilities.client.rest.resources.DepartmentData;
 import uk.ac.stfc.facilities.client.rest.resources.EstablishmentData;
+import uk.ac.stfc.facilities.client.rest.resources.CountryData;
 import uk.ac.stfc.facilities.client.rest.resources.RorPayloadBuilder;
 
 import java.util.Collections;
@@ -21,6 +22,7 @@ public class EstablishmentControllerTest extends RestTest {
     protected void injectData() throws Exception {
         injectData(EstablishmentData.data);
         injectData(DepartmentData.data);
+        injectData(CountryData.data);
     }
 
     @Override
@@ -35,6 +37,7 @@ public class EstablishmentControllerTest extends RestTest {
         deleteTestData("CATEGORY", "ID");
         deleteTestData("ESTABLISHMENT_NEW", "ID");
         deleteTestData("ESTABLISHMENT_NEW", "ESTABLISHMENT_NAME", NEW_EST_NAME);
+        deleteTestData("COUNTRY_NEW", "ID");
     }
 
     /* ----------------- getEstablishment ----------------- */
@@ -51,7 +54,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .body("name", equalTo(VERIFIED_EST_NAME))
                 .body("aliases[0]", equalTo(VERIFIED_EST_ALIAS))
                 // Validate categories
-                .body("categories[0]", equalTo(CATEGORY_NAME));;
+                .body("categories[0]", equalTo(CATEGORY_NAME));
     }
 
     @Test
@@ -415,4 +418,18 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
+
+    /* -----------------  getCountries ----------------- */
+
+    @Test
+    public void test_getUCountries_ReturnsCountriesList() {
+        given()
+                .when()
+                .get(getBaseURI() + "/establishment/countries")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("name", hasItem("TEST_COUNTRY_1"))
+                .body("name", hasItem("TEST_COUNTRY_2"));
+    }
+
 }

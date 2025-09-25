@@ -51,4 +51,7 @@ public class Constants {
     public static final String CATEGORY_NAME_2 = "TEST_CATEGORY_2";
     public static final String CATEGORY_NAME_3 = "TEST_CATEGORY_3";
 
+    public static final String TEST_COUNTRY_1 =  "TEST_COUNTRY_1";
+    public static final String TEST_COUNTRY_2 =   "TEST_COUNTRY_2";
+
 }
