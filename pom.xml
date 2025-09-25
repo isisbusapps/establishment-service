@@ -133,6 +133,14 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/isisbusapps/establishment-service</url>
+        </repository>
+    </distributionManagement>
+
     <profiles>
         <profile>
             <id>native</id>
