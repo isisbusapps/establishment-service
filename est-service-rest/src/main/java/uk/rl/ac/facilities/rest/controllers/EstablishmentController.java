@@ -163,9 +163,6 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     public List<CountryDTO> getCountries() {
-        return estService.getAllCountries()
-                .stream()
-                .map(countryMapper::toDTO)
-                .toList();
+        return countryMapper.toDTO(estService.getAllCountries());
     }
 }

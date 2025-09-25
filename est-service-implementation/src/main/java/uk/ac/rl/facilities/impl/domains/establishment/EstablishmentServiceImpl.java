@@ -295,7 +295,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public List<CountryModel> getAllCountries() {
-        return countryRepo.listAll().stream().map(countryMapper::toModel).toList();
+        return countryMapper.toModel(countryRepo.listAll());
     }
 
     private List<Establishment> fuzzySearch(String query, Integer cutoff, boolean useAliases, List<Establishment> establishments) {
