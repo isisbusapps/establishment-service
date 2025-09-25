@@ -10,10 +10,12 @@ import uk.rl.ac.facilities.api.domains.department.DepartmentModel;
 import uk.rl.ac.facilities.api.domains.department.DepartmentService;
 import uk.rl.ac.facilities.api.domains.establishment.EstablishmentModel;
 import uk.rl.ac.facilities.api.domains.establishment.EstablishmentService;
+import uk.rl.ac.facilities.api.dto.CountryDTO;
 import uk.rl.ac.facilities.api.dto.CreateEstDTO;
 import uk.rl.ac.facilities.api.dto.EstSearchQueryDTO;
 import uk.rl.ac.facilities.api.dto.EstablishmentDTO;
 import uk.rl.ac.facilities.facilities.api.generated.ror.RorSchemaV21;
+import uk.rl.ac.facilities.rest.mappers.CountryMapper;
 import uk.rl.ac.facilities.rest.mappers.EstablishmentMapper;
 
 import java.util.List;
@@ -23,6 +25,8 @@ import java.util.Objects;
 public class EstablishmentController implements EstablishmentControllerInterface {
     @Inject
     EstablishmentMapper estMapper;
+    @Inject
+    CountryMapper countryMapper;
     @Inject
     EstablishmentService estService;
     @Inject
@@ -155,5 +159,10 @@ public class EstablishmentController implements EstablishmentControllerInterface
         }
 
         estService.deleteEstablishment(establishmentId);
+    }
+
+    @Override
+    public List<CountryDTO> getCountries() {
+        return countryMapper.toDTO(estService.getAllCountries());
     }
 }

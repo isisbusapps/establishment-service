@@ -35,4 +35,7 @@ public interface EstablishmentService {
     List<CategoryModel> getCategoriesForEstablishment(Long establishmentId);
 
     List<AliasModel> getAliasesForEstablishment(Long establishmentId);
+
+    List<CountryModel> getAllCountries();
+
 }
