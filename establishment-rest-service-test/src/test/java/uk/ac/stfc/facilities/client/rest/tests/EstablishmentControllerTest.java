@@ -177,6 +177,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
                 .body("name", equalTo(NEW_EST_NAME))
+                .body("country", equalTo("TEST_COUNTRY"))
                 .body("verified", equalTo(false));
     }
 
