@@ -192,8 +192,10 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public EstablishmentModel createUnverifiedEstablishment(String name) {
-        Establishment unverifiedEst = new Establishment(name);
+    public EstablishmentModel createUnverifiedEstablishment(String name, String countryName) {
+        Establishment unverifiedEst = new Establishment();
+        unverifiedEst.setEstablishmentName(name);
+        unverifiedEst.setCountryName(countryName);
         unverifiedEst.setVerified(false);
         estRepo.persist(unverifiedEst);
         return estMapper.toModel(unverifiedEst);

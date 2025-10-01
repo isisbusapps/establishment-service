@@ -19,7 +19,6 @@ import uk.rl.ac.facilities.rest.mappers.CountryMapper;
 import uk.rl.ac.facilities.rest.mappers.EstablishmentMapper;
 
 import java.util.List;
-import java.util.Objects;
 
 @Transactional
 public class EstablishmentController implements EstablishmentControllerInterface {
@@ -62,10 +61,13 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     public Response createUnverifiedEstablishment(CreateEstDTO createEstDTO) {
-        if (createEstDTO == null || createEstDTO.getEstName().isEmpty()) {
-            throw new BadRequestException("Establishment name must not be null or empty");
+        if (createEstDTO == null
+                || createEstDTO.getEstName() == null || createEstDTO.getEstName().isEmpty()
+                || createEstDTO.getCountry() == null || createEstDTO.getCountry().isEmpty()) {
+            throw new BadRequestException("Establishment name or country must not be null or empty");
         }
-        EstablishmentDTO newEstablishment = estMapper.toDTO(estService.createUnverifiedEstablishment(createEstDTO.getEstName()));
+        EstablishmentDTO newEstablishment = estMapper.toDTO(estService.createUnverifiedEstablishment(
+                createEstDTO.getEstName(), createEstDTO.getCountry() ));
         return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
     }
 
