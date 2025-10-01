@@ -20,7 +20,7 @@ public interface EstablishmentService {
 
     List<CategoryModel> addEstablishmentCategoryLinksFromRor(Long establishmentId, RorSchemaV21 ror);
 
-    EstablishmentModel createUnverifiedEstablishment(String name);
+    EstablishmentModel createUnverifiedEstablishment(String name, String countryName);
 
     void deleteEstablishment(Long establishmentId);
 
