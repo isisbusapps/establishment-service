@@ -26,9 +26,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -301,6 +299,20 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     private List<Establishment> fuzzySearch(String query, Integer cutoff, boolean useAliases, List<Establishment> establishments) {
+
+        Map<Long, List<EstablishmentAlias>> aliasesByEstId = Collections.emptyMap();
+        if (useAliases) {
+            List<Long> estIds = establishments.stream()
+                    .map(Establishment::getEstablishmentId)
+                    .toList();
+
+            List<EstablishmentAlias> allAliases = aliasRepo.list("establishment.establishmentId in ?1", estIds);
+
+            aliasesByEstId = allAliases.stream()
+                    .collect(Collectors.groupingBy(alias -> alias.getEstablishment().getEstablishmentId()));
+        }
+
+
         List<Pair<Integer, Establishment>> scoredMatches = new ArrayList<>();
 
         for  (Establishment estModel : establishments){
@@ -308,7 +320,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
             int score = estScore;
 
             if (useAliases) {
-                List<EstablishmentAlias> aliases = aliasRepo.getAliasesFromEstablishment(estModel.getEstablishmentId());
+                List<EstablishmentAlias> aliases = aliasesByEstId.getOrDefault(estModel.getEstablishmentId(), Collections.emptyList());
 
                 for (EstablishmentAlias alias : aliases) {
                     int aliasScore = FuzzySearch.weightedRatio(query, alias.getAlias());
