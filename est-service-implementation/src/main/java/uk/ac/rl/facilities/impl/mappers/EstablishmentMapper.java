@@ -10,6 +10,9 @@ import uk.ac.rl.facilities.impl.domains.establishment.EstablishmentCategoryLink;
 import uk.rl.ac.facilities.api.domains.establishment.CategoryModel;
 import uk.rl.ac.facilities.api.domains.establishment.EstablishmentModel;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -50,5 +53,23 @@ public abstract class EstablishmentMapper extends DateConverter {
             return  Collections.emptyList();
         }
         return categoryLinks.stream().map(EstablishmentCategoryLink::getCategory).map(categoryMapper::toModel).toList();
+    }
+
+    protected URL map(String url) {
+        if (url == null || url.isBlank()) {
+            return null;
+        }
+        try {
+            if (!url.matches("^[a-zA-Z][a-zA-Z0-9+.-]*://.*")) {
+                url = "https://" + url;
+            }
+            return URI.create(url).toURL();
+        } catch (MalformedURLException e) {
+            return null;
+        }
+    }
+
+    protected String map(URL url) {
+        return url != null ? url.toString() : null;
     }
 }
