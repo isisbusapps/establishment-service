@@ -33,6 +33,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     private DepartmentRepository depRepo;
     private LabelRepository labelRepo;
+    private LabelKeywordRepository labelKeywordRepo;
     private DepartmentLabelLinkRepository depLabelLinkRepo;
     private DepartmentMapper deptMapper;
     private LabelMapper labelMapper;
@@ -42,11 +43,13 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Inject
     public DepartmentServiceImpl(DepartmentRepository depRepo,
                                  LabelRepository labelRepo,
+                                 LabelKeywordRepository labelKeywordRepo,
                                  DepartmentLabelLinkRepository depLabelLinkRepo,
                                  DepartmentMapper deptMapper,
                                  LabelMapper labelMapper) {
         this.depRepo = depRepo;
         this.labelRepo = labelRepo;
+        this.labelKeywordRepo = labelKeywordRepo;
         this.depLabelLinkRepo = depLabelLinkRepo;
         this.deptMapper = deptMapper;
         this.labelMapper = labelMapper;
@@ -169,13 +172,19 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = depRepo.findByIdOptional(departmentId).orElseThrow(() -> new  EntityNotFoundException("No department found with department id: " + departmentId));
 
         String cleanDepartmentName = cleanName(department.getDepartmentName());
-        List<Label> allLabels = labelRepo.getAll();
-        List<Label> matchedLabels = fuzzySearch(cleanDepartmentName, DEPT_LABEL_CUTOFF, allLabels);
 
-        List<Long> matchedLabelIds = matchedLabels.stream().map(Label::getLabelId).toList();
+        List<LabelKeyword> allLabelKeywords = labelKeywordRepo.listAll();
+        List<LabelKeyword> matchedLabelKeywords = fuzzySearch(cleanDepartmentName, DEPT_LABEL_CUTOFF, allLabelKeywords);
+
+        List<Long> matchedLabelIds = matchedLabelKeywords.stream()
+                .map(LabelKeyword::getLabel)
+                .map(Label::getLabelId)
+                .distinct()
+                .toList();
+
         Long otherId = labelRepo.getByName(FALLBACK_LABEL_NAME).getLabelId();
 
-        return addDepartmentLabelLinks(departmentId, matchedLabels.isEmpty() ? List.of(otherId) : matchedLabelIds);
+        return addDepartmentLabelLinks(departmentId, matchedLabelIds.isEmpty() ? List.of(otherId) : matchedLabelIds);
     }
 
     @Override
@@ -183,18 +192,18 @@ public class DepartmentServiceImpl implements DepartmentService {
         return labelMapper.toModel(depLabelLinkRepo.findLabelsLinkedToDepartment(departmentId).stream().toList());
     }
 
-    private List<Label> fuzzySearch(String departmentName, Integer cutoff, List<Label> labels) {
-        List<Label> matchedLabels = new ArrayList<>();
+    private List<LabelKeyword> fuzzySearch(String departmentName, Integer cutoff, List<LabelKeyword> labelKeywords) {
+        List<LabelKeyword> matchedLabelKeywords = new ArrayList<>();
 
-        for (Label label : labels) {
-            int matchScore = FuzzySearch.partialRatio(departmentName, label.getLabelName(),String::toLowerCase);
+        for (LabelKeyword labelKeyword : labelKeywords) {
+            int matchScore = FuzzySearch.partialRatio(departmentName, labelKeyword.getKeyword(),String::toLowerCase);
 
             if (matchScore >= cutoff) {
-                matchedLabels.add(label);
+                matchedLabelKeywords.add(labelKeyword);
             }
         }
 
-        return matchedLabels;
+        return matchedLabelKeywords;
     }
 
     private static String cleanName(String input) {
