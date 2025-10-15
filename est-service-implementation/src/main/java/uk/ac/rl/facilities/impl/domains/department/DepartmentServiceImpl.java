@@ -22,7 +22,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     public static final Set<String> DEPT_STOPWORDS = new HashSet<>(Arrays.asList(
             "department", "dept", "division", "office", "school", "faculty", "laboratory", "center", "centre",
-            "institute", "facility", "research", "ltd", "plc",
+            "institute", "facility", "research", "ltd", "plc", "undergraduate", "graduate",
             "of", "for", "and", "the", "a", "an", "in", "on", "with", "to", "by", "under", "from",
             "le", "an", "des", "et", "institut", "departamento", "di", "de", "du"
     ));
@@ -196,7 +196,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         List<LabelKeyword> matchedLabelKeywords = new ArrayList<>();
 
         for (LabelKeyword labelKeyword : labelKeywords) {
-            int matchScore = FuzzySearch.partialRatio(departmentName, labelKeyword.getKeyword(),String::toLowerCase);
+            int matchScore = FuzzySearch.weightedRatio(departmentName, labelKeyword.getKeyword(),String::toLowerCase);
 
             if (matchScore >= cutoff) {
                 matchedLabelKeywords.add(labelKeyword);
