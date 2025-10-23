@@ -22,6 +22,8 @@ public class DepartmentControllerTest extends RestTest {
 
     @Override
     protected void cleanupData() throws Exception {
+        deleteTestData("LABEL_KEYWORD", "ID");
+        deleteTestData("DEPARTMENT_LABEL_LINK", "DEPARTMENT_ID");
         deleteTestData("DEPARTMENT_LABEL_LINK", "DEPARTMENT_ID");
         deleteTestData("DEPARTMENT_LABEL_LINK", "LABEL_ID");
         deleteTestData("LABEL", "ID");

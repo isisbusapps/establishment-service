@@ -35,8 +35,8 @@ public class Constants {
     public static final String NEW_LABEL_NAME_1 = "NEW_LABEL_NAME_1";
     public static final String NEW_LABEL_NAME_2 = "NEW_LABEL_NAME_2";
 
-    public static final String TEST_DEPARTMENT_NAME = "TEST_DEPARTMENT_PHYSICS_CHEMISTRY_MATHEMATICS_NEW_LABEL_NAME";
-    public static final String NEW_DEPARTMENT_NAME = "TEST_NEW_DEPARTMENT_CHEMISTRY_MATHEMATICS_NEW_LABEL_NAME";
+    public static final String TEST_DEPARTMENT_NAME = "TEST_DEPARTMENT_HERMIONE_HAGRID_DUMBLEDORE";
+    public static final String NEW_DEPARTMENT_NAME = "TEST_NEW_DEPARTMENT_HERMIONE_HAGRID_DUMBLEDORE";
     public static final String TEST_LABEL_NAME = "Physics";
 
 
@@ -54,4 +54,13 @@ public class Constants {
     public static final String TEST_COUNTRY_1 =  "TEST_COUNTRY_1";
     public static final String TEST_COUNTRY_2 =   "TEST_COUNTRY_2";
 
+    public static final int KEYWORD_ID_1 =  -700;
+    public static final int KEYWORD_ID_2 =  -701;
+    public static final int KEYWORD_ID_3 =  -702;
+    public static final int KEYWORD_ID_4 =  -703;
+
+    public static final String TEST_KEYWORD_1 =  "hermione";
+    public static final String TEST_KEYWORD_2 =  "hagrid";
+    public static final String TEST_KEYWORD_3 =  "dumbledore";
+    public static final String TEST_KEYWORD_4 =  "harry";
 }

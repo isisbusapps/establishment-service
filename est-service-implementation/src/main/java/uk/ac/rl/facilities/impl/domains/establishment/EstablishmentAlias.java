@@ -28,7 +28,7 @@ public class EstablishmentAlias {
     }
 
     public EstablishmentAlias(Long aliasId, Establishment establishment, String alias) {
-        this.aliasId = this.aliasId;
+        this.aliasId = aliasId;
         this.establishment = establishment;
         this.alias = alias;
     }
