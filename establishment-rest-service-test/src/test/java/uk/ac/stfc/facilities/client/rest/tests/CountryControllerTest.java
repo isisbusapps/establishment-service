@@ -22,7 +22,7 @@ public class CountryControllerTest extends RestTest {
         deleteTestData("COUNTRY_NEW", "ID");
     }
 
-    /* ----------------- getEstablishment ----------------- */
+    /* ----------------- getCountry ----------------- */
 
     @Test
     public void test_getCountry_ValidId_ReturnsCountry() {
