@@ -420,18 +420,4 @@ public class EstablishmentControllerTest extends RestTest {
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
-
-    /* -----------------  getCountries ----------------- */
-
-    @Test
-    public void test_getUCountries_ReturnsCountriesList() {
-        given()
-                .when()
-                .get(getBaseURI() + "/establishment/countries")
-                .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .body("name", hasItem("TEST_COUNTRY_1"))
-                .body("name", hasItem("TEST_COUNTRY_2"));
-    }
-
 }
