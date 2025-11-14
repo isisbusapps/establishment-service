@@ -217,7 +217,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         est.setEstablishmentName(updateEst.getName());
         est.setRorId(updateEst.getRorID());
         est.setCountryName(updateEst.getCountry());
-        est.setEstablishmentUrl(updateEst.getUrl().toString());
+        est.setEstablishmentUrl(updateEst.getUrl() != null ? updateEst.getUrl().toString() : null);
         est.setVerified(updateEst.getVerified());
 
         estRepo.persist(est);
