@@ -93,4 +93,8 @@ public interface EstablishmentControllerInterface {
     @Path("/countries")
     List<CountryDTO> getCountries();
 
+    @GET
+    @Path("/ror/{rorIdSuffix}")
+    EstablishmentDTO getEstablishmentByRorId(@PathParam("rorIdSuffix") String rorId);
+
 }
