@@ -298,6 +298,12 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         return countryMapper.toModel(countryRepo.listAll());
     }
 
+    @Override
+    public CountryModel getCountry(Long countryId) {
+        return countryMapper.toModel(countryRepo.findByIdOptional(countryId).orElseThrow(
+                () -> new EntityNotFoundException(Country.class.getName(), countryId)));
+    }
+
     private List<Establishment> fuzzySearch(String query, Integer cutoff, boolean useAliases, List<Establishment> establishments) {
 
         Map<Long, List<EstablishmentAlias>> aliasesByEstId = Collections.emptyMap();

@@ -163,8 +163,5 @@ public class EstablishmentController implements EstablishmentControllerInterface
         estService.deleteEstablishment(establishmentId);
     }
 
-    @Override
-    public List<CountryDTO> getCountries() {
-        return countryMapper.toDTO(estService.getAllCountries());
-    }
+
 }
