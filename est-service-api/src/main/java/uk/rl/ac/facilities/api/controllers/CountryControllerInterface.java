@@ -15,7 +15,6 @@ import java.util.List;
 
 @Path("country")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public interface CountryControllerInterface {
 
     @GET
