@@ -67,6 +67,34 @@ public class EstablishmentControllerTest extends RestTest {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    /* ----------------- getEstablishmentByRorId ----------------- */
+
+    @Test
+    public void test_getEstablishmentByRorId_ValidRorIdSuffix_ReturnsEstablishment() {
+        String rorIdSuffix = VERIFIED_ROR_ID.replace("https://ror.org/", "");
+
+        given()
+                .when()
+                .get(getBaseURI() + "/establishment/ror/" + rorIdSuffix)
+                .then()
+                .log().ifValidationFails(LogDetail.BODY)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("rorID", equalTo("https://ror.org/" + rorIdSuffix))
+                .body("id", equalTo(VERIFIED_EST_ID))
+                .body("name", equalTo(VERIFIED_EST_NAME));
+    }
+
+    @Test
+    public void test_getEstablishmentByRorId_InvalidSuffix_ReturnsNull() {
+        String invalidRorSuffix = "nonexistent123";
+
+        given()
+                .when()
+                .get(getBaseURI() + "/establishment/ror/" + invalidRorSuffix)
+                .then()
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+    }
+
     /* ----------------- getEstablishmentsByQuery ----------------- */
 
     @Test
