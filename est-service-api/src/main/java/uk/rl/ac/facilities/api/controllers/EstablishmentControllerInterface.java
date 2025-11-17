@@ -88,9 +88,4 @@ public interface EstablishmentControllerInterface {
     @DELETE
     @Path("/{establishmentId}")
     void deleteEstablishmentAndLinkedDepartments(@PathParam("establishmentId") Long establishmentId);
-
-    @GET
-    @Path("/countries")
-    List<CountryDTO> getCountries();
-
 }

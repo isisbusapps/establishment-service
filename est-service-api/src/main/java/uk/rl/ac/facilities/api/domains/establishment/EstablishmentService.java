@@ -38,4 +38,5 @@ public interface EstablishmentService {
 
     List<CountryModel> getAllCountries();
 
+    CountryModel getCountry(Long countryId);
 }
