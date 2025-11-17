@@ -10,8 +10,8 @@ public class EstablishmentData {
     public static Operation data = sequenceOf(
             insertInto("ESTABLISHMENT_NEW")
                     .columns("ID",              "ESTABLISHMENT_NAME",  "ROR_ID",       "COUNTRY_NAME",   "ESTABLISHMENT_URL",  "FROM_DATE",  "THRU_DATE",  "VERIFIED")
-                    .values(VERIFIED_EST_ID,    VERIFIED_EST_NAME,     "rorstring1",   "UK",             "http://acme.test",                null,         null,         1         )
-                    .values(UNVERIFIED_EST_ID,  UNVERIFIED_EST_NAME,   null,           null,             null,                 null,         null,         0         )
+                    .values(VERIFIED_EST_ID,    VERIFIED_EST_NAME,     "rorstring1",   "UK",             "http://acme.test",                null,         null,         true         )
+                    .values(UNVERIFIED_EST_ID,  UNVERIFIED_EST_NAME,   null,           null,             null,                 null,         null,         false         )
                     .build(),
 
             insertInto("ESTABLISHMENT_ALIAS")
