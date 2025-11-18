@@ -1,6 +1,5 @@
 package uk.rl.ac.facilities.rest.controllers;
 
-import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -16,7 +15,6 @@ import uk.rl.ac.facilities.rest.mappers.DepartmentMapper;
 
 import java.util.List;
 
-@Authenticated
 @Transactional
 public class DepartmentController implements DepartmentControllerInterface {
     @Inject
