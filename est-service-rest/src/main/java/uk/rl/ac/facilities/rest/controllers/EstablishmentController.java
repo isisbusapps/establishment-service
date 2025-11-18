@@ -1,10 +1,13 @@
 package uk.rl.ac.facilities.rest.controllers;
 
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import uk.rl.ac.facilities.api.controllers.EstablishmentControllerInterface;
 import uk.rl.ac.facilities.api.domains.department.DepartmentModel;
 import uk.rl.ac.facilities.api.domains.department.DepartmentService;
@@ -85,6 +88,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
+    @RolesAllowed({"USER_OFFICE"})
     public EstablishmentDTO rorVerifyAndEnrichData(Long establishmentId, RorSchemaV21 rorMatch) {
         if (establishmentId == null || rorMatch == null) {
             throw new NotFoundException("Missing required input data");
@@ -104,6 +108,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
+    @RolesAllowed({"USER_OFFICE"})
     public Response manualVerifyAndEnrichData(Long establishmentId, EstablishmentDTO inputEst) {
         if (establishmentId == null || inputEst == null || inputEst.getName().isEmpty()) {
             throw new BadRequestException("Missing required input data");
@@ -135,16 +140,19 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
+    @RolesAllowed("USER_OFFICE")
     public Response deleteEstablishmentAliases(Long establishmentId) {
         return Response.status(501).build();
     }
 
     @Override
+    @RolesAllowed("USER_OFFICE")
     public Response deleteEstablishmentCategoryLinks(Long establishmentId) {
         return Response.status(501).build();
     }
 
     @Override
+    @RolesAllowed("USER_OFFICE")
     public void deleteEstablishmentAndLinkedDepartments(Long establishmentId) {
         if (establishmentId == null) {
             throw new BadRequestException("Missing input establishment id");
