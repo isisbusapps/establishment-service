@@ -1,5 +1,7 @@
 package uk.rl.ac.facilities.rest.controllers;
 
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
@@ -14,6 +16,7 @@ import uk.rl.ac.facilities.rest.mappers.DepartmentMapper;
 
 import java.util.List;
 
+@Authenticated
 @Transactional
 public class DepartmentController implements DepartmentControllerInterface {
     @Inject
@@ -33,6 +36,7 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
+    @RolesAllowed("USER_OFFICE")
     public DepartmentDTO addDepartmentLabelLinks(Long departmentId, List<Long> LabelIds) {
         if (departmentId == null) {
             throw new BadRequestException("Missing input: department id");
@@ -47,6 +51,7 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
+    @RolesAllowed("USER_OFFICE")
     public DepartmentDTO removeDepartmentLabelLink(Long departmentId, Long labelId) {
         DepartmentModel departmentModel = depService.deleteDepartmentLabel(departmentId, labelId);
 
@@ -54,6 +59,7 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
+    @RolesAllowed("USER_OFFICE")
     public DepartmentDTO removeDepartmentLabelLink(Long departmentId) {
         DepartmentModel departmentModel = depService.deleteDepartmentLabel(departmentId);
 
@@ -79,6 +85,7 @@ public class DepartmentController implements DepartmentControllerInterface {
     }
 
     @Override
+    @RolesAllowed("USER_OFFICE")
     public void deleteDepartment(Long departmentId) {
         if (departmentId == null) {
             throw new BadRequestException("Missing input department id");
