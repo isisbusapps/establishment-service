@@ -83,7 +83,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public EstablishmentModel getEstablishmentByRorId(String rorIdSuffix) {
         String RorId = "https://ror.org/" + rorIdSuffix;
-        Establishment est = estRepo.find("rorIdSuffix", RorId).firstResultOptional()
+        Establishment est = estRepo.find("rorId", RorId).firstResultOptional()
                 .orElse(null);
 
         return estMapper.toModel(est);
