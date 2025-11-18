@@ -7,7 +7,6 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import uk.rl.ac.facilities.api.controllers.EstablishmentControllerInterface;
 import uk.rl.ac.facilities.api.domains.department.DepartmentModel;
 import uk.rl.ac.facilities.api.domains.department.DepartmentService;
@@ -23,6 +22,7 @@ import uk.rl.ac.facilities.rest.mappers.EstablishmentMapper;
 
 import java.util.List;
 
+@Authenticated
 @Transactional
 public class EstablishmentController implements EstablishmentControllerInterface {
     @Inject
@@ -88,7 +88,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
-    @RolesAllowed({"USER_OFFICE"})
+    @RolesAllowed("USER_OFFICE")
     public EstablishmentDTO rorVerifyAndEnrichData(Long establishmentId, RorSchemaV21 rorMatch) {
         if (establishmentId == null || rorMatch == null) {
             throw new NotFoundException("Missing required input data");
@@ -108,7 +108,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
-    @RolesAllowed({"USER_OFFICE"})
+    @RolesAllowed("USER_OFFICE")
     public Response manualVerifyAndEnrichData(Long establishmentId, EstablishmentDTO inputEst) {
         if (establishmentId == null || inputEst == null || inputEst.getName().isEmpty()) {
             throw new BadRequestException("Missing required input data");
