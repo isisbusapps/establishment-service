@@ -254,7 +254,6 @@ public class EstablishmentControllerTest extends RestTest {
         String RorTestPayLoad = RorPayloadBuilder.buildTestRorPayload();
 
         given().header(AUTH_USER_OFFICE_HEADER)
-                .log().all()
                 .contentType("application/json")
                 .body(RorTestPayLoad)
                 .when()
