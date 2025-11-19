@@ -1,7 +1,6 @@
 # Establishment Service
 # Running tests locally
 ## REST Integration Tests
-1. Make sure you have Java17 installed
 1. Open the `establishment-rest-service-test` project in IntelliJ
 1. On the top menu bar, click the drop down menu that says 'current file'
 1. Click on 'Edit Configurations'
