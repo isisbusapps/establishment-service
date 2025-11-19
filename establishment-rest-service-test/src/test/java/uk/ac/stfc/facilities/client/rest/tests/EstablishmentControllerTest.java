@@ -45,7 +45,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_getEstablishment_ValidId_ReturnsEstablishment() {
-        given()
+        given().header(AUTH_USER_HEADER)
                 .when()
                 .get(getBaseURI() + "/establishment/" + VERIFIED_EST_ID)
                 .then()
@@ -253,7 +253,8 @@ public class EstablishmentControllerTest extends RestTest {
     public void test_rorVerifyAndEnrichData_ValidInput_ReturnsUpdatedEstablishment() {
         String RorTestPayLoad = RorPayloadBuilder.buildTestRorPayload();
 
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
+                .log().all()
                 .contentType("application/json")
                 .body(RorTestPayLoad)
                 .when()
@@ -278,7 +279,7 @@ public class EstablishmentControllerTest extends RestTest {
     public void test_rorVerifyAndEnrichData_EstablishmentNonExistent_ReturnsNotFound() {
         String RorTestPayLoad = RorPayloadBuilder.buildTestRorPayload();
 
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(RorTestPayLoad)
                 .when()
@@ -299,7 +300,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .build()
                 .toString();
 
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(payload)
                 .when()
@@ -316,7 +317,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_manualVerifyAndEnrichData_MissingInput_ReturnsBadRequest() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .when()
                 .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID + "/enrich-verify")
@@ -328,7 +329,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_addEstablishmentAliases_ValidInput_ReturnsUpdatedAliases() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(Json.createArrayBuilder()
                         .add(NEW_ALIAS_NAME_1)
@@ -345,7 +346,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_addEstablishmentAliases_AliasAlreadyExists_AliasNotAdded() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(Json.createArrayBuilder()
                         .add(VERIFIED_EST_ALIAS)
@@ -359,7 +360,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_addEstablishmentAliases_EstablishmentNonExistent_ReturnsNotFound() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(Json.createArrayBuilder()
                         .add(NEW_ALIAS_NAME_1)
@@ -374,7 +375,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_addEstablishmentAliases_MissingInput_ReturnsBadRequest() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .when()
                 .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/aliases")
@@ -386,7 +387,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_addEstablishmentCategoryLinks_ValidInput_ReturnsUpdatedCategories() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body("[-400, -500]")
                 .when()
@@ -399,7 +400,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_addEstablishmentCategoryLinks_CategoryAlreadyExists_CategoryNotAdded() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(Collections.singletonList(CATEGORY_ID))
                 .when()
@@ -410,7 +411,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_addEstablishmentCategoryLinks_EstablishmentNonExistent_ReturnsNotFound() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body("[1,2, 7]")
                 .when()
@@ -421,7 +422,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_addEstablishmentCategoryLinks_MissingInput_ReturnsBadRequest() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .when()
                 .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/categories")
@@ -433,7 +434,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_deleteEstablishmentAndLinkedDepartments_ValidId_ReturnsSuccessMessage() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .when()
                 .delete(getBaseURI() + "/establishment/" + VERIFIED_EST_ID)
                 .then()
@@ -442,7 +443,7 @@ public class EstablishmentControllerTest extends RestTest {
 
     @Test
     public void test_deleteEstablishmentAndLinkedDepartments_EstablishmentNonExistent_ReturnsNotFound() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .when()
                 .delete(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID)
                 .then()
