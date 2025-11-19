@@ -16,7 +16,6 @@
         <junit5.version>5.10.2</junit5.version>
         <rest-assured.version>5.4.0</rest-assured.version>
         <maven.surefire.version>3.1.2</maven.surefire.version>
-        <userOfficeTest.restUri>http://localhost:8080</userOfficeTest.restUri>
     </properties>
 
     <dependencies>
@@ -88,16 +87,6 @@
                 <version>${compiler-plugin.version}</version>
                 <configuration>
                     <parameters>true</parameters>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <maven.home>${maven.home}</maven.home>
-                        <userOfficeTest.restUri>${userOfficeTest.restUri}</userOfficeTest.restUri>
-                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
