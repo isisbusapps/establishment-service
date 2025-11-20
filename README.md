@@ -1,3 +1,5 @@
+[![Establishment Service Dev Docker](https://github.com/isisbusapps/establishment-service/actions/workflows/dev-build-docker-image.yaml/badge.svg)](https://github.com/isisbusapps/establishment-service/actions/workflows/dev-build-docker-image.yaml)
+
 # Establishment Service
 # Running tests locally
 ## REST Integration Tests
