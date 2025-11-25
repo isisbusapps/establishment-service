@@ -67,7 +67,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_addDepartmentLabelLinksManually_ValidInput_ReturnsUpdatedLinks() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(Json.createArrayBuilder()
                         .add(NEW_LABEL_ID_1)
@@ -84,7 +84,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_addDepartmentLabelLinksManually_LinkAlreadyExists_LinkNotAdded() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(Json.createArrayBuilder()
                         .add(TEST_LABEL_ID)
@@ -99,7 +99,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_addDepartmentLabelLinksManually_DepartmentNonExistent_ReturnsNotFound() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(Json.createArrayBuilder()
                         .add(TEST_LABEL_ID)
@@ -112,7 +112,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_addDepartmentLabelLinksManually_LabelNonExistent_ReturnsNotFound() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
                 .body(Json.createArrayBuilder()
                         .add(NON_EXISTENT_LABEL_ID)
@@ -127,7 +127,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_addDepartmentLabelLinksAutomatically_ValidInput_ReturnsLinks() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .when()
                 .put(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label")
                 .then()
@@ -137,7 +137,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_addDepartmentLabelLinksAutomatically_DepartmentNonExistent_ReturnsNotFound() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .when()
                 .put(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID + "/label")
                 .then()
@@ -148,7 +148,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_removeDepartmentLabelLink_ValidInput_RemovesLink() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .when()
                 .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label/" + TEST_LABEL_ID)
                 .then()
@@ -158,7 +158,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_removeDepartmentLabelLink_NonExistent_ReturnsNotFound() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .when()
                 .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID + "/label/" + NON_EXISTENT_LABEL_ID)
                 .then()
@@ -222,7 +222,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_deleteDepartmentAndDepLabelLinks_ValidInput_ReturnsSuccessMessage() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .when()
                 .delete(getBaseURI() + "/department/" + TEST_DEPARTMENT_ID)
                 .then()
@@ -231,7 +231,7 @@ public class DepartmentControllerTest extends RestTest {
 
     @Test
     public void test_deleteDepartmentAndDepLabelLinks_DepartmentNonExistent_ReturnsNotFound() {
-        given()
+        given().header(AUTH_USER_OFFICE_HEADER)
                 .when()
                 .delete(getBaseURI() + "/department/" + NON_EXISTENT_DEPARTMENT_ID)
                 .then()
