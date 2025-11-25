@@ -81,6 +81,15 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
+    public EstablishmentModel getEstablishmentByRorId(String rorIdSuffix) {
+        String RorId = "https://ror.org/" + rorIdSuffix;
+        Establishment est = estRepo.find("rorId", RorId).firstResultOptional()
+                .orElse(null);
+
+        return estMapper.toModel(est);
+    }
+
+    @Override
     public List<EstablishmentModel> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit) {
         List<Establishment>  allEst = onlyVerified?  estRepo.getVerified() : estRepo.getAll();
 
@@ -217,7 +226,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         est.setEstablishmentName(updateEst.getName());
         est.setRorId(updateEst.getRorID());
         est.setCountryName(updateEst.getCountry());
-        est.setEstablishmentUrl(updateEst.getUrl().toString());
+        est.setEstablishmentUrl(updateEst.getUrl() != null ? updateEst.getUrl().toString() : null);
         est.setVerified(updateEst.getVerified());
 
         estRepo.persist(est);
