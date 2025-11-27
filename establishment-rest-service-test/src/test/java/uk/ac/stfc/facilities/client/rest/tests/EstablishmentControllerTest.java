@@ -194,7 +194,7 @@ public class EstablishmentControllerTest extends RestTest {
     /* -----------------  createUnverifiedEstablishment ----------------- */
 
     @Test
-    public void test_createUnverifiedEstablishment_ValidInput_ReturnsCreatedEstablishment() {
+    public void test_createUnverifiedEstablishment_ValidInputNoUrl_ReturnsCreatedEstablishment() {
         given()
                 .contentType("application/json")
                 .body(Json.createObjectBuilder()
@@ -211,11 +211,45 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
     @Test
+    public void test_createUnverifiedEstablishment_ValidInput_ReturnsCreatedEstablishment() {
+        given()
+                .contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("estName", NEW_EST_NAME)
+                        .add("country", "TEST_COUNTRY")
+                        .add("url", VALID_URL)
+                        .build().toString())
+                .when()
+                .post(getBaseURI() + "/establishment")
+                .then()
+                .statusCode(Response.Status.CREATED.getStatusCode())
+                .body("name", equalTo(NEW_EST_NAME))
+                .body("country", equalTo("TEST_COUNTRY"))
+                .body("url", equalTo(VALID_URL))
+                .body("verified", equalTo(false));
+    }
+
+
+    @Test
     public void test_createUnverifiedEstablishment_EmptyName_ReturnsBadRequest() {
         given().contentType("application/json")
                 .body(Json.createObjectBuilder()
                         .add("estName", "")
                         .add("country", "TEST_COUNTRY")
+                        .build().toString())
+                .when()
+                .post(getBaseURI() + "/establishment")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void test_createUnverifiedEstablishment_InvalidUrl_ReturnsBadRequest() {
+        given().contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("estName", "")
+                        .add("country", "TEST_COUNTRY")
+                        .add("url", INVALID_URL)
                         .build().toString())
                 .when()
                 .post(getBaseURI() + "/establishment")
