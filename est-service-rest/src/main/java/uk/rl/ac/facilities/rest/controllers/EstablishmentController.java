@@ -66,9 +66,13 @@ public class EstablishmentController implements EstablishmentControllerInterface
                 || createEstDTO.getCountry() == null || createEstDTO.getCountry().isEmpty()) {
             throw new BadRequestException("Establishment name or country must not be null or empty");
         }
-        EstablishmentDTO newEstablishment = estMapper.toDTO(estService.createUnverifiedEstablishment(
-                createEstDTO.getEstName(), createEstDTO.getCountry(), createEstDTO.getUrl()));
-        return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
+        try {
+            EstablishmentDTO newEstablishment = estMapper.toDTO(estService.createUnverifiedEstablishment(
+                    createEstDTO.getEstName(), createEstDTO.getCountry(), createEstDTO.getUrl()));
+            return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
+        }
     }
 
     @Override
