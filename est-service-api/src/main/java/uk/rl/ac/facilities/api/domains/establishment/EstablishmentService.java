@@ -2,7 +2,6 @@ package uk.rl.ac.facilities.api.domains.establishment;
 
 import uk.rl.ac.facilities.facilities.api.generated.ror.RorSchemaV21;
 
-import java.net.URL;
 import java.util.List;
 
 public interface EstablishmentService {
