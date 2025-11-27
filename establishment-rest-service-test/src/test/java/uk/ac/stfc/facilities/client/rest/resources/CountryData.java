@@ -10,7 +10,7 @@ public class CountryData {
 
     public static Operation data = sequenceOf(insertInto("COUNTRY_NEW")
                 .columns("ID",     "COUNTRY_NAME")
-                .values(-56005554,  "TEST_COUNTRY_1")
-                .values(-56005555,  "TEST_COUNTRY_2")
+                .values(COUNTRY_ID_1,  TEST_COUNTRY_1)
+                .values(COUNTRY_ID_2,  TEST_COUNTRY_2)
                 .build());
 }

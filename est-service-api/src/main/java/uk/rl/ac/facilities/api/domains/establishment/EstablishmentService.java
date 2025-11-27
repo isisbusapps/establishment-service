@@ -10,6 +10,8 @@ public interface EstablishmentService {
 
     EstablishmentModel getEstablishment(Long establishmentId);
 
+    EstablishmentModel getEstablishmentByRorId(String rorIdSuffix);
+
     List<EstablishmentModel> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit);
 
     List<RorSchemaV21> getRorMatches(String establishmentName);
@@ -38,4 +40,5 @@ public interface EstablishmentService {
 
     List<CountryModel> getAllCountries();
 
+    CountryModel getCountry(Long countryId);
 }

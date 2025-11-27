@@ -10,6 +10,7 @@ public class Constants {
     public static final String UNVERIFIED_EST_NAME = "TEST_UNVERIFIED_EST";
     public static final String VERIFIED_EST_NAME = "TEST_VERIFIED_EST";
     public static final String VERIFIED_EST_ALIAS = "TEST_ALIAS";
+    public static final String VERIFIED_ROR_ID = "https://ror.org/testrorid123";
     public static final String NEW_EST_NAME = "TEST_NEW_EST";
     public static final String NEW_ALIAS_NAME_1 = "TEST_NEW_ALIAS_1";
     public static final String NEW_ALIAS_NAME_2 = "TEST_NEW_ALIAS_2";
@@ -50,6 +51,10 @@ public class Constants {
 
     public static final String CATEGORY_NAME_2 = "TEST_CATEGORY_2";
     public static final String CATEGORY_NAME_3 = "TEST_CATEGORY_3";
+
+    public static final int COUNTRY_ID_1 = -56005554;
+    public static final int COUNTRY_ID_2 = -56005555;
+    public static final int NON_EXISTENT_COUNTRY_ID = -756005556;
 
     public static final String TEST_COUNTRY_1 =  "TEST_COUNTRY_1";
     public static final String TEST_COUNTRY_2 =   "TEST_COUNTRY_2";
