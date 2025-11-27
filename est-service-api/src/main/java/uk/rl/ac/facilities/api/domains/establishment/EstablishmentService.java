@@ -2,6 +2,7 @@ package uk.rl.ac.facilities.api.domains.establishment;
 
 import uk.rl.ac.facilities.facilities.api.generated.ror.RorSchemaV21;
 
+import java.net.URL;
 import java.util.List;
 
 public interface EstablishmentService {
@@ -22,7 +23,7 @@ public interface EstablishmentService {
 
     List<CategoryModel> addEstablishmentCategoryLinksFromRor(Long establishmentId, RorSchemaV21 ror);
 
-    EstablishmentModel createUnverifiedEstablishment(String name, String countryName);
+    EstablishmentModel createUnverifiedEstablishment(String name, String countryName, String url);
 
     void deleteEstablishment(Long establishmentId);
 

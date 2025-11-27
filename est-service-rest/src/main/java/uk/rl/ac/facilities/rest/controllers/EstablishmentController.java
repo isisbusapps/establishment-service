@@ -11,7 +11,6 @@ import uk.rl.ac.facilities.api.domains.department.DepartmentModel;
 import uk.rl.ac.facilities.api.domains.department.DepartmentService;
 import uk.rl.ac.facilities.api.domains.establishment.EstablishmentModel;
 import uk.rl.ac.facilities.api.domains.establishment.EstablishmentService;
-import uk.rl.ac.facilities.api.dto.CountryDTO;
 import uk.rl.ac.facilities.api.dto.CreateEstDTO;
 import uk.rl.ac.facilities.api.dto.EstSearchQueryDTO;
 import uk.rl.ac.facilities.api.dto.EstablishmentDTO;
@@ -68,7 +67,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             throw new BadRequestException("Establishment name or country must not be null or empty");
         }
         EstablishmentDTO newEstablishment = estMapper.toDTO(estService.createUnverifiedEstablishment(
-                createEstDTO.getEstName(), createEstDTO.getCountry() ));
+                createEstDTO.getEstName(), createEstDTO.getCountry(), createEstDTO.getUrl()));
         return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
     }
 

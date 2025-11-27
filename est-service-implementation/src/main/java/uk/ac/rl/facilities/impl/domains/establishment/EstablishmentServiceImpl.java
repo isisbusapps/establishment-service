@@ -21,6 +21,7 @@ import uk.rl.ac.facilities.facilities.api.generated.ror.*;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -199,10 +200,11 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
-    public EstablishmentModel createUnverifiedEstablishment(String name, String countryName) {
+    public EstablishmentModel createUnverifiedEstablishment(String name, String countryName, String url) {
         Establishment unverifiedEst = new Establishment();
         unverifiedEst.setEstablishmentName(name);
         unverifiedEst.setCountryName(countryName);
+        unverifiedEst.setEstablishmentUrl(url);
         unverifiedEst.setVerified(false);
         estRepo.persist(unverifiedEst);
         return estMapper.toModel(unverifiedEst);
