@@ -20,6 +20,7 @@ import uk.rl.ac.facilities.api.exceptions.EntityNotFoundException;
 import uk.rl.ac.facilities.facilities.api.generated.ror.*;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -201,6 +202,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
 
     @Override
     public EstablishmentModel createUnverifiedEstablishment(String name, String countryName, String url) {
+
+        validateUrl(url);
+
         Establishment unverifiedEst = new Establishment();
         unverifiedEst.setEstablishmentName(name);
         unverifiedEst.setCountryName(countryName);
@@ -357,5 +361,21 @@ public class EstablishmentServiceImpl implements EstablishmentService {
         return scoredMatches.stream()
                 .map(Pair::getValue)
                 .toList();
+    }
+
+    private static void validateUrl(String url) {
+        if (url == null || url.isBlank()) {
+            return;
+        }
+
+        if (!url.matches("^[a-zA-Z][a-zA-Z0-9+.-]*://.*")) {
+            throw new IllegalArgumentException("URL must include a valid scheme: " + url);
+        }
+
+        try {
+            URI.create(url).toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("Invalid URL provided: " + url);
+        }
     }
 }
