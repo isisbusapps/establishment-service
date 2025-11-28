@@ -33,9 +33,28 @@ jobs:
 
 
         - name: Build and Push Docker Image
-          id: push
+          id: docker_build
           uses: docker/build-push-action@v6
           with:
             context: .
             push: true
             tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAGS }}
+
+        - name: Checkout the Gitops repository
+          uses: actions/checkout@v5
+          with:
+            repository: isisbusapps/gitops
+            token: ${{ secrets.WORKFLOW_TOKEN }}
+
+        - name: Edit the patch-image yaml
+          uses: mikefarah/yq@v4.48.1
+          with:
+            cmd: yq e -i '.spec.template.spec.containers[0].image = "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.docker_build.outputs.digest }}"' './components/ua/establishment-service/overlays/dev/patch-image.yml'
+
+        - name: Commit and push changes
+          run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git commit -am "[CD] Update Establishment Service with this commit ${{ github.event.head_commit.url}}"
+            git push
+
