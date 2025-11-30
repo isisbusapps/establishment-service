@@ -318,6 +318,9 @@ public class EstablishmentServiceImpl implements EstablishmentService {
                 () -> new EntityNotFoundException(Country.class.getName(), countryId)));
     }
 
+    @Override
+    public List<CategoryModel> getAllCategories() {return categoryMapper.toShallowModel(categoryRepo.listAll()); }
+
     private List<Establishment> fuzzySearch(String query, Integer cutoff, boolean useAliases, List<Establishment> establishments) {
 
         Map<Long, List<EstablishmentAlias>> aliasesByEstId = Collections.emptyMap();
