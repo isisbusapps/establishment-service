@@ -11,11 +11,12 @@ import uk.rl.ac.facilities.api.domains.department.DepartmentModel;
 import uk.rl.ac.facilities.api.domains.department.DepartmentService;
 import uk.rl.ac.facilities.api.domains.establishment.EstablishmentModel;
 import uk.rl.ac.facilities.api.domains.establishment.EstablishmentService;
+import uk.rl.ac.facilities.api.dto.CategoryDTO;
 import uk.rl.ac.facilities.api.dto.CreateEstDTO;
 import uk.rl.ac.facilities.api.dto.EstSearchQueryDTO;
 import uk.rl.ac.facilities.api.dto.EstablishmentDTO;
 import uk.rl.ac.facilities.facilities.api.generated.ror.RorSchemaV21;
-import uk.rl.ac.facilities.rest.mappers.CountryMapper;
+import uk.rl.ac.facilities.rest.mappers.CategoryMapper;
 import uk.rl.ac.facilities.rest.mappers.EstablishmentMapper;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
     @Inject
     EstablishmentMapper estMapper;
     @Inject
-    CountryMapper countryMapper;
+    CategoryMapper categoryMapper;
     @Inject
     EstablishmentService estService;
     @Inject
@@ -133,7 +134,6 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
-    @RolesAllowed("USER_OFFICE")
     public EstablishmentDTO addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds) {
         if (establishmentId == null || categoryIds == null || categoryIds.isEmpty()) {
             throw new BadRequestException("Missing required input data");
@@ -178,5 +178,10 @@ public class EstablishmentController implements EstablishmentControllerInterface
     public EstablishmentDTO getEstablishmentByRorId(String rorIdSuffix) {
         EstablishmentModel establishment = estService.getEstablishmentByRorId(rorIdSuffix);
         return estMapper.toDTO(establishment);
+    }
+
+    @Override
+    public List<CategoryDTO> getEstablishmentCategories() {
+        return categoryMapper.toDTO(estService.getAllCategories());
     }
 }
