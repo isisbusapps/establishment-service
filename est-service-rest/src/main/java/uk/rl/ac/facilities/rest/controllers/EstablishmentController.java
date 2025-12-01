@@ -134,7 +134,6 @@ public class EstablishmentController implements EstablishmentControllerInterface
     }
 
     @Override
-    @RolesAllowed("USER_OFFICE")
     public EstablishmentDTO addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds) {
         if (establishmentId == null || categoryIds == null || categoryIds.isEmpty()) {
             throw new BadRequestException("Missing required input data");
