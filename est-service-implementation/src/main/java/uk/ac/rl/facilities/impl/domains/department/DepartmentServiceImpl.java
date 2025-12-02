@@ -60,9 +60,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         Department existingDep = depRepo.findByNameAndEstablishmentId(name, establishmentId);
         if (existingDep != null) {
-            throw new IllegalArgumentException(
-                    "Department with name '" + name + "' already exists for establishment with id + " + establishmentId
-            );
+            LOGGER.info("Department '{}' already exists for establishment {}. Returning existing department.", name, establishmentId);
+            return deptMapper.toModel(existingDep);
         }
 
         Department dep = new Department(name, establishmentId);
