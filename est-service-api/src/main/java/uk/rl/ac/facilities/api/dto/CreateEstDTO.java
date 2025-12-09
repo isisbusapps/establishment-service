@@ -6,6 +6,8 @@ public class CreateEstDTO {
 
     private String country;
 
+    private String url;
+
     public String getEstName() {
         return estName;
     }
@@ -18,7 +20,10 @@ public class CreateEstDTO {
         return country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
+    public void setCountry(String country) {this.country = country; }
+
+    public String getUrl() {return url; }
+
+    public void setUrl(String url) {this.url = url; }
+
 }

@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
-import uk.rl.ac.facilities.api.dto.CountryDTO;
+import uk.rl.ac.facilities.api.dto.CategoryDTO;
 import uk.rl.ac.facilities.api.dto.CreateEstDTO;
 import uk.rl.ac.facilities.api.dto.EstSearchQueryDTO;
 import uk.rl.ac.facilities.api.dto.EstablishmentDTO;
@@ -88,4 +88,12 @@ public interface EstablishmentControllerInterface {
     @DELETE
     @Path("/{establishmentId}")
     void deleteEstablishmentAndLinkedDepartments(@PathParam("establishmentId") Long establishmentId);
+
+    @GET
+    @Path("/ror/{rorIdSuffix}")
+    EstablishmentDTO getEstablishmentByRorId(@PathParam("rorIdSuffix") String rorId);
+
+    @GET
+    @Path("/categories")
+    List<CategoryDTO> getEstablishmentCategories();
 }

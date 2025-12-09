@@ -194,7 +194,7 @@ public class EstablishmentControllerTest extends RestTest {
     /* -----------------  createUnverifiedEstablishment ----------------- */
 
     @Test
-    public void test_createUnverifiedEstablishment_ValidInput_ReturnsCreatedEstablishment() {
+    public void test_createUnverifiedEstablishment_ValidInputNoUrl_ReturnsCreatedEstablishment() {
         given()
                 .contentType("application/json")
                 .body(Json.createObjectBuilder()
@@ -211,11 +211,45 @@ public class EstablishmentControllerTest extends RestTest {
     }
 
     @Test
+    public void test_createUnverifiedEstablishment_ValidInput_ReturnsCreatedEstablishment() {
+        given()
+                .contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("estName", NEW_EST_NAME)
+                        .add("country", "TEST_COUNTRY")
+                        .add("url", VALID_URL)
+                        .build().toString())
+                .when()
+                .post(getBaseURI() + "/establishment")
+                .then()
+                .statusCode(Response.Status.CREATED.getStatusCode())
+                .body("name", equalTo(NEW_EST_NAME))
+                .body("country", equalTo("TEST_COUNTRY"))
+                .body("url", equalTo(VALID_URL))
+                .body("verified", equalTo(false));
+    }
+
+
+    @Test
     public void test_createUnverifiedEstablishment_EmptyName_ReturnsBadRequest() {
         given().contentType("application/json")
                 .body(Json.createObjectBuilder()
                         .add("estName", "")
                         .add("country", "TEST_COUNTRY")
+                        .build().toString())
+                .when()
+                .post(getBaseURI() + "/establishment")
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    public void test_createUnverifiedEstablishment_InvalidUrl_ReturnsBadRequest() {
+        given().contentType("application/json")
+                .body(Json.createObjectBuilder()
+                        .add("estName", "")
+                        .add("country", "TEST_COUNTRY")
+                        .add("url", INVALID_URL)
                         .build().toString())
                 .when()
                 .post(getBaseURI() + "/establishment")
@@ -271,7 +305,7 @@ public class EstablishmentControllerTest extends RestTest {
                 // Validate aliases
                 .body("aliases", hasItems(ROR_PAYLOAD_LABEL, ROR_PAYLOAD_ACRONYM, ROR_PAYLOAD_ALIAS))
                 // Validate categories
-                .body("categories", hasItems(ROR_PAYLOAD_TYPE_1,ROR_PAYLOAD_TYPE_2));
+                .body("categories", hasItems(ROR_PAYLOAD_TYPE_1, ROR_PAYLOAD_TYPE_2));
     }
 
     @Test
@@ -303,7 +337,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .contentType("application/json")
                 .body(payload)
                 .when()
-                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID+ "/enrich-verify")
+                .put(getBaseURI() + "/establishment/" + UNVERIFIED_EST_ID + "/enrich-verify")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("id", equalTo(UNVERIFIED_EST_ID))
@@ -447,5 +481,20 @@ public class EstablishmentControllerTest extends RestTest {
                 .delete(getBaseURI() + "/establishment/" + NON_EXISTENT_EST_ID)
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    /* -----------------  getEstablishmentCategories ----------------- */
+
+    @Test
+    public void test_getEstablishmentCategories_ReturnsAllCategories() {
+
+        given()
+                .when()
+                .get(getBaseURI() + "/establishment/categories")
+                .then()
+                .log().ifValidationFails(LogDetail.BODY)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("id", hasItems(CATEGORY_ID, CATEGORY_ID_2, CATEGORY_ID_3))
+                .body("name", hasItems(CATEGORY_NAME, CATEGORY_NAME_2, CATEGORY_NAME_3));
     }
 }
