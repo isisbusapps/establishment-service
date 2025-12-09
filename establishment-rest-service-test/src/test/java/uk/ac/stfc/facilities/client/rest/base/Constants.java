@@ -14,6 +14,8 @@ public class Constants {
     public static final String NEW_EST_NAME = "TEST_NEW_EST";
     public static final String NEW_ALIAS_NAME_1 = "TEST_NEW_ALIAS_1";
     public static final String NEW_ALIAS_NAME_2 = "TEST_NEW_ALIAS_2";
+    public static final String VALID_URL = "http://acme.test";
+    public static final String INVALID_URL = "www.invalidurl.ac.uk";
 
     public static final String ROR_QUERY = "King's College London";
     public static final String ROR_PAYLOAD_NAME = "TEST_ROR_NAME";

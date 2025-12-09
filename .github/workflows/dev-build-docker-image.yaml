@@ -1,0 +1,60 @@
+name: Establishment Service Dev Docker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+    paths-ignore:
+      - README.md
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  TAGS: dev
+
+jobs:
+  build-and-push-image:
+    runs-on: self-hosted
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
+
+        - name: Login to GHCR
+          uses: docker/login-action@v3
+          with:
+            registry: ${{ env.REGISTRY }}
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+
+        - name: Build and Push Docker Image
+          id: docker_build
+          uses: docker/build-push-action@v6
+          with:
+            context: .
+            push: true
+            tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAGS }}
+
+        - name: Checkout the Gitops repository
+          uses: actions/checkout@v5
+          with:
+            repository: isisbusapps/gitops
+            token: ${{ secrets.WORKFLOW_TOKEN }}
+
+        - name: Edit the patch-image yaml
+          uses: mikefarah/yq@v4.48.1
+          with:
+            cmd: yq e -i '.spec.template.spec.containers[0].image = "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.docker_build.outputs.digest }}"' './components/ua/establishment-service/overlays/dev/patch-image.yml'
+
+        - name: Commit and push changes
+          run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git commit -am "[CD] Update Establishment Service with this commit ${{ github.event.head_commit.url}}"
+            git push
+
