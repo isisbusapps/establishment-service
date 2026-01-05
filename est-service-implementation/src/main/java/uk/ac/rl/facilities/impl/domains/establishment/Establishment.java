@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import uk.ac.rl.facilities.impl.domains.establishment.EstablishmentCategoryLink;
+
 @Entity
 @Table(name = "ESTABLISHMENT_NEW")
 public class Establishment {
@@ -42,6 +44,10 @@ public class Establishment {
     @OneToMany(mappedBy = "establishment", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<EstablishmentAlias> aliases = new ArrayList<>();
 
+    // OrderBy ensures that categories are returned in the same order every time.
+    // IntelliJ complains that CATEGORY_ID does not exist, so we suppress it here.
+    @SuppressWarnings("JpaQlInspection")
+    @OrderBy("CATEGORY_ID ASC")
     @OneToMany(mappedBy = "establishment", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<EstablishmentCategoryLink> categoryLinks = new HashSet<>();
 
