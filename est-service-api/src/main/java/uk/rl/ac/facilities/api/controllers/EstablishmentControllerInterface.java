@@ -11,6 +11,10 @@ import uk.rl.ac.facilities.api.dto.CreateEstDTO;
 import uk.rl.ac.facilities.api.dto.EstSearchQueryDTO;
 import uk.rl.ac.facilities.api.dto.EstablishmentDTO;
 import uk.rl.ac.facilities.facilities.api.generated.ror.RorSchemaV21;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.util.List;
 
@@ -49,6 +53,9 @@ public interface EstablishmentControllerInterface {
     List<EstablishmentDTO> getUnverifiedEstablishments();
 
     @POST
+    @APIResponses(value = {
+            @APIResponse(responseCode = "201", description = "Establishment created successfully", content = @Content(schema = @Schema(implementation = EstablishmentDTO.class))),
+    })
     Response createUnverifiedEstablishment(CreateEstDTO establishmentName);
 
     @GET
