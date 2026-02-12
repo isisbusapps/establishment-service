@@ -18,7 +18,7 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository_owner }}/establishment-service
   APP_NAME: Establishment Service
   GITOPS_REPO: isisbusapps/gitops
   GITOPS_PATCH_PATH: components/ua/establishment-service/overlays/prod/patch-image.yml
