@@ -66,7 +66,7 @@ jobs:
     needs: build_and_push
     steps:
       - name: Checkout GitOps repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: ${{ env.GITOPS_REPO }}
           token: ${{ secrets.WORKFLOW_TOKEN }}
