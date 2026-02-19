@@ -111,12 +111,11 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     @RolesAllowed("USER_OFFICE")
-    public Response manualVerifyAndEnrichData(Long establishmentId, EstablishmentDTO inputEst) {
+    public Response manualEnrichData(Long establishmentId, EstablishmentDTO inputEst) {
         if (establishmentId == null || inputEst == null || inputEst.getName().isEmpty()) {
             throw new BadRequestException("Missing required input data");
         }
         inputEst.setId(establishmentId);
-        inputEst.setVerified(true);
 
         estService.updateEstablishment(establishmentId, estMapper.toModel(inputEst));
 

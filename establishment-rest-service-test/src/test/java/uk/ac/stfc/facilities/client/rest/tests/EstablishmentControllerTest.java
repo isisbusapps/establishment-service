@@ -324,12 +324,13 @@ public class EstablishmentControllerTest extends RestTest {
     /* -----------------  manualVerifyAndEnrichData ----------------- */
 
     @Test
-    public void test_manualVerifyAndEnrichData_ValidInput_ReturnsUpdatedEstablishment() {
+    public void test_manualEnrichData_ValidInput_ReturnsUpdatedEstablishment() {
         String payload = Json.createObjectBuilder()
                 .add("name", ROR_PAYLOAD_NAME)
                 .add("rorID", ROR_PAYLOAD_ROR_ID)
                 .add("country", ROR_PAYLOAD_COUNTRY)
                 .add("url", ROR_PAYLOAD_URL)
+                .add("verified", ROR_PAYLOAD_VERIFIED)
                 .build()
                 .toString();
 
@@ -345,7 +346,7 @@ public class EstablishmentControllerTest extends RestTest {
                 .body("rorID", equalTo(ROR_PAYLOAD_ROR_ID))
                 .body("country", equalTo(ROR_PAYLOAD_COUNTRY))
                 .body("url", equalTo(ROR_PAYLOAD_URL))
-                .body("verified", equalTo(true));
+                .body("verified", equalTo(ROR_PAYLOAD_VERIFIED));
     }
 
     @Test
