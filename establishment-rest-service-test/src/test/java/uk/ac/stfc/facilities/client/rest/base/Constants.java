@@ -22,6 +22,7 @@ public class Constants {
     public static final String ROR_PAYLOAD_ROR_ID = "TEST_ROR_ID";
     public static final String ROR_PAYLOAD_COUNTRY = "TEST_ROR_COUNTRY";
     public static final String ROR_PAYLOAD_URL = "http://acme.test/ror";
+    public static final Boolean ROR_PAYLOAD_VERIFIED = true;
     public static final String ROR_PAYLOAD_ACRONYM = "TEST_ROR_ACRONYM";
     public static final String ROR_PAYLOAD_ALIAS = "TEST_ROR_ALIAS";
     public static final String ROR_PAYLOAD_LABEL = "TEST_ROR_LABEL";

@@ -71,7 +71,7 @@ public interface EstablishmentControllerInterface {
 
     @PUT
     @Path("/{establishmentId}/enrich-verify")
-    Response manualVerifyAndEnrichData(@PathParam("establishmentId") Long establishmentId,
+    Response manualEnrichData(@PathParam("establishmentId") Long establishmentId,
                                     EstablishmentDTO inputEst);
 
     @PUT
