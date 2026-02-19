@@ -78,7 +78,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public EstablishmentModel getEstablishment(Long establishmentId) {
         return estMapper.toModel(estRepo.findByIdOptional(establishmentId).orElseThrow(
-                () -> new EntityNotFoundException(Establishment.class.getName(), establishmentId)));
+                () -> new RuntimeException("Establishment not found")));
     }
 
     @Override
