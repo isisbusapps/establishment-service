@@ -76,7 +76,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentModel getDepartment(Long departmentId) {
-        return deptMapper.toModel(depRepo.findByIdOptional(departmentId).orElseThrow(() -> new EntityNotFoundException("Department with id " + departmentId + " not found")));
+        return deptMapper.toModel(depRepo.findByIdOptional(departmentId).orElseThrow(() -> new EntityNotFoundException("Department",departmentId.toString())));
     }
 
     @Override
@@ -94,7 +94,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentModel deleteDepartmentLabel(Long departmentId, Long labelId) {
         DepartmentLabelLinkId departmentLabelLinkId  = new DepartmentLabelLinkId(departmentId, labelId);
-        DepartmentLabelLink link = depLabelLinkRepo.findByIdOptional(departmentLabelLinkId).orElseThrow(() -> new EntityNotFoundException("Label with id " + labelId + " not found for department with id " + departmentId));
+        DepartmentLabelLink link = depLabelLinkRepo.findByIdOptional(departmentLabelLinkId).orElseThrow(() -> new EntityNotFoundException("Label", labelId.toString()));
         depLabelLinkRepo.delete(link);
         depLabelLinkRepo.flush();
         return deptMapper.toModel(depRepo.findById(departmentId));
@@ -133,10 +133,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentModel addDepartmentLabelLinks(Long departmentId, List<Long> LabelIds) {
-        Department department = depRepo.findByIdOptional(departmentId).orElseThrow(() -> new  EntityNotFoundException("No department found with department id: " + departmentId));
+        Department department = depRepo.findByIdOptional(departmentId).orElseThrow(() -> new  EntityNotFoundException("Department",departmentId.toString()));
 
         Set<Label> labelsToAdd = LabelIds.stream()
-                .map(id -> labelRepo.findByIdOptional(id).orElseThrow(() -> new EntityNotFoundException("Label not found for id: " + id)))
+                .map(id -> labelRepo.findByIdOptional(id).orElseThrow(() -> new EntityNotFoundException("Label", id.toString())))
                 .collect(Collectors.toSet());
 
         Set<Label> existingLabels = new HashSet<>(depLabelLinkRepo.findLabelsLinkedToDepartment(department.getDepartmentId()));
@@ -168,7 +168,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentModel addDepartmentLabelLinksAutomatically(Long departmentId) {
-        Department department = depRepo.findByIdOptional(departmentId).orElseThrow(() -> new  EntityNotFoundException("No department found with department id: " + departmentId));
+        Department department = depRepo.findByIdOptional(departmentId).orElseThrow(() -> new  EntityNotFoundException("Department", departmentId.toString()));
 
         String cleanDepartmentName = cleanName(department.getDepartmentName());
 
