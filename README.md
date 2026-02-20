@@ -13,11 +13,11 @@
     - Change 'Class' to 'all in package'
     - Where it says `-ea` add the following config:
 ``` 
--D"dbunit.connectionUrl=jdbc:oracle:thin:@//localhost:1521/xepdb"
--D"dbunit.username=ISISUSERDB"
--D"dbunit.password=pa55w0rdTolocalDB"
+-D"db.url=jdbc:oracle:thin:@//localhost:1521/xepdb"
+-D"db.username=ISISUSERDB"
+-D"db.password=pa55w0rdTolocalDB"
 -D"userOfficeTest.restUri=http://localhost:4019"
--D"uk.stfc.bisapps.config=C:\FBS\Apps\secret-config\local\establishment-service\RestTest.config"`
+-D"uk.stfc.bisapps.config=C:\FBS\Apps\secret-config\local\establishment-service\RestTest.config"
 ```
 
 9. Click ok
