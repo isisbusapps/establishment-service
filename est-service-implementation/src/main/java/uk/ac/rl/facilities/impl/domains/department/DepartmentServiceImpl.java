@@ -76,7 +76,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentModel getDepartment(Long departmentId) {
-        return deptMapper.toModel(depRepo.findByIdOptional(departmentId).orElseThrow(() -> new EntityNotFoundException("Department", departmentId)));
+        return deptMapper.toModel(depRepo.findByIdOptional(departmentId).orElseThrow(() -> new EntityNotFoundException("Department with id " + departmentId + " not found")));
     }
 
     @Override
@@ -94,7 +94,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public DepartmentModel deleteDepartmentLabel(Long departmentId, Long labelId) {
         DepartmentLabelLinkId departmentLabelLinkId  = new DepartmentLabelLinkId(departmentId, labelId);
-        DepartmentLabelLink link = depLabelLinkRepo.findByIdOptional(departmentLabelLinkId).orElseThrow(() -> new EntityNotFoundException("Label", labelId));
+        DepartmentLabelLink link = depLabelLinkRepo.findByIdOptional(departmentLabelLinkId).orElseThrow(() -> new EntityNotFoundException("Label with id " + labelId + " not found for department with id " + departmentId));
         depLabelLinkRepo.delete(link);
         depLabelLinkRepo.flush();
         return deptMapper.toModel(depRepo.findById(departmentId));

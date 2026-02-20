@@ -78,7 +78,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public EstablishmentModel getEstablishment(Long establishmentId) {
         return estMapper.toModel(estRepo.findByIdOptional(establishmentId).orElseThrow(
-                () -> new EntityNotFoundException(Establishment.class.getName(), establishmentId)));
+                () -> new EntityNotFoundException("Establishment with id " + establishmentId + " not found")));
     }
 
     @Override
@@ -126,7 +126,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public EstablishmentModel addRorDataToEstablishment(Long establishmentId, RorSchemaV21 ror){
-        Establishment est = estRepo.findByIdOptional(establishmentId).orElseThrow(() -> new EntityNotFoundException(Establishment.class.getName(), establishmentId));
+        Establishment est = estRepo.findByIdOptional(establishmentId).orElseThrow(() -> new EntityNotFoundException("Establishment with id " + establishmentId + " not found"));
 
         if (est == null) {
             LOGGER.warn("No establishment found with establishment id: " + establishmentId);
@@ -247,7 +247,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<AliasModel> addEstablishmentAliases(Long establishmentId, List<String> aliasNames) {
 
-        Establishment est = estRepo.findByIdOptional(establishmentId).orElseThrow(() -> new EntityNotFoundException(Establishment.class.getName(), establishmentId));
+        Establishment est = estRepo.findByIdOptional(establishmentId).orElseThrow(() -> new EntityNotFoundException("Establishment with id " + establishmentId + " not found"));
         if (est == null) {
             LOGGER.warn("No establishment found with establishment id: " + establishmentId);
             throw new NoResultException("No establishment found with establishment id: " + establishmentId);
@@ -270,7 +270,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public List<CategoryModel> addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds) {
 
-        Establishment est = estRepo.findByIdOptional(establishmentId).orElseThrow(() -> new EntityNotFoundException(Establishment.class.getName(), establishmentId));
+        Establishment est = estRepo.findByIdOptional(establishmentId).orElseThrow(() -> new EntityNotFoundException("Establishment with id " + establishmentId + " not found"));
 
         if (est == null) {
             LOGGER.warn("No establishment found with establishment id: " + establishmentId);
@@ -315,7 +315,7 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     @Override
     public CountryModel getCountry(Long countryId) {
         return countryMapper.toModel(countryRepo.findByIdOptional(countryId).orElseThrow(
-                () -> new EntityNotFoundException(Country.class.getName(), countryId)));
+                () -> new EntityNotFoundException("Country with id " + countryId + " not found")));
     }
 
     @Override
