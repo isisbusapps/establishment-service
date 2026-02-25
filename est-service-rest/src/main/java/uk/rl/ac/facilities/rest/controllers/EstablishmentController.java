@@ -21,6 +21,8 @@ import uk.rl.ac.facilities.rest.mappers.EstablishmentMapper;
 
 import java.util.List;
 
+import static uk.rl.ac.facilities.rest.helpers.InputValidation.validateUrl;
+
 @Transactional
 public class EstablishmentController implements EstablishmentControllerInterface {
     @Inject
@@ -68,6 +70,7 @@ public class EstablishmentController implements EstablishmentControllerInterface
             throw new BadRequestException("Establishment name or country must not be null or empty");
         }
         try {
+            validateUrl(createEstDTO.getUrl());
             EstablishmentDTO newEstablishment = estMapper.toDTO(estService.createUnverifiedEstablishment(
                     createEstDTO.getEstName(), createEstDTO.getCountry(), createEstDTO.getUrl()));
             return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
@@ -115,6 +118,8 @@ public class EstablishmentController implements EstablishmentControllerInterface
         if (establishmentId == null || inputEst == null || inputEst.getName().isEmpty()) {
             throw new BadRequestException("Missing required input data");
         }
+
+        validateUrl(inputEst.getUrl());
         inputEst.setId(establishmentId);
 
         estService.updateEstablishment(establishmentId, estMapper.toModel(inputEst));
