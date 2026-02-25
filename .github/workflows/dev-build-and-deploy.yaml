@@ -3,12 +3,12 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - develop
+      - main
     paths-ignore:
       - README.md
   pull_request:
     branches:
-      - develop
+      - main
     paths-ignore:
       - README.md
 concurrency:
