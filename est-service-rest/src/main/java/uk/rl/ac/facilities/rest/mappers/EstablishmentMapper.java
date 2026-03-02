@@ -1,6 +1,9 @@
 package uk.rl.ac.facilities.rest.mappers;
 
+import org.mapstruct.Condition;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import uk.rl.ac.facilities.BaseClasses.DateConverter;
 import uk.rl.ac.facilities.api.domains.establishment.AliasModel;
 import uk.rl.ac.facilities.api.domains.establishment.CategoryModel;
@@ -17,6 +20,7 @@ public abstract class EstablishmentMapper extends DateConverter {
     public abstract EstablishmentDTO toDTO(EstablishmentModel establishmentModel);
     public abstract List<EstablishmentDTO> toDTO(List<EstablishmentModel> establishmentModel);
 
+    @Mapping(target = "url", source = "url", conditionQualifiedByName = "isNotEmpty" )
     public abstract EstablishmentModel toModel(EstablishmentDTO establishmentDTO);
     public abstract List<EstablishmentModel> toModel(List<EstablishmentDTO> establishmentDTO);
 
@@ -54,5 +58,10 @@ public abstract class EstablishmentMapper extends DateConverter {
             model.setAlias(name);
             return model;
         }).toList();
+    }
+    @Condition
+    @Named( "isNotEmpty")
+    boolean isNotEmpty(String value) {
+        return value != null && !value.isEmpty();
     }
 }
