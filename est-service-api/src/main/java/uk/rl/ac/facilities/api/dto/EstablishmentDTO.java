@@ -59,7 +59,6 @@ public class EstablishmentDTO {
     @Schema(
             description = "The date the establishment record stopped being active",
             example = "2023-01-01T00:00:00Z",
-            readOnly = true,
             implementation = String.class,
             type = SchemaType.STRING,
             format = "date-time",
