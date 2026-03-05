@@ -8,17 +8,17 @@ public class EstablishmentRepositoryImpl implements EstablishmentRepository {
 
     @Override
     public List<Establishment> getAll() {
-        return listAll();
+        return list("thruDate is null");
     }
 
     @Override
     public List<Establishment> getVerified() {
-        return list("verified", true);
+        return list("verified = true and thruDate is null");
     }
 
     @Override
     public List<Establishment> getUnverified() {
-        return list("verified", false);
+        return list("verified = false and thruDate is null");
     }
 
     @Override
