@@ -4,7 +4,9 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import uk.rl.ac.facilities.api.controllers.EstablishmentControllerInterface;
 import uk.rl.ac.facilities.api.domains.department.DepartmentModel;
@@ -20,6 +22,7 @@ import uk.rl.ac.facilities.rest.mappers.CategoryMapper;
 import uk.rl.ac.facilities.rest.mappers.EstablishmentMapper;
 
 import java.util.List;
+import java.util.Map;
 
 import static uk.rl.ac.facilities.rest.helpers.InputValidation.validateUrl;
 
@@ -38,15 +41,25 @@ public class EstablishmentController implements EstablishmentControllerInterface
     public EstablishmentDTO getEstablishment(Long establishmentId) {
         EstablishmentModel establishment = estService.getEstablishment(establishmentId);
         if (establishment == null) {
-            throw new RuntimeException("No establishment found with id " + establishmentId);
+            throw new NotFoundException(
+                    Response.status(Response.Status.NOT_FOUND)
+                            .entity(Map.of("message", "No establishment found with id " + establishmentId))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
         return estMapper.toDTO(establishment);
     }
 
     @Override
     public List<EstablishmentDTO> getEstablishmentsByQuery(EstSearchQueryDTO searchQuery, Boolean useAliases, Boolean onlyVerified, int limit) {
-        if (searchQuery == null) {
-            throw new BadRequestException("Missing search query");
+        if (searchQuery == null || searchQuery.name == null || searchQuery.name.isEmpty()) {
+            throw new BadRequestException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("message", "Missing search query"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
         return estService.getEstablishmentsByQuery(searchQuery.name, useAliases, onlyVerified, limit)
                 .stream()
@@ -67,7 +80,12 @@ public class EstablishmentController implements EstablishmentControllerInterface
         if (createEstDTO == null
                 || createEstDTO.getEstName() == null || createEstDTO.getEstName().isEmpty()
                 || createEstDTO.getCountry() == null || createEstDTO.getCountry().isEmpty()) {
-            throw new BadRequestException("Establishment name or country must not be null or empty");
+            throw new BadRequestException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("message", "Establishment name or country must not be null or empty"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
         try {
             validateUrl(createEstDTO.getUrl());
@@ -75,20 +93,34 @@ public class EstablishmentController implements EstablishmentControllerInterface
                     createEstDTO.getEstName(), createEstDTO.getCountry(), createEstDTO.getUrl()));
             return Response.status(Response.Status.CREATED).entity(newEstablishment).build();
         } catch (IllegalArgumentException e) {
-            throw new BadRequestException(e.getMessage());
+            throw new BadRequestException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("message", e.getMessage()))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
     }
 
     @Override
     public List<RorSchemaV21> getRorMatches(String searchQuery) {
         if (searchQuery == null) {
-            throw new BadRequestException("Missing search query");
+            throw new BadRequestException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("message", "Missing search query"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
-
         try {
-            return  estService.getRorMatches(searchQuery);
+            return estService.getRorMatches(searchQuery);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch establishments");
+            throw new InternalServerErrorException(
+                    Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(Map.of("message", "Failed to fetch establishments"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
     }
 
@@ -96,7 +128,12 @@ public class EstablishmentController implements EstablishmentControllerInterface
     @RolesAllowed("USER_OFFICE")
     public EstablishmentDTO rorVerifyAndEnrichData(Long establishmentId, RorSchemaV21 rorMatch) {
         if (establishmentId == null || rorMatch == null) {
-            throw new NotFoundException("Missing required input data");
+            throw new BadRequestException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("message", "Missing required input data"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
         try {
             estService.addRorDataToEstablishment(establishmentId, rorMatch);
@@ -108,15 +145,25 @@ public class EstablishmentController implements EstablishmentControllerInterface
             return estMapper.toDTO(estService.getEstablishment(establishmentId));
 
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new InternalServerErrorException(
+                    Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(Map.of("message", e.getMessage()))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
     }
 
     @Override
     @RolesAllowed("USER_OFFICE")
     public Response manualEnrichData(Long establishmentId, EstablishmentDTO inputEst) {
-        if (establishmentId == null || inputEst == null || inputEst.getName().isEmpty()) {
-            throw new BadRequestException("Missing required input data");
+        if (establishmentId == null || inputEst == null || inputEst.getName() == null || inputEst.getName().isEmpty()) {
+            throw new BadRequestException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("message", "Missing required input data"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
 
         validateUrl(inputEst.getUrl());
@@ -131,7 +178,12 @@ public class EstablishmentController implements EstablishmentControllerInterface
     @RolesAllowed("USER_OFFICE")
     public EstablishmentDTO addEstablishmentAliases(Long establishmentId, List<String> aliasNames) {
         if (establishmentId == null || aliasNames == null || aliasNames.isEmpty()) {
-            throw new BadRequestException("Missing required input data");
+            throw new BadRequestException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("message", "Missing required input data"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
         estService.addEstablishmentAliases(establishmentId, aliasNames);
         return estMapper.toDTO(estService.getEstablishment(establishmentId));
@@ -140,7 +192,12 @@ public class EstablishmentController implements EstablishmentControllerInterface
     @Override
     public EstablishmentDTO addEstablishmentCategoryLinks(Long establishmentId, List<Long> categoryIds) {
         if (establishmentId == null || categoryIds == null || categoryIds.isEmpty()) {
-            throw new BadRequestException("Missing required input data");
+            throw new BadRequestException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("message", "Missing required input data"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
         estService.addEstablishmentCategoryLinks(establishmentId, categoryIds);
         return estMapper.toDTO(estService.getEstablishment(establishmentId));
@@ -162,16 +219,26 @@ public class EstablishmentController implements EstablishmentControllerInterface
     @RolesAllowed("USER_OFFICE")
     public void deleteEstablishmentAndLinkedDepartments(Long establishmentId) {
         if (establishmentId == null) {
-            throw new BadRequestException("Missing input establishment id");
+            throw new BadRequestException(
+                    Response.status(Response.Status.BAD_REQUEST)
+                            .entity(Map.of("message", "Missing input establishment id"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
 
         if (estService.getEstablishment(establishmentId) == null) {
-            throw new NotFoundException("Establishment not found");
+            throw new NotFoundException(
+                    Response.status(Response.Status.NOT_FOUND)
+                            .entity(Map.of("message", "Establishment not found"))
+                            .type(MediaType.APPLICATION_JSON)
+                            .build()
+            );
         }
 
         List<DepartmentModel> linkedDepartments = depService.getDepartmentsByEstablishmentId(establishmentId);
 
-        for  (DepartmentModel dep : linkedDepartments) {
+        for (DepartmentModel dep : linkedDepartments) {
             depService.deleteDepartment(dep.getId());
         }
 

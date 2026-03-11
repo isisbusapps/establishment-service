@@ -5,6 +5,8 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import uk.rl.ac.facilities.api.controllers.DepartmentControllerInterface;
 import uk.rl.ac.facilities.api.domains.department.DepartmentModel;
 import uk.rl.ac.facilities.api.domains.department.DepartmentService;
@@ -14,6 +16,7 @@ import uk.rl.ac.facilities.api.dto.DepartmentDTO;
 import uk.rl.ac.facilities.rest.mappers.DepartmentMapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 public class DepartmentController implements DepartmentControllerInterface {
@@ -28,7 +31,12 @@ public class DepartmentController implements DepartmentControllerInterface {
     public DepartmentDTO getDepartment(Long departmentId) {
         DepartmentModel department = depService.getDepartment(departmentId);
         if (department == null) {
-            throw new RuntimeException("No department found with id " + departmentId);
+            throw new NotFoundException(
+                Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("message", "No department found with id " + departmentId))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build()
+            );
         }
         return departmentMapper.toDTO(department);
     }
@@ -37,13 +45,17 @@ public class DepartmentController implements DepartmentControllerInterface {
     @RolesAllowed("USER_OFFICE")
     public DepartmentDTO addDepartmentLabelLinks(Long departmentId, List<Long> LabelIds) {
         if (departmentId == null) {
-            throw new BadRequestException("Missing input: department id");
-        };
+            throw new BadRequestException(
+                Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Map.of("message", "Missing input: department id"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build()
+            );
+        }
         if (LabelIds == null || LabelIds.isEmpty()) {
             DepartmentModel departmentModel = depService.addDepartmentLabelLinksAutomatically(departmentId);
             return departmentMapper.toDTO(departmentModel);
         }
-
         DepartmentModel departmentModel = depService.addDepartmentLabelLinks(departmentId, LabelIds);
         return departmentMapper.toDTO(departmentModel);
     }
@@ -68,15 +80,22 @@ public class DepartmentController implements DepartmentControllerInterface {
     public DepartmentDTO createDepartment(CreateDepartmentDTO createDepartmentDTO) {
         String name = createDepartmentDTO.getName();
         Long establishmentId = createDepartmentDTO.getEstablishmentId();
-
-        if (name == null || establishmentId == null) {
-            throw new BadRequestException("Request must have a name and establishmentId");
+        if (name == null || name.isEmpty() || establishmentId == null) {
+            throw new BadRequestException(
+                Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Map.of("message", "Request must have a name and establishmentId"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build()
+            );
         }
-
         if (estService.getEstablishment(establishmentId) == null) {
-            throw new NotFoundException("Cannot create department: establishment not found");
+            throw new NotFoundException(
+                Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("message", "Cannot create department: establishment not found"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build()
+            );
         }
-
         DepartmentModel department = depService.createDepartment(name, establishmentId);
         department = depService.addDepartmentLabelLinksAutomatically(department.getId());
         return departmentMapper.toDTO(department);
@@ -86,14 +105,21 @@ public class DepartmentController implements DepartmentControllerInterface {
     @RolesAllowed("USER_OFFICE")
     public void deleteDepartment(Long departmentId) {
         if (departmentId == null) {
-            throw new BadRequestException("Missing input department id");
+            throw new BadRequestException(
+                Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Map.of("message", "Missing input department id"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build()
+            );
         }
-
         if (depService.getDepartment(departmentId) == null) {
-            throw new NotFoundException("No such Department found");
+            throw new NotFoundException(
+                Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("message", "No such department found"))
+                        .type(MediaType.APPLICATION_JSON)
+                        .build()
+            );
         }
-
         depService.deleteDepartment(departmentId);
-        }
+    }
 }
-
