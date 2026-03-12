@@ -53,13 +53,15 @@ public class EstablishmentController implements EstablishmentControllerInterface
 
     @Override
     public List<EstablishmentDTO> getEstablishmentsByQuery(EstSearchQueryDTO searchQuery, Boolean useAliases, Boolean onlyVerified, int limit) {
-        if (searchQuery == null || searchQuery.name == null || searchQuery.name.isEmpty()) {
+        if (searchQuery == null || searchQuery.name == null) {
             throw new BadRequestException(
                     Response.status(Response.Status.BAD_REQUEST)
                             .entity(Map.of("message", "Missing search query"))
                             .type(MediaType.APPLICATION_JSON)
                             .build()
             );
+        } else if (searchQuery.name.isEmpty()) {
+            return List.of();
         }
         return estService.getEstablishmentsByQuery(searchQuery.name, useAliases, onlyVerified, limit)
                 .stream()
