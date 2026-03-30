@@ -6,7 +6,7 @@
 version: 2
 updates:
   # Enable version updates for npm
-  - package-ecosystem: "npm"
+  - package-ecosystem: "maven"
     directory: "/establishment-service/"
     schedule:
       interval: "daily"
