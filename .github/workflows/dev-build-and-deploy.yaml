@@ -20,7 +20,7 @@ jobs:
     with:
       image-name: establishment-service
       app-name: Establishment Service
-      gitops-patch-path: components/ua/establishment-service/overlays/dev/patch-image.yml
+      gitops-patch-path: components/ua/establishment-service/overlays/dev/patch-image.yaml
       use-dockerhub-mirror: true
     secrets:
       workflow-token: ${{ secrets.WORKFLOW_TOKEN }}

@@ -19,7 +19,7 @@ jobs:
     with:
       image-name: establishment-service
       app-name: Establishment Service
-      gitops-patch-path: components/ua/establishment-service/overlays/prod/patch-image.yml
+      gitops-patch-path: components/ua/establishment-service/overlays/prod/patch-image.yaml
       release-version: ${{ inputs.releaseVersion }}
       is-hotfix: ${{ inputs.isHotfix }}
       use-dockerhub-mirror: true
