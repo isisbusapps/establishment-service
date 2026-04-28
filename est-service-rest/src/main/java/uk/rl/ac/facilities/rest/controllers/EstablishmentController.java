@@ -23,6 +23,7 @@ import uk.rl.ac.facilities.rest.mappers.EstablishmentMapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static uk.rl.ac.facilities.rest.helpers.InputValidation.validateUrl;
 
@@ -49,6 +50,22 @@ public class EstablishmentController implements EstablishmentControllerInterface
             );
         }
         return estMapper.toDTO(establishment);
+    }
+
+    @Override
+    public List<EstablishmentDTO> getEstablishmentsByIds(List<Long> establishmentIds) {
+
+        if (establishmentIds == null || establishmentIds.isEmpty()) {
+            return List.of();
+        }
+
+        return estService.getEstablishmentsByIds(establishmentIds.stream()
+                        .filter(Objects::nonNull)
+                        .distinct()
+                        .toList())
+                .stream()
+                .map(estMapper::toDTO)
+                .toList();
     }
 
     @Override

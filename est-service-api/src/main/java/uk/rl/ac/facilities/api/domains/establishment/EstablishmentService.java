@@ -10,6 +10,8 @@ public interface EstablishmentService {
 
     EstablishmentModel getEstablishment(Long establishmentId);
 
+    List<EstablishmentModel> getEstablishmentsByIds(List<Long> establishmentIds);
+
     EstablishmentModel getEstablishmentByRorId(String rorIdSuffix);
 
     List<EstablishmentModel> getEstablishmentsByQuery(String searchQuery, boolean useAliases, boolean onlyVerified, int limit);
