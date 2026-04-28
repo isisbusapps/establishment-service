@@ -80,6 +80,19 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+    public List<DepartmentModel> getDepartmentsByIds(List<Long> ids) {
+
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
+        return depRepo.list("id in ?1", ids)
+                .stream()
+                .map(deptMapper::toModel)
+                .toList();
+    }
+
+    @Override
     public List<DepartmentModel> getDepartmentsByEstablishmentId(Long establishmentId) {
         return deptMapper.toModel(depRepo.list("establishmentId", establishmentId));
     }
