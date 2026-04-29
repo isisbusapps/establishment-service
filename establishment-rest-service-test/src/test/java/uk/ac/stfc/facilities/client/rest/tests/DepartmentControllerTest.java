@@ -63,6 +63,42 @@ public class DepartmentControllerTest extends RestTest {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+    /* -----------------  getDepartmentsByIds ----------------- */
+
+    @Test
+    public void test_getDepartmentsByIds_ValidIds_ReturnsDepartments() {
+        given().contentType("application/json")
+                .body("[" + TEST_DEPARTMENT_ID + ", " + TEST_DEPARTMENT_ID_2 + "]")
+                .when()
+                .post(getBaseURI() + "/department/batch")
+                .then()
+                .log().ifValidationFails(LogDetail.BODY)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("id", hasItems(TEST_DEPARTMENT_ID, TEST_DEPARTMENT_ID_2));
+    }
+
+    @Test
+    public void test_getDepartmentsByIds_EmptyList_ReturnsEmptyList() {
+        given().contentType("application/json")
+                .body("[]")
+                .when()
+                .post(getBaseURI() + "/department/batch")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("$", hasSize(0));
+    }
+
+    @Test
+    public void test_getDepartmentsByIds_NonExistentIds_ReturnsEmptyList() {
+        given().contentType("application/json")
+                .body("[" + NON_EXISTENT_DEPARTMENT_ID + "]")
+                .when()
+                .post(getBaseURI() + "/department/batch")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("$", hasSize(0));
+    }
+
     /* ----------------- addDepartmentLabelLinksManually ----------------- */
 
     @Test
