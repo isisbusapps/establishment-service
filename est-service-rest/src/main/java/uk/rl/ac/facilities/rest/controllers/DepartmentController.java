@@ -17,6 +17,7 @@ import uk.rl.ac.facilities.rest.mappers.DepartmentMapper;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Transactional
 public class DepartmentController implements DepartmentControllerInterface {
@@ -39,6 +40,22 @@ public class DepartmentController implements DepartmentControllerInterface {
             );
         }
         return departmentMapper.toDTO(department);
+    }
+
+    @Override
+    public List<DepartmentDTO> getDepartmentsByIds(List<Long> departmentIds) {
+
+        if (departmentIds == null || departmentIds.isEmpty()) {
+            return List.of();
+        }
+
+        return depService.getDepartmentsByIds(departmentIds.stream()
+                        .filter(Objects::nonNull)
+                        .distinct()
+                        .toList())
+                .stream()
+                .map(departmentMapper::toDTO)
+                .toList();
     }
 
     @Override

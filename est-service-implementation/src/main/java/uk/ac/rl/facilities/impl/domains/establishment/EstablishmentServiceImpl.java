@@ -81,6 +81,19 @@ public class EstablishmentServiceImpl implements EstablishmentService {
     }
 
     @Override
+    public List<EstablishmentModel> getEstablishmentsByIds(List<Long> ids) {
+
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
+        return estRepo.list("id in ?1", ids)
+                .stream()
+                .map(estMapper::toModel)
+                .toList();
+    }
+
+    @Override
     public EstablishmentModel getEstablishmentByRorId(String rorIdSuffix) {
         String RorId = "https://ror.org/" + rorIdSuffix;
         Establishment est = estRepo.find("rorId", RorId).firstResultOptional()

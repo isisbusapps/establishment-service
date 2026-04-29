@@ -18,6 +18,10 @@ public interface DepartmentControllerInterface {
     @Path("/{departmentId}")
     DepartmentDTO getDepartment(@PathParam("departmentId") Long departmentId);
 
+    @POST
+    @Path("/batch")
+    List<DepartmentDTO> getDepartmentsByIds(List<Long> departmentIds);
+
     @PUT
     @Path("/{departmentId}/label")
     DepartmentDTO addDepartmentLabelLinks(@PathParam("departmentId") Long departmentId, List<Long> LabelIds);

@@ -28,6 +28,10 @@ public interface EstablishmentControllerInterface {
     EstablishmentDTO getEstablishment(@PathParam("establishmentId") Long establishmentId);
 
     @POST
+    @Path("/batch")
+    List<EstablishmentDTO> getEstablishmentsByIds(List<Long> establishmentIds);
+
+    @POST
     @Path("/search")
     List<EstablishmentDTO>  getEstablishmentsByQuery(
             EstSearchQueryDTO name,

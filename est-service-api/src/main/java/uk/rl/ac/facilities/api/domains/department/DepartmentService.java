@@ -10,6 +10,8 @@ public interface DepartmentService {
 
     DepartmentModel getDepartment(Long departmentId);
 
+    List<DepartmentModel> getDepartmentsByIds(List<Long> departmentIds);
+
     List<DepartmentModel> getDepartmentsByEstablishmentId(Long establishmentId);
 
     void deleteDepartment(Long depId);
