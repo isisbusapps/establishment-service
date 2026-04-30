@@ -67,6 +67,43 @@ public class EstablishmentControllerTest extends RestTest {
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
+
+    /* -----------------  getEstablishmentsByIds ----------------- */
+
+    @Test
+    public void test_getEstablishmentsByIds_ValidIds_ReturnsEstablishments() {
+        given().contentType("application/json")
+                .body("[" + VERIFIED_EST_ID + ", " + UNVERIFIED_EST_ID + "]")
+                .when()
+                .post(getBaseURI() + "/establishment/batch")
+                .then()
+                .log().ifValidationFails(LogDetail.BODY)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("id", hasItems(VERIFIED_EST_ID, UNVERIFIED_EST_ID));
+    }
+
+    @Test
+    public void test_getEstablishmentsByIds_EmptyList_ReturnsEmptyList() {
+        given().contentType("application/json")
+                .body("[]")
+                .when()
+                .post(getBaseURI() + "/establishment/batch")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("$", hasSize(0));
+    }
+
+    @Test
+    public void test_getEstablishmentsByIds_NonExistentIds_ReturnsEmptyList() {
+        given().contentType("application/json")
+                .body("[" + NON_EXISTENT_EST_ID + "]")
+                .when()
+                .post(getBaseURI() + "/establishment/batch")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("$", hasSize(0));
+    }
+
     /* ----------------- getEstablishmentByRorId ----------------- */
 
     @Test

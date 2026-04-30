@@ -11,6 +11,7 @@ public class DepartmentData {
             insertInto("DEPARTMENT")
                     .columns("ID",               "DEPARTMENT_NAME",    "OLD_ESTABLISHMENT_ID",  "ESTABLISHMENT_ID")
                     .values( TEST_DEPARTMENT_ID,  TEST_DEPARTMENT_NAME,  null,                    VERIFIED_EST_ID     )
+                    .values( TEST_DEPARTMENT_ID_2,  TEST_DEPARTMENT_NAME_2,  null,                VERIFIED_EST_ID     )
                     .build(),
 
             insertInto("LABEL")
