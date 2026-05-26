@@ -151,8 +151,12 @@
     </profiles>
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/isisbusapps/establishment-service</url>
+            <id>gitea</id>
+            <url>https://git.developers.facilities.rl.ac.uk/api/packages/isisbusapps/maven</url>
         </repository>
+        <snapshotRepository>
+            <id>gitea</id>
+            <url>https://git.developers.facilities.rl.ac.uk/api/packages/isisbusapps/maven</url>
+        </snapshotRepository>
     </distributionManagement>
 </project>
