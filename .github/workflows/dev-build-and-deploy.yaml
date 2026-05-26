@@ -39,6 +39,8 @@ jobs:
           server-id: gitea
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
+      - name: Install Maven
+        run: sudo apt-get install -y maven
       - name: Deploy est-service-api to Gitea
         run: mvn deploy -pl est-service-api -B --no-transfer-progress
         env:
