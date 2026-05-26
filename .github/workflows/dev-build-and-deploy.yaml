@@ -28,17 +28,19 @@ jobs:
   publish_api:
     name: Publish API artifact
     runs-on: self-hosted
+    timeout-minutes: 15
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-    permissions:
-      packages: write
-      contents: read
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
-      - name: Publish est-service-api to GitHub Packages
+          server-id: gitea
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+      - name: Deploy est-service-api to Gitea
         run: mvn deploy -pl est-service-api -B --no-transfer-progress
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.GITEA_MAVEN_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.GITEA_MAVEN_TOKEN }}
