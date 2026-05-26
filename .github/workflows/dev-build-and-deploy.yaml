@@ -25,20 +25,20 @@ jobs:
       use-dockerhub-mirror: true
     secrets:
       workflow-token: ${{ secrets.WORKFLOW_TOKEN }}
-#  publish_api:
-#    name: Publish API artifact
-#    runs-on: self-hosted
-#    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-#    permissions:
-#      packages: write
-#      contents: read
-#    steps:
-#      - uses: actions/checkout@v6
-#      - uses: actions/setup-java@v4
-#        with:
-#          java-version: '21'
-#          distribution: 'temurin'
-#      - name: Publish est-service-api to GitHub Packages
-#        run: mvn deploy -pl est-service-api -B --no-transfer-progress
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  publish_api:
+    name: Publish API artifact
+    runs-on: self-hosted
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Publish est-service-api to GitHub Packages
+        run: mvn deploy -pl est-service-api -B --no-transfer-progress
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
