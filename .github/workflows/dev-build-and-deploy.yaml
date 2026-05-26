@@ -34,6 +34,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v6
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
       - name: Publish est-service-api to GitHub Packages
         run: mvn deploy -pl est-service-api -B --no-transfer-progress
         env:
