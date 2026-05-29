@@ -41,7 +41,9 @@ jobs:
       - name: Install Maven
         run: sudo apt-get install -y maven
       - name: Deploy est-service-api to Gitea
-        run: mvn deploy -pl est-service-api -B --no-transfer-progress
+        run: |
+          mvn deploy -N -B --no-transfer-progress
+          mvn deploy -pl est-service-api -B --no-transfer-progress
         env:
           MAVEN_USERNAME: ${{ secrets.GITEA_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.GITEA_PASSWORD }}
