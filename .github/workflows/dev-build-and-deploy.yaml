@@ -44,5 +44,5 @@ jobs:
       - name: Deploy est-service-api to Gitea
         run: mvn deploy -pl est-service-api -B --no-transfer-progress
         env:
-          MAVEN_USERNAME: ${{ secrets.GITEA_MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.GITEA_MAVEN_TOKEN }}
+          MAVEN_USERNAME: ${{ secrets.GITEA_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.GITEA_PASSWORD }}
