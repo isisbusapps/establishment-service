@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 89-prevent-deploy-api-fail
     paths-ignore:
       - README.md
   pull_request:
@@ -38,6 +39,8 @@ jobs:
           server-id: gitea
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
+      - name: Install Maven
+        run: sudo apt-get install -y maven
       - name: Deploy est-service-api to Gitea
         run: |
           mvn deploy -N -B --no-transfer-progress 2>&1 | tee /tmp/deploy_output.txt || grep -q "409 Conflict" /tmp/deploy_output.txt
