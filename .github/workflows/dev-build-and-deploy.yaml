@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - 89-prevent-api-deploy-fail
+      - 89-prevent-deploy-api-fail
     paths-ignore:
       - README.md
   pull_request:
