@@ -42,7 +42,7 @@ jobs:
       - name: Deploy est-service-api to Gitea
         run: |
           mvn deploy -N -B --no-transfer-progress 2>&1 | tee /tmp/deploy_output.txt || grep -q "409 Conflict" /tmp/deploy_output.txt
-          mvn deploy -pl est-service-api -B --no-transfer-progress
+          mvn deploy -pl est-service-api -B --no-transfer-progress 2>&1 | tee /tmp/deploy_output.txt || grep -q "409 Conflict" /tmp/deploy_output.txt
         env:
           MAVEN_USERNAME: ${{ secrets.GITEA_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.GITEA_PASSWORD }}
