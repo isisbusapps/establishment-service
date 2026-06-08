@@ -2,7 +2,7 @@ name: Main Rest Tests
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 40 * * * " # 00:40 UTC, daily
+    - cron: "40 0 * * *" # 00:40 UTC, daily
 
 jobs:
   rest-test:
