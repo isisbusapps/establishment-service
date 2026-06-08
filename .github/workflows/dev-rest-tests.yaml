@@ -1,0 +1,46 @@
+name: Main Rest Tests
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 00 * * * " # 00:00, daily
+
+jobs:
+  rest-test:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          architecture: x64
+
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.3.9
+
+      - name: Run Maven Tests
+        env:
+          REST_URI: https://devapis.facilities.rl.ac.uk/users-service/v2
+          DB_ENV: Dev
+          SUPER_ADMIN_TOKEN: ${{ secrets.SUPER_ADMIN_TOKEN }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          USER_OFFICE_TOKEN: ${{ secrets.USER_OFFICE_TOKEN }}
+          USER_TOKEN: ${{ secrets.USER_TOKEN }}
+          GET_ALL_BASICPERSONDETAILS_API_KEY: ${{ secrets.GET_ALL_BASIC_PERSONDETAILS_API_KEY }}
+          GET_ALL_PERSONDETAILS_API_KEY: ${{ secrets.GET_ALL_PERSONDETAILS_API_KEY }}
+          FAP_API_KEY: ${{ secrets.FAP_API_KEY }}
+          ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
+          ISISBUSAPPS_CI_FED_ID: ${{ secrets.ISISBUSAPPS_CI_FED_ID }}
+          ISISBUSAPPS_CI_PASSWORD: ${{ secrets.ISISBUSAPPS_CI_PASSWORD }}
+          Dev_UserDBUsername: ${{ secrets.DEV_USERDBUSERNAME }}
+          Dev_UserDBPassword: ${{ secrets.DEV_USERDBPASSWORD }}
+          Dev_DatabaseUrl: ${{ secrets.DEV_DATABASEURL }}
+        run: mvn -B clean test -D'userOfficeTest.restUri'=$REST_URI -D'databaseEnv'=$DB_ENV -f users/users-rest-services-test/pom.xml
