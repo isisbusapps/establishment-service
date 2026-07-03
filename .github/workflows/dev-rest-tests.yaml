@@ -28,8 +28,7 @@ jobs:
 
       - name: Run Maven Tests
         env:
-          REST_URI: https://devapis.facilities.rl.ac.uk/users-service/v2
-          DB_ENV: Dev
+          REST_URI: https://devapis.facilities.rl.ac.uk/establishment-service
           SUPER_ADMIN_TOKEN: ${{ secrets.SUPER_ADMIN_TOKEN }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           USER_OFFICE_TOKEN: ${{ secrets.USER_OFFICE_TOKEN }}
@@ -40,7 +39,7 @@ jobs:
           ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
           ISISBUSAPPS_CI_FED_ID: ${{ secrets.ISISBUSAPPS_CI_FED_ID }}
           ISISBUSAPPS_CI_PASSWORD: ${{ secrets.ISISBUSAPPS_CI_PASSWORD }}
-          Dev_UserDBUsername: ${{ secrets.DEV_USERDBUSERNAME }}
-          Dev_UserDBPassword: ${{ secrets.DEV_USERDBPASSWORD }}
-          Dev_DatabaseUrl: ${{ secrets.DEV_DATABASEURL }}
-        run: mvn -B clean test -D'userOfficeTest.restUri'=$REST_URI -D'databaseEnv'=$DB_ENV -f users/users-rest-services-test/pom.xml
+          DB_USERNAME: ${{ secrets.DEV_USERDBUSERNAME }}
+          DB_PASSWORD: ${{ secrets.DEV_USERDBPASSWORD }}
+          DB_URL: ${{ secrets.DEV_DATABASEURL }}
+        run: mvn -B clean test -D'userOfficeTest.restUri'=$REST_URI -D'db.url'=$DB_URL -D'db.username'=$DB_USERNAME -D'db.password'=$DB_PASSWORD -f establishment-rest-service-test/pom.xml
