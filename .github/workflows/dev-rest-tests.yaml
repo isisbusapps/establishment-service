@@ -12,6 +12,7 @@ permissions:
 jobs:
   rest-test:
     permissions:
+      packages: read
       contents: read
       id-token: write
     runs-on: fase-self-hosted
