@@ -26,20 +26,23 @@ jobs:
       workflow-token: ${{ secrets.WORKFLOW_TOKEN }}
   publish_api:
     name: Publish API artifact
-    runs-on: self-hosted
+    runs-on: fase-self-hosted
+    container: ghcr.io/isisbusapps/fase-gh-runner-container:latest
     timeout-minutes: 15
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           java-version: '21'
           distribution: 'temurin'
           server-id: gitea
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
-      - name: Install Maven
-        run: sudo apt-get install -y maven
+      - name: Setup Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.3.9
       - name: Deploy est-service-api to Gitea
         run: |
           mvn deploy -N -B --no-transfer-progress 2>&1 | tee /tmp/deploy_output.txt || grep -q "409 Conflict" /tmp/deploy_output.txt
