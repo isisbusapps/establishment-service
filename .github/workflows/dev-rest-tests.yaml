@@ -27,6 +27,9 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           architecture: x64
+          server-id: gitea
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
 
       - name: Setup Maven
         uses: stCarolas/setup-maven@v5
@@ -35,6 +38,8 @@ jobs:
 
       - name: Run Maven Tests
         env:
+          MAVEN_USERNAME: ${{ secrets.GITEA_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.GITEA_PASSWORD }}
           REST_URI: https://devapis.facilities.rl.ac.uk/establishment-service
           SUPER_ADMIN_TOKEN: ${{ secrets.SUPER_ADMIN_TOKEN }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
