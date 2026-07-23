@@ -39,10 +39,6 @@ jobs:
           server-id: gitea
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
-      - name: Setup Maven
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: 3.3.9
       - name: Deploy est-service-api to Gitea
         run: |
           mvn deploy -N -B --no-transfer-progress 2>&1 | tee /tmp/deploy_output.txt || grep -q "409 Conflict" /tmp/deploy_output.txt

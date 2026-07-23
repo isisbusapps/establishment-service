@@ -31,11 +31,6 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
 
-      - name: Setup Maven
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: 3.3.9
-
       - name: Run Maven Tests
         env:
           MAVEN_USERNAME: ${{ secrets.GITEA_USERNAME }}
