@@ -26,7 +26,7 @@ jobs:
       workflow-token: ${{ secrets.WORKFLOW_TOKEN }}
   publish_api:
     name: Publish API artifact
-    runs-on: fase-self-hosted
+    runs-on: fase-self-hosted-dind
     container: ghcr.io/isisbusapps/fase-gh-runner-container:latest
     timeout-minutes: 15
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
