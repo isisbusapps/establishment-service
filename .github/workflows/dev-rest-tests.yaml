@@ -31,6 +31,16 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
 
+      - name: Debug secret presence
+        env:
+          DB_URL: ${{ secrets.DEV_DATABASEURL }}
+          DB_USERNAME: ${{ secrets.DEV_USERDBUSERNAME }}
+          DB_PASSWORD: ${{ secrets.DEV_USERDBPASSWORD }}
+        run: |
+          echo "DB_URL len: ${#DB_URL}"
+          echo "DB_USERNAME len: ${#DB_USERNAME}"
+          echo "DB_PASSWORD len: ${#DB_PASSWORD}"
+
       - name: Run Maven Tests
         env:
           MAVEN_USERNAME: ${{ secrets.GITEA_USERNAME }}
