@@ -85,6 +85,13 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>gitea</id>
+            <url>https://git.developers.facilities.rl.ac.uk/api/packages/isisbusapps/maven</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
