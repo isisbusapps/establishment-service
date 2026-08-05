@@ -12,16 +12,16 @@ public class AuthConfig {
     private static BISAppProperties bisAppProperties = null;
 
     public AuthConfig() {
-        int unsetEnvs = 0;
+        boolean unsetEnvs = false;
         for (String token : TOKEN_NAME_LIST) {
             if (System.getenv(token) == null) {
-                unsetEnvs++;
+                unsetEnvs = true;
             }
         }
-        if (unsetEnvs > 0) {
+        if (unsetEnvs) {
             String configPath = System.getProperty(CONFIG_PATH);
             if (configPath == null) {
-                throw new RuntimeException("Set " + TOKEN_NAME_LIST + " env vars, or -D" + CONFIG_PATH + " pointing at a config file");
+                throw new RuntimeException("Missing config");
             }
             bisAppProperties = new BISAppProperties(configPath);
         }
