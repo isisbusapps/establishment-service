@@ -1,15 +1,17 @@
 package uk.ac.stfc.facilities.client.rest.base;
 
-import uk.stfc.bisapps.config.BISAppProperties;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 public class AuthConfig {
     private static final String CONFIG_PATH = "uk.stfc.bisapps.config";
     private static final String USER_OFFICE_TOKEN = "USER_OFFICE_TOKEN";
     private static final String USER_TOKEN = "USER_TOKEN";
     private static final List<String> TOKEN_NAME_LIST = List.of(USER_OFFICE_TOKEN, USER_TOKEN);
-    private static BISAppProperties bisAppProperties = null;
+    private static Properties restTestConfigProperties = null;
 
     public AuthConfig() {
         boolean unsetEnvs = false;
@@ -21,9 +23,18 @@ public class AuthConfig {
         if (unsetEnvs) {
             String configPath = System.getProperty(CONFIG_PATH);
             if (configPath == null) {
-                throw new RuntimeException("Missing config");
+                throw new RuntimeException("Config path not set");
             }
-            bisAppProperties = new BISAppProperties(configPath);
+            File restTestConfig = new File(configPath);
+            if (!restTestConfig.isFile()) {
+                throw new RuntimeException("Config file not found");
+            }
+            try {
+                restTestConfigProperties = new Properties();
+                restTestConfigProperties.load(new FileInputStream(restTestConfig));
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to load config file");
+            }
         }
     }
 
@@ -32,7 +43,7 @@ public class AuthConfig {
         if (userOfficeToken != null) {
             return userOfficeToken;
         }
-        return bisAppProperties.getProperty(USER_OFFICE_TOKEN);
+        return restTestConfigProperties.getProperty(USER_OFFICE_TOKEN);
     }
 
     public String getUserToken() {
@@ -40,6 +51,6 @@ public class AuthConfig {
         if (userToken != null) {
             return userToken;
         }
-        return bisAppProperties.getProperty(USER_TOKEN);
+        return restTestConfigProperties.getProperty(USER_TOKEN);
     }
 }
