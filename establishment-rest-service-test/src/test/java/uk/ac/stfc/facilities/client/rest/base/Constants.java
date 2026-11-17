@@ -1,10 +1,10 @@
 package uk.ac.stfc.facilities.client.rest.base;
 
 public class Constants {
-    public static final int VERIFIED_EST_ID = -600000;
-    public static final int UNVERIFIED_EST_ID = -600001;
-    public static final int NON_EXISTENT_EST_ID = -1200000;
-    public static final int ALIAS_ID = -700000;
+    public static final int VERIFIED_EST_ID = -2600000;
+    public static final int UNVERIFIED_EST_ID = -2600001;
+    public static final int NON_EXISTENT_EST_ID = -2200000;
+    public static final int ALIAS_ID = -2700000;
     public static final int VERIFIED_EST_CATEGORY_ID = 1;
 
     public static final String UNVERIFIED_EST_NAME = "TEST_UNVERIFIED_EST";
@@ -29,13 +29,13 @@ public class Constants {
     public static final String ROR_PAYLOAD_TYPE_1 = "education";
     public static final String ROR_PAYLOAD_TYPE_2 = "funder";
 
-    public static final int TEST_DEPARTMENT_ID = -800000;
-    public static final int TEST_DEPARTMENT_ID_2 = -800001;
-    public static final int NON_EXISTENT_DEPARTMENT_ID = -1600000;
-    public static final int NON_EXISTENT_LABEL_ID = -10;
-    public static final int TEST_LABEL_ID = -100;
-    public static final int NEW_LABEL_ID_1 = -200;
-    public static final int NEW_LABEL_ID_2 = -300;
+    public static final int TEST_DEPARTMENT_ID = -2800000;
+    public static final int TEST_DEPARTMENT_ID_2 = -2800001;
+    public static final int NON_EXISTENT_DEPARTMENT_ID = -2900000;
+    public static final int NON_EXISTENT_LABEL_ID = -2000010;
+    public static final int TEST_LABEL_ID = -2000100;
+    public static final int NEW_LABEL_ID_1 = -2000200;
+    public static final int NEW_LABEL_ID_2 = -2000300;
 
     public static final String NEW_LABEL_NAME_1 = "NEW_LABEL_NAME_1";
     public static final String NEW_LABEL_NAME_2 = "NEW_LABEL_NAME_2";
@@ -47,27 +47,27 @@ public class Constants {
 
 
     public static final String CATEGORY_NAME = "education";
-    public static final int CATEGORY_ID = -100;
-    public static final int ROR_TYPE_ID_1 = -200;
-    public static final int ROR_TYPE_ID_2 = -300;
+    public static final int CATEGORY_ID = -2000100;
+    public static final int ROR_TYPE_ID_1 = -2000200;
+    public static final int ROR_TYPE_ID_2 = -2000300;
 
-    public static final int CATEGORY_ID_2 = -400;
-    public static final int CATEGORY_ID_3 = -500;
+    public static final int CATEGORY_ID_2 = -2000400;
+    public static final int CATEGORY_ID_3 = -2000500;
 
     public static final String CATEGORY_NAME_2 = "TEST_CATEGORY_2";
     public static final String CATEGORY_NAME_3 = "TEST_CATEGORY_3";
 
-    public static final int COUNTRY_ID_1 = -56005554;
-    public static final int COUNTRY_ID_2 = -56005555;
-    public static final int NON_EXISTENT_COUNTRY_ID = -756005556;
+    public static final int COUNTRY_ID_1 = -2560554;
+    public static final int COUNTRY_ID_2 = -2560555;
+    public static final int NON_EXISTENT_COUNTRY_ID = -2560556;
 
     public static final String TEST_COUNTRY_1 =  "TEST_COUNTRY_1";
     public static final String TEST_COUNTRY_2 =   "TEST_COUNTRY_2";
 
-    public static final int KEYWORD_ID_1 =  -700;
-    public static final int KEYWORD_ID_2 =  -701;
-    public static final int KEYWORD_ID_3 =  -702;
-    public static final int KEYWORD_ID_4 =  -703;
+    public static final int KEYWORD_ID_1 =  -2000700;
+    public static final int KEYWORD_ID_2 =  -2000701;
+    public static final int KEYWORD_ID_3 =  -2000702;
+    public static final int KEYWORD_ID_4 =  -2000703;
 
     public static final String TEST_KEYWORD_1 =  "hermione";
     public static final String TEST_KEYWORD_2 =  "hagrid";
