@@ -460,7 +460,7 @@ public class EstablishmentControllerTest extends RestTest {
     public void test_addEstablishmentCategoryLinks_ValidInput_ReturnsUpdatedCategories() {
         given().header(AUTH_USER_OFFICE_HEADER)
                 .contentType("application/json")
-                .body("[-400, -500]")
+                .body("[" + CATEGORY_ID_2 + ", " + CATEGORY_ID_3 + "]")
                 .when()
                 .put(getBaseURI() + "/establishment/" + VERIFIED_EST_ID + "/categories")
                 .then()

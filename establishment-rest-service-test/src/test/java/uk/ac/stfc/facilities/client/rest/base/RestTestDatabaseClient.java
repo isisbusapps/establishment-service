@@ -61,7 +61,7 @@ public abstract class RestTestDatabaseClient {
     }
 
     public void deleteTestData(String table, String field) throws SQLException {
-        sql("DELETE FROM " + table + " WHERE " + field + " < 0").execute(connection, null);
+        sql("DELETE FROM " + table + " WHERE " + field + " BETWEEN -2999999 AND -2000000").execute(connection, null);
     }
 
     public void deleteTestData(String table, String field, String value) throws SQLException {
