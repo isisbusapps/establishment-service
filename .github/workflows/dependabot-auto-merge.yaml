@@ -1,0 +1,81 @@
+name: Dependabot Build, REST Tests, and Auto-Merge
+
+on:
+  workflow_dispatch:
+    inputs:
+      prNumber:
+        description: 'PR number to test and merge'
+        required: true
+        type: number
+  pull_request_target:
+    branches:
+      - main
+    types:
+      - opened
+
+permissions:
+  packages: read
+  contents: write
+  pull-requests: write
+
+jobs:
+  test-and-merge:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.user.login == 'dependabot[bot]'
+    concurrency:
+      group: establishment-rest-tests-dev-db
+      cancel-in-progress: false
+    runs-on: fase-self-hosted
+    container: ghcr.io/isisbusapps/fase-gh-runner-container:latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || format('refs/pull/{0}/head', inputs.prNumber) }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          architecture: x64
+          server-id: gitea
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+
+      - name: Build and run unit tests
+        env:
+          MAVEN_USERNAME: ${{ secrets.GITEA_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.GITEA_PASSWORD }}
+        run: mvn -B clean package --no-transfer-progress
+
+      - name: Start service and run REST tests
+        env:
+          MAVEN_USERNAME: ${{ secrets.GITEA_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.GITEA_PASSWORD }}
+          SUPER_ADMIN_TOKEN: ${{ secrets.SUPER_ADMIN_TOKEN }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          USER_OFFICE_TOKEN: ${{ secrets.USER_OFFICE_TOKEN }}
+          USER_TOKEN: ${{ secrets.USER_TOKEN }}
+          GET_ALL_BASICPERSONDETAILS_API_KEY: ${{ secrets.GET_ALL_BASIC_PERSONDETAILS_API_KEY }}
+          GET_ALL_PERSONDETAILS_API_KEY: ${{ secrets.GET_ALL_PERSONDETAILS_API_KEY }}
+          FAP_API_KEY: ${{ secrets.FAP_API_KEY }}
+          ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
+          ISISBUSAPPS_CI_FED_ID: ${{ secrets.ISISBUSAPPS_CI_FED_ID }}
+          ISISBUSAPPS_CI_PASSWORD: ${{ secrets.ISISBUSAPPS_CI_PASSWORD }}
+          DB_USERNAME: ${{ secrets.DEV_USERDBUSERNAME }}
+          DB_PASSWORD: ${{ secrets.DEV_USERDBPASSWORD }}
+          DB_URL: ${{ secrets.DEV_DATABASEURL }}
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+        run: |
+          mkdir -p config
+          gh api -H "Accept: application/vnd.github.raw" repos/isisbusapps/gitops/contents/components/ua/establishment-service/overlays/dev/config.yaml | yq e '.data."application.properties"' - > config/application.properties
+          java -XX:-UseBASE64Intrinsics -jar est-service-rest/target/quarkus-app/quarkus-run.jar &
+          timeout 60 bash -c 'until python3 -c "import urllib.request; urllib.request.urlopen(\"http://localhost:8080/q/health/ready\")" 2>/dev/null; do sleep 1; done'
+          mvn -B clean test -D'userOfficeTest.restUri'=http://localhost:8080 -D'db.url'=$DB_URL -D'db.username'=$DB_USERNAME -D'db.password'=$DB_PASSWORD -f establishment-rest-service-test/pom.xml
+
+      - name: Auto-merge Dependabot PR
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+          PR_TARGET: ${{ github.event.pull_request.html_url || inputs.prNumber }}
+        run: |
+          gh pr merge --squash "$PR_TARGET" || gh pr merge --auto --squash "$PR_TARGET"
