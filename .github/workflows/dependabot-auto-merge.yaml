@@ -1,0 +1,41 @@
+name: Dependabot Patch Auto-Merge
+
+on:
+  pull_request_target:
+    branches:
+      - main
+    types:
+      - opened
+
+permissions:
+  packages: read
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge-patch:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: fase-self-hosted
+    container: ghcr.io/isisbusapps/fase-gh-runner-container:latest
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.WORKFLOW_TOKEN }}"
+
+      - name: Wait for build, approve, and merge patch PR
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          sleep 10
+          BUILD_RUN_ID=$(gh run list --repo "$REPO" --workflow "dev-build-and-deploy.yaml" --commit "$HEAD_SHA" --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          if [ -n "$BUILD_RUN_ID" ]; then
+            gh run watch "$BUILD_RUN_ID" --repo "$REPO" --exit-status
+          fi
+          gh pr review "$PR_URL" --approve
+          gh pr merge "$PR_URL" --squash || gh pr merge "$PR_URL" --auto --squash
